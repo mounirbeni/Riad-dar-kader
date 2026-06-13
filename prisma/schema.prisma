@@ -1,0 +1,145 @@
+// Riad Dar Kader — Prisma schema
+// PostgreSQL data model for the custom booking platform.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  cancelled
+  completed
+}
+
+enum ExtraPriceType {
+  per_booking
+  per_guest
+  per_night
+}
+
+enum AdminRole {
+  owner
+  manager
+}
+
+model Room {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  capacity    Int      @default(2)
+  basePrice   Int // stored in MAD (whole dirhams) per night
+  isActive    Boolean  @default(true)
+  photos      String[] @default([])
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookingRooms BookingRoom[]
+  blockedDates BlockedDate[]
+
+  @@index([isActive])
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  reference       String        @unique // human-friendly e.g. DK-7F3A9
+  checkIn         DateTime      @db.Date
+  checkOut        DateTime      @db.Date
+  guests          Int
+  guestName       String
+  guestEmail      String
+  guestPhone      String
+  guestCountry    String?
+  specialRequests String?
+  status          BookingStatus @default(pending)
+  optionLabel     String? // e.g. "Family Stay", "Full Riad Request"
+  estimatedTotal  Int           @default(0) // MAD
+  adminNotes      String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  rooms  BookingRoom[]
+  extras BookingExtra[]
+
+  @@index([status])
+  @@index([checkIn, checkOut])
+}
+
+model BookingRoom {
+  id        String  @id @default(cuid())
+  bookingId String
+  roomId    String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  room      Room    @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, roomId])
+  @@index([roomId])
+}
+
+model Extra {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  nameFr      String
+  description String
+  descriptionFr String
+  price       Int // MAD
+  priceType   ExtraPriceType @default(per_booking)
+  isActive    Boolean        @default(true)
+  sortOrder   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  bookingExtras BookingExtra[]
+
+  @@index([isActive])
+}
+
+model BookingExtra {
+  id            String  @id @default(cuid())
+  bookingId     String
+  extraId       String
+  quantity      Int     @default(1)
+  priceSnapshot Int // MAD captured at request time
+  nameSnapshot  String
+  booking       Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  extra         Extra   @relation(fields: [extraId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+model BlockedDate {
+  id        String   @id @default(cuid())
+  roomId    String? // null = whole riad blocked for that date
+  date      DateTime @db.Date
+  reason    String?
+  createdAt DateTime @default(now())
+
+  room Room? @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, date])
+  @@index([date])
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  role         AdminRole @default(owner)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}

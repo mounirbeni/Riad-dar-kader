@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f5f0e8;
+  --foreground: #1a1a1a;
+  --font-cormorant: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-inter: "Inter", "Manrope", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply btn bg-terracotta text-white shadow-card hover:bg-terracotta-dark;
+  }
+  .btn-outline {
+    @apply btn border border-terracotta/30 bg-transparent text-terracotta hover:bg-terracotta/5;
+  }
+  .btn-gold {
+    @apply btn bg-brass text-white hover:bg-brass-dark;
+  }
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white hover:brightness-95;
+  }
+  .card {
+    @apply rounded-2xl bg-white shadow-card;
+  }
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-brass;
+  }
+  .input {
+    @apply w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-terracotta focus:ring-2 focus:ring-terracotta/15;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-muted;
+  }
+}
+
+/* Subtle Moroccan pattern divider */
+.pattern-divider {
+  height: 6px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #b8943f 0,
+    #b8943f 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.5;
+}
