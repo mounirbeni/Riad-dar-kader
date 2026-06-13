@@ -4,6 +4,9 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { prisma } from "@/lib/prisma";
 import { BookingFlow, type ClientExtra } from "@/components/booking/BookingFlow";
 
+// Rendered on-demand (reads active extras from the database).
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

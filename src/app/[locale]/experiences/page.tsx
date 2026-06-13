@@ -8,6 +8,9 @@ import { Placeholder } from "@/components/Placeholder";
 import { formatMAD } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 
+// Rendered on-demand (reads extras from the database).
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

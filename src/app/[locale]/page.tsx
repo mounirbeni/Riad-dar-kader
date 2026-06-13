@@ -10,6 +10,10 @@ import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { RIAD, siteUrl } from "@/lib/constants";
 
+// Rendered on-demand so the build doesn't require a live database and admin
+// content changes appear immediately.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {
