@@ -7,11 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // Pooled connection for the app at runtime (serverless-friendly).
   url      = env("DATABASE_URL")
-  // Direct (unpooled) connection used for migrations / `db push`.
-  // Falls back to DATABASE_URL locally if not set.
-  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 enum BookingStatus {
