@@ -28,8 +28,11 @@ fi
 
 prisma generate
 
-echo "→ Syncing database schema (prisma db push)…"
-DATABASE_URL="$MIGRATE_URL" prisma db push --skip-generate
+echo "→ Syncing database schema (prisma db push --force-reset)…"
+# TEMPORARY one-time reset: drops all existing tables before recreating the
+# schema. Reverted immediately after the first successful deploy so future
+# deploys never wipe live data.
+DATABASE_URL="$MIGRATE_URL" prisma db push --skip-generate --force-reset --accept-data-loss
 
 echo "→ Seeding database…"
 tsx prisma/seed.ts || echo "seed step skipped (non-fatal)"
