@@ -12,17 +12,28 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Respect iOS notch / Dynamic Island */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
   }
   body {
     background-color: var(--background);
     color: var(--foreground);
     -webkit-font-smoothing: antialiased;
+    /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   h1,
   h2,
   h3,
   h4 {
     @apply font-serif;
+  }
+  /* Prevent iOS from zooming on input focus (requires font-size ≥ 16px) */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
   }
 }
 
@@ -32,6 +43,8 @@
   }
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+    /* Ensure minimum 44px tap target on mobile */
+    min-height: 44px;
   }
   .btn-primary {
     @apply btn bg-terracotta text-white shadow-card hover:bg-terracotta-dark;
@@ -52,7 +65,9 @@
     @apply text-xs font-semibold uppercase tracking-[0.2em] text-brass;
   }
   .input {
-    @apply w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-terracotta focus:ring-2 focus:ring-terracotta/15;
+    @apply w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-ink outline-none transition focus:border-terracotta focus:ring-2 focus:ring-terracotta/15;
+    /* 16px enforced here too to guarantee no iOS zoom */
+    font-size: 16px;
   }
   .label {
     @apply mb-1.5 block text-sm font-medium text-muted;
@@ -79,4 +94,18 @@
     transparent 16px
   );
   opacity: 0.5;
+}
+
+/* PWA: bottom nav safe-area aware padding for the fixed bar */
+.bottom-nav-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Desktop: wider hero layout */
+@media (min-width: 1280px) {
+  .hero-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+  }
 }

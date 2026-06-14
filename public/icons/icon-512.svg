@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#8B3A2A"/>
+  <rect x="0" y="0" width="512" height="512" fill="url(#pattern)" opacity="0.12"/>
+  <defs>
+    <pattern id="pattern" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M16 0l16 16-16 16L0 16z" fill="none" stroke="#F5F0E8" stroke-width="0.7"/>
+    </pattern>
+  </defs>
+  <!-- Moroccan keyhole arch -->
+  <path d="M176 380 V262 C176 176 210 128 256 128 C302 128 336 176 336 262 V380 Z" fill="#F5F0E8" opacity="0.92"/>
+  <!-- Gold accent bar -->
+  <rect x="155" y="380" width="202" height="8" fill="#B8943F" rx="4"/>
+  <!-- Gold dots -->
+  <circle cx="214" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
+  <circle cx="256" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
+  <circle cx="298" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
+</svg>

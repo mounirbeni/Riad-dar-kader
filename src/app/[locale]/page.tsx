@@ -71,45 +71,66 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
+      {/* Hero — mobile/tablet: full-bleed; desktop xl+: two-column split */}
+      <section className="relative overflow-hidden xl:flex xl:min-h-screen">
+        {/* Full-bleed background (mobile/tablet only) */}
         <Placeholder
           variant={0}
           rounded={false}
-          className="absolute inset-0 h-full w-full"
+          className="absolute inset-0 h-full w-full xl:hidden"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70" />
-        <div className="container-page relative flex min-h-[82vh] flex-col items-start justify-center py-20 text-white">
-          <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-brass-light" />
-            <span className="text-xs font-medium uppercase tracking-[0.25em] text-brass-light">
-              {t.heroKicker}
-            </span>
+        <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70 xl:hidden" />
+
+        {/* Left pane — text */}
+        <div className="relative xl:flex xl:w-[52%] xl:shrink-0 xl:flex-col xl:items-start xl:justify-center xl:bg-terracotta-dark">
+          {/* Zellige overlay on desktop */}
+          <div className="absolute inset-0 hidden bg-zellige opacity-10 xl:block" />
+          <div className="container-page relative flex min-h-[82vh] flex-col items-start justify-center py-20 text-white xl:min-h-0 xl:max-w-none xl:mx-0 xl:px-14 xl:py-0">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-brass-light" />
+              <span className="text-xs font-medium uppercase tracking-[0.25em] text-brass-light">
+                {t.heroKicker}
+              </span>
+            </div>
+            <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl md:text-[5.5rem] xl:max-w-lg xl:text-[4.75rem]">
+              {t.heroTitle}
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 xl:max-w-sm">
+              {t.heroSubtitle}
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link href={localePath(locale, "stay")} className="btn-primary shadow-soft">
+                {t.heroCta}
+              </Link>
+              <Link
+                href={localePath(locale, "riad")}
+                className="btn border border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"
+              >
+                {t.heroSecondary}
+              </Link>
+            </div>
+            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <span className="inline-flex items-center gap-2 rounded-full bg-brass/90 px-4 py-2 text-sm font-medium text-white">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-white" />
+                {t.openingNote}
+              </span>
+              <span className="text-sm text-white/75">
+                {locale === "fr"
+                  ? "Réservation directe · sans frais de plateforme"
+                  : "Direct booking · no platform fees"}
+              </span>
+            </div>
           </div>
-          <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl md:text-[5.5rem]">
-            {t.heroTitle}
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90">{t.heroSubtitle}</p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link href={localePath(locale, "stay")} className="btn-primary shadow-soft">
-              {t.heroCta}
-            </Link>
-            <Link
-              href={localePath(locale, "riad")}
-              className="btn border border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"
-            >
-              {t.heroSecondary}
-            </Link>
-          </div>
-          <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-brass/90 px-4 py-2 text-sm font-medium text-white">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-white" />
-              {t.openingNote}
-            </span>
-            <span className="text-sm text-white/75">
-              {locale === "fr"
-                ? "Réservation directe · sans frais de plateforme"
-                : "Direct booking · no platform fees"}
+        </div>
+
+        {/* Right pane — visual (xl+ only) */}
+        <div className="relative hidden xl:block xl:flex-1">
+          <Placeholder variant={1} rounded={false} className="h-full w-full" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-terracotta-dark/25" />
+          <div className="absolute bottom-8 left-8">
+            <span className="inline-flex items-center gap-2 rounded-full bg-black/30 px-5 py-2.5 text-sm text-white backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brass-light" />
+              Médina de Marrakech · Maroc
             </span>
           </div>
         </div>
