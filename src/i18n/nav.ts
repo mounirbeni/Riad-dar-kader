@@ -5,6 +5,7 @@ import type { Locale } from "./config";
 export const navPaths = {
   home: "",
   riad: "le-riad",
+  rooms: "chambres",
   stay: "sejour",
   experiences: "experiences",
   gallery: "galerie",

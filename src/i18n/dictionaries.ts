@@ -8,6 +8,7 @@ export const dictionaries = {
     nav: {
       home: "Accueil",
       riad: "Le Riad",
+      rooms: "Chambres",
       stay: "Réserver",
       experiences: "Expériences",
       gallery: "Galerie",
@@ -54,7 +55,7 @@ export const dictionaries = {
       roomsTitle: "Les chambres & espaces",
       roomsText:
         "Sept chambres pensées comme des refuges, autour d'un patio baigné de lumière.",
-      roomsCta: "Vérifier les disponibilités",
+      roomsCta: "Voir toutes les chambres",
       extrasTitle: "Expériences & extras",
       extrasText:
         "Petit-déjeuner marocain, dîner sur la terrasse, hammam, visites guidées…",
@@ -88,6 +89,48 @@ export const dictionaries = {
       futureTitle: "Une maison d'hôtes en devenir",
       futureText:
         "Dar Kader ouvre bientôt ses portes. Nous accueillerons nos premiers voyageurs dès le début octobre, avec l'envie de partager un Marrakech authentique et chaleureux.",
+    },
+    rooms: {
+      kicker: "Nos chambres",
+      title: "Sept chambres & suites",
+      subtitle:
+        "Sept refuges uniques autour d'un patio baigné de lumière, chacun habillé d'artisanat marrakchi. Découvrez chaque chambre en détail.",
+      viewRoom: "Voir la chambre",
+      perNight: "/ nuit",
+      upTo: "Jusqu'à",
+      overview: "Présentation",
+      amenitiesTitle: "Équipements & services",
+      capacityLabel: "Capacité",
+      bedLabel: "Couchage",
+      viewLabel: "Vue",
+      sizeLabel: "Superficie",
+      bookThisRoom: "Réserver cette chambre",
+      checkAvailability: "Vérifier les disponibilités",
+      backToRooms: "Toutes les chambres",
+      otherRooms: "Autres chambres",
+      notFoundTitle: "Chambre introuvable",
+      notFoundText: "Cette chambre n'existe pas ou n'est plus disponible.",
+      bed: {
+        double: "Lit double",
+        twin: "Lits jumeaux",
+        double_sofa: "Lit double + canapé",
+        family: "Lits multiples",
+      },
+      views: {
+        patio: "Sur le patio",
+        terrace: "Sur la terrasse",
+        medina: "Sur la Médina",
+      },
+      amenities: {
+        wifi: "Wi-Fi gratuit",
+        ac: "Climatisation",
+        heating: "Chauffage",
+        ensuite: "Salle de bain privée",
+        breakfast: "Petit-déjeuner inclus",
+        safe: "Coffre-fort",
+        terrace: "Accès terrasse",
+        tea: "Plateau de thé & café",
+      },
     },
     stay: {
       title: "Réserver votre séjour",
@@ -179,6 +222,7 @@ export const dictionaries = {
     nav: {
       home: "Home",
       riad: "The Riad",
+      rooms: "Rooms",
       stay: "Book",
       experiences: "Experiences",
       gallery: "Gallery",
@@ -224,7 +268,7 @@ export const dictionaries = {
       roomsTitle: "Rooms & spaces",
       roomsText:
         "Seven rooms imagined as quiet retreats around a light-filled patio.",
-      roomsCta: "Check availability",
+      roomsCta: "View all rooms",
       extrasTitle: "Experiences & extras",
       extrasText:
         "Moroccan breakfast, dinner on the terrace, hammam, guided tours…",
@@ -257,6 +301,48 @@ export const dictionaries = {
       futureTitle: "A guesthouse in the making",
       futureText:
         "Dar Kader opens its doors soon. We'll welcome our first travellers from early October, eager to share a warm, authentic Marrakech.",
+    },
+    rooms: {
+      kicker: "Our rooms",
+      title: "Seven rooms & suites",
+      subtitle:
+        "Seven unique retreats around a light-filled patio, each dressed in Marrakech craftsmanship. Explore every room in detail.",
+      viewRoom: "View room",
+      perNight: "/ night",
+      upTo: "Up to",
+      overview: "Overview",
+      amenitiesTitle: "Amenities & services",
+      capacityLabel: "Capacity",
+      bedLabel: "Bedding",
+      viewLabel: "View",
+      sizeLabel: "Size",
+      bookThisRoom: "Book this room",
+      checkAvailability: "Check availability",
+      backToRooms: "All rooms",
+      otherRooms: "Other rooms",
+      notFoundTitle: "Room not found",
+      notFoundText: "This room doesn't exist or is no longer available.",
+      bed: {
+        double: "Double bed",
+        twin: "Twin beds",
+        double_sofa: "Double bed + sofa",
+        family: "Multiple beds",
+      },
+      views: {
+        patio: "Patio view",
+        terrace: "Terrace view",
+        medina: "Medina view",
+      },
+      amenities: {
+        wifi: "Free Wi-Fi",
+        ac: "Air conditioning",
+        heating: "Heating",
+        ensuite: "Private bathroom",
+        breakfast: "Breakfast included",
+        safe: "Safe",
+        terrace: "Terrace access",
+        tea: "Tea & coffee tray",
+      },
     },
     stay: {
       title: "Book your stay",

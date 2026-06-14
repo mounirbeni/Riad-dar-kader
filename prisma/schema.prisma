@@ -29,17 +29,22 @@ enum AdminRole {
 }
 
 model Room {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String
-  capacity    Int      @default(2)
-  basePrice   Int // stored in MAD (whole dirhams) per night
-  isActive    Boolean  @default(true)
-  photos      String[] @default([])
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String // primary (French)
+  descriptionEn String? // optional English description
+  capacity      Int      @default(2)
+  basePrice     Int // stored in MAD (whole dirhams) per night
+  sizeM2        Int? // room size in square metres
+  bedType       String? // key: double | twin | double_sofa | family
+  view          String? // key: patio | terrace | medina
+  amenities     String[] @default([]) // amenity keys, e.g. wifi, ac, ensuite
+  isActive      Boolean  @default(true)
+  photos        String[] @default([])
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   bookingRooms BookingRoom[]
   blockedDates BlockedDate[]

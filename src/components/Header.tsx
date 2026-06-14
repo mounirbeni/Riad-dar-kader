@@ -10,6 +10,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 const NAV_ORDER: NavKey[] = [
   "home",
   "riad",
+  "rooms",
   "stay",
   "experiences",
   "gallery",

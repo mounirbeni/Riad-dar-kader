@@ -175,18 +175,22 @@ export default async function HomePage({
             </h2>
             <p className="mt-3 max-w-xl text-muted">{t.roomsText}</p>
           </div>
-          <Link href={localePath(locale, "stay")} className="btn-outline">
+          <Link href={localePath(locale, "rooms")} className="btn-outline">
             {t.roomsCta}
           </Link>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {rooms.map((room, i) => (
-            <article key={room.id} className="card overflow-hidden">
+            <Link
+              key={room.id}
+              href={`${localePath(locale, "rooms")}/${room.slug}`}
+              className="card group overflow-hidden"
+            >
               <Placeholder
                 label={room.name}
                 variant={i + 1}
                 rounded={false}
-                className="aspect-[4/3] w-full"
+                className="aspect-[4/3] w-full transition group-hover:opacity-95"
               />
               <div className="p-5">
                 <h3 className="font-serif text-xl text-ink">{room.name}</h3>
@@ -202,7 +206,7 @@ export default async function HomePage({
                   </span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
