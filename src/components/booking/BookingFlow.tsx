@@ -422,7 +422,7 @@ export function BookingFlow({
                               >
                                 <div className="flex items-stretch gap-0">
                                   {/* Thumbnail */}
-                                  <div className="relative w-28 shrink-0 overflow-hidden sm:w-36">
+                                  <div className="relative aspect-[4/3] w-40 shrink-0 overflow-hidden sm:aspect-auto sm:w-56">
                                     {photo ? (
                                       // eslint-disable-next-line @next/next/no-img-element
                                       <img
@@ -434,28 +434,28 @@ export function BookingFlow({
                                       <Placeholder
                                         variant={idx + 1}
                                         rounded={false}
-                                        className="h-full min-h-[7rem] w-full"
+                                        className="h-full min-h-[9rem] w-full"
                                       />
                                     )}
                                     {/* Placeholder marker so the owner knows to add a photo */}
                                     {!photo && (
-                                      <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-md bg-black/45 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-white backdrop-blur-sm">
-                                        <IconCamera size={9} />
+                                      <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-black/45 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-white backdrop-blur-sm">
+                                        <IconCamera size={11} />
                                         {fr ? "Photo à venir" : "Photo soon"}
                                       </span>
                                     )}
                                     {/* Selected overlay */}
                                     {selected && (
                                       <div className="absolute inset-0 flex items-center justify-center bg-terracotta/45">
-                                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-terracotta shadow">
-                                          <IconCheck size={18} />
+                                        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-terracotta shadow">
+                                          <IconCheck size={22} />
                                         </span>
                                       </div>
                                     )}
                                   </div>
 
                                   {/* Info */}
-                                  <div className="flex min-w-0 flex-1 items-center gap-3 p-4">
+                                  <div className="flex min-w-0 flex-1 items-center gap-3 p-4 sm:p-5">
                                     <div className="min-w-0 flex-1">
                                       <div className="flex flex-wrap items-center gap-2">
                                         <h4 className="font-serif text-lg text-ink">{room.name}</h4>
