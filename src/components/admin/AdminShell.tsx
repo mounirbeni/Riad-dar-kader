@@ -34,7 +34,15 @@ function Initials({ email }: { email: string }) {
   );
 }
 
-function SidebarContent({ email, onNav }: { email: string; onNav?: () => void }) {
+function SidebarContent({
+  email,
+  pendingCount,
+  onNav,
+}: {
+  email: string;
+  pendingCount?: number;
+  onNav?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -61,6 +69,10 @@ function SidebarContent({ email, onNav }: { email: string; onNav?: () => void })
           const active = item.exact
             ? pathname === item.href
             : pathname === item.href || pathname.startsWith(item.href + "/");
+          const badge =
+            item.href === "/admin/bookings" && pendingCount && pendingCount > 0
+              ? pendingCount
+              : undefined;
           return (
             <Link
               key={item.href}
@@ -76,12 +88,12 @@ function SidebarContent({ email, onNav }: { email: string; onNav?: () => void })
                 {item.icon}
               </span>
               <span className="flex-1">{item.label}</span>
-              {item.badge != null && item.badge > 0 && (
+              {badge != null && (
                 <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-terracotta px-1.5 text-[10px] font-bold text-white">
-                  {item.badge}
+                  {badge}
                 </span>
               )}
-              {active && (
+              {active && !badge && (
                 <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
               )}
             </Link>
@@ -113,9 +125,11 @@ function SidebarContent({ email, onNav }: { email: string; onNav?: () => void })
 export function AdminShell({
   children,
   email,
+  pendingCount,
 }: {
   children: ReactNode;
   email: string;
+  pendingCount?: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -123,7 +137,7 @@ export function AdminShell({
     <div className="min-h-screen bg-[#F7F4EF] lg:flex">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 bg-[#1C1612] lg:block">
-        <SidebarContent email={email} />
+        <SidebarContent email={email} pendingCount={pendingCount} />
       </aside>
 
       {/* Mobile overlay */}
@@ -140,7 +154,7 @@ export function AdminShell({
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <SidebarContent email={email} onNav={() => setOpen(false)} />
+        <SidebarContent email={email} pendingCount={pendingCount} onNav={() => setOpen(false)} />
       </aside>
 
       {/* Main content */}

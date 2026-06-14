@@ -292,6 +292,7 @@ export async function blockDatesAction(
     skipDuplicates: true,
   });
   revalidatePath("/admin/calendar");
+  revalidatePath("/admin");
   return { ok: true, message: `${nights.length} date(s) bloquée(s).` };
 }
 
@@ -303,6 +304,7 @@ export async function unblockDateAction(
   const id = String(formData.get("id") || "");
   if (id) await prisma.blockedDate.delete({ where: { id } });
   revalidatePath("/admin/calendar");
+  revalidatePath("/admin");
   return { ok: true };
 }
 
