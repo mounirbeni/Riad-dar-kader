@@ -78,17 +78,20 @@ export default async function HomePage({
           rounded={false}
           className="absolute inset-0 h-full w-full"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/70 via-terracotta/50 to-ink/60" />
-        <div className="container-page relative flex min-h-[78vh] flex-col items-start justify-center py-20 text-white">
-          <span className="rounded-full bg-white/15 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] backdrop-blur-sm">
-            {t.heroKicker}
-          </span>
-          <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-tight sm:text-6xl md:text-7xl">
+        <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70" />
+        <div className="container-page relative flex min-h-[82vh] flex-col items-start justify-center py-20 text-white">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-brass-light" />
+            <span className="text-xs font-medium uppercase tracking-[0.25em] text-brass-light">
+              {t.heroKicker}
+            </span>
+          </div>
+          <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl md:text-[5.5rem]">
             {t.heroTitle}
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/90">{t.heroSubtitle}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={localePath(locale, "stay")} className="btn-primary">
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90">{t.heroSubtitle}</p>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link href={localePath(locale, "stay")} className="btn-primary shadow-soft">
               {t.heroCta}
             </Link>
             <Link
@@ -98,9 +101,16 @@ export default async function HomePage({
               {t.heroSecondary}
             </Link>
           </div>
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-brass/90 px-4 py-2 text-sm font-medium text-white">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-white" />
-            {t.openingNote}
+          <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-brass/90 px-4 py-2 text-sm font-medium text-white">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-white" />
+              {t.openingNote}
+            </span>
+            <span className="text-sm text-white/75">
+              {locale === "fr"
+                ? "Réservation directe · sans frais de plateforme"
+                : "Direct booking · no platform fees"}
+            </span>
           </div>
         </div>
       </section>

@@ -41,32 +41,32 @@ export function Placeholder({
         <defs>
           <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={from} />
-            <stop offset="100%" stopColor={to} />
+            <stop offset="55%" stopColor={to} />
+            <stop offset="100%" stopColor={from} />
           </linearGradient>
+          <radialGradient id={`v-${gid}`} cx="50%" cy="38%" r="75%">
+            <stop offset="55%" stopColor="#000000" stopOpacity="0" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.28" />
+          </radialGradient>
           <pattern
             id={`p-${gid}`}
-            width="40"
-            height="40"
+            width="28"
+            height="28"
             patternUnits="userSpaceOnUse"
-            patternTransform="rotate(0)"
           >
-            <path
-              d="M20 0l20 20-20 20L0 20z"
-              fill="none"
-              stroke="#F5F0E8"
-              strokeWidth="0.8"
-              opacity="0.18"
-            />
+            <path d="M14 0l14 14-14 14L0 14z" fill="none" stroke="#F5F0E8" strokeWidth="0.6" opacity="0.16" />
+            <circle cx="14" cy="14" r="1" fill="#F5F0E8" opacity="0.14" />
           </pattern>
         </defs>
         <rect width="400" height="300" fill={`url(#${gid})`} />
         <rect width="400" height="300" fill={`url(#p-${gid})`} />
-        {/* Moroccan arch silhouette */}
+        {/* Moroccan keyhole arch silhouette */}
         <path
-          d="M170 230 V150 C170 120 185 105 200 105 C215 105 230 120 230 150 V230 Z"
+          d="M165 235 V150 C165 120 178 100 200 100 C222 100 235 120 235 150 V235 Z"
           fill="#F5F0E8"
-          opacity="0.12"
+          opacity="0.10"
         />
+        <rect width="400" height="300" fill={`url(#v-${gid})`} />
       </svg>
       {label && (
         <div className="absolute inset-0 flex items-center justify-center">

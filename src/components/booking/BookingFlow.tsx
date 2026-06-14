@@ -7,8 +7,13 @@ import { searchAvailability, createBooking } from "@/app/actions/booking";
 import type { AvailabilityResult, StayOption } from "@/lib/availability";
 import { formatMAD } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
-import { todayUTC, toDateOnlyString, nightsBetween, parseDateOnly } from "@/lib/dates";
+import {
+  nightsBetween,
+  parseDateOnly,
+  formatDateHuman,
+} from "@/lib/dates";
 import { Stepper } from "./Stepper";
+import { AvailabilityCalendar } from "./AvailabilityCalendar";
 
 export type ClientExtra = {
   id: string;
@@ -34,7 +39,7 @@ export function BookingFlow({
   extras: ClientExtra[];
 }) {
   const t = dict.stay;
-  const today = toDateOnlyString(todayUTC());
+  const fr = locale === "fr";
 
   const [step, setStep] = useState(1);
   const [checkIn, setCheckIn] = useState("");
@@ -45,7 +50,6 @@ export function BookingFlow({
   const [error, setError] = useState<string | null>(null);
   const [availability, setAvailability] = useState<AvailabilityResult | null>(null);
   const [optionKey, setOptionKey] = useState<StayOption["key"] | null>(null);
-
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
 
   const [guestName, setGuestName] = useState("");
@@ -53,16 +57,16 @@ export function BookingFlow({
   const [guestPhone, setGuestPhone] = useState("");
   const [guestCountry, setGuestCountry] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
-  const [website, setWebsite] = useState(""); // honeypot
+  const [website, setWebsite] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
 
   const nights = useMemo(() => {
-    const ci = parseDateOnly(checkIn);
-    const co = parseDateOnly(checkOut);
-    if (!ci || !co || co <= ci) return 0;
-    return nightsBetween(ci, co);
+    const a = parseDateOnly(checkIn);
+    const b = parseDateOnly(checkOut);
+    if (!a || !b || b <= a) return 0;
+    return nightsBetween(a, b);
   }, [checkIn, checkOut]);
 
   const selectedOption = useMemo(
@@ -70,24 +74,27 @@ export function BookingFlow({
     [availability, optionKey]
   );
 
-  const extrasTotal = useMemo(() => {
-    return Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
-      const extra = extras.find((e) => e.id === id);
-      if (!extra || qty < 1) return sum;
-      return sum + extraLineTotal(extra.price, extra.priceType, qty, { guests, nights });
-    }, 0);
-  }, [selectedExtras, extras, guests, nights]);
+  const extrasTotal = useMemo(
+    () =>
+      Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
+        const e = extras.find((x) => x.id === id);
+        if (!e || qty < 1) return sum;
+        return sum + extraLineTotal(e.price, e.priceType, qty, { guests, nights });
+      }, 0),
+    [selectedExtras, extras, guests, nights]
+  );
 
   const grandTotal = (selectedOption?.estimatedTotal || 0) + extrasTotal;
+  const chosenExtras = extras.filter((e) => selectedExtras[e.id]);
 
-  function errMsg(code: string) {
-    return (
-      (t.errors as Record<string, string>)[code] || t.errors.generic
-    );
-  }
+  const errMsg = (code: string) =>
+    (t.errors as Record<string, string>)[code] || t.errors.generic;
 
-  async function onSearch(e: React.FormEvent) {
-    e.preventDefault();
+  async function onSearch() {
+    if (!checkIn || !checkOut || nights < 1) {
+      setError(errMsg("invalid_dates"));
+      return;
+    }
     setError(null);
     setLoading(true);
     setOptionKey(null);
@@ -99,9 +106,7 @@ export function BookingFlow({
       return;
     }
     setAvailability(res.result);
-    if (!res.result.isAvailable) {
-      setError(errMsg(res.result.reason || "no_capacity"));
-    }
+    if (!res.result.isAvailable) setError(errMsg(res.result.reason || "no_capacity"));
     setStep(2);
   }
 
@@ -114,37 +119,18 @@ export function BookingFlow({
     });
   }
 
-  function setExtraQty(id: string, qty: number) {
-    setSelectedExtras((prev) => ({ ...prev, [id]: Math.max(1, qty) }));
-  }
-
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!optionKey) return;
     setError(null);
     setSubmitting(true);
-    const payload = {
-      checkIn,
-      checkOut,
-      guests,
-      optionKey,
-      guestName,
-      guestEmail,
-      guestPhone,
-      guestCountry,
-      specialRequests,
-      website,
-      extras: Object.entries(selectedExtras).map(([extraId, quantity]) => ({
-        extraId,
-        quantity,
-      })),
-    };
-    const res = await createBooking(payload);
+    const res = await createBooking({
+      checkIn, checkOut, guests, optionKey,
+      guestName, guestEmail, guestPhone, guestCountry, specialRequests, website,
+      extras: Object.entries(selectedExtras).map(([extraId, quantity]) => ({ extraId, quantity })),
+    });
     setSubmitting(false);
-    if (!res.ok) {
-      setError(errMsg(res.error));
-      return;
-    }
+    if (!res.ok) { setError(errMsg(res.error)); return; }
     setConfirmation({
       reference: res.reference,
       estimatedTotal: res.estimatedTotal,
@@ -153,143 +139,94 @@ export function BookingFlow({
     setStep(5);
   }
 
-  // --- Confirmation screen ---
+  const optionLabel = (o: StayOption) => (fr ? o.labelFr : o.labelEn);
+  const includedFeatures = fr
+    ? ["Confirmation directe par le riad", "Sans paiement en ligne", "Annulation flexible"]
+    : ["Confirmed directly by the riad", "No online payment", "Flexible cancellation"];
+
+  // ---------- Confirmation ----------
   if (step === 5 && confirmation) {
     return (
       <div className="mt-10">
-        <div className="card mx-auto max-w-xl p-8 text-center sm:p-12">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-brass/15 text-3xl text-brass">
-            ✓
+        <div className="card mx-auto max-w-xl overflow-hidden">
+          <div className="bg-terracotta px-8 py-10 text-center text-white">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/15 text-3xl">✓</div>
+            <h2 className="mt-4 font-serif text-3xl">{t.confirmTitle}</h2>
+            <p className="mx-auto mt-2 max-w-sm text-white/85">{t.confirmText}</p>
           </div>
-          <h2 className="mt-5 font-serif text-3xl text-ink">{t.confirmTitle}</h2>
-          <p className="mt-3 text-muted">{t.confirmText}</p>
-
-          <div className="mt-6 rounded-xl bg-sand p-4">
-            <p className="text-xs uppercase tracking-wider text-muted">
-              {t.confirmReference}
-            </p>
-            <p className="mt-1 font-serif text-2xl text-terracotta">
-              {confirmation.reference}
-            </p>
+          <div className="p-8">
+            <div className="rounded-xl border border-dashed border-brass/40 bg-sand p-4 text-center">
+              <p className="text-xs uppercase tracking-wider text-muted">{t.confirmReference}</p>
+              <p className="mt-1 font-serif text-2xl tracking-wide text-terracotta">{confirmation.reference}</p>
+            </div>
+            <Summary
+              fr={fr} dict={dict} locale={locale}
+              checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
+              optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+              chosenExtras={chosenExtras} selectedExtras={selectedExtras}
+              total={confirmation.estimatedTotal} flat
+            />
+            <a href={confirmation.whatsappOwnerUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp mt-6 w-full">
+              {t.confirmWhatsapp}
+            </a>
+            <button type="button" onClick={() => window.location.reload()} className="btn-outline mt-3 w-full">
+              {t.newSearch}
+            </button>
           </div>
-
-          <SummaryBlock
-            t={t}
-            dict={dict}
-            locale={locale}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            guests={guests}
-            nights={nights}
-            optionLabel={selectedOption ? labelFor(selectedOption, locale) : null}
-            extras={extras}
-            selectedExtras={selectedExtras}
-            total={confirmation.estimatedTotal}
-            compact
-          />
-
-          <a
-            href={`https://wa.me/${(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "212600000000").replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-              `${locale === "fr" ? "Bonjour, ma demande de réservation" : "Hello, my reservation request"} ${confirmation.reference}`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-whatsapp mt-6 w-full"
-          >
-            {t.confirmWhatsapp}
-          </a>
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="btn-outline mt-3 w-full"
-          >
-            {t.newSearch}
-          </button>
         </div>
       </div>
     );
   }
 
+  const showSummary = nights > 0 && step >= 2;
+
   return (
-    <div className="mt-8">
+    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_340px] lg:items-start">
       <div className="card p-5 sm:p-7">
         <Stepper step={step} dict={dict} />
-        <div className="mt-6">
+
+        <div key={step} className="mt-6 animate-step">
           {/* STEP 1 — Dates */}
           {step === 1 && (
-            <form onSubmit={onSearch} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div>
-                  <label className="label" htmlFor="checkIn">
-                    {t.checkIn}
-                  </label>
-                  <input
-                    id="checkIn"
-                    type="date"
-                    min={today}
-                    required
-                    value={checkIn}
-                    onChange={(e) => {
-                      setCheckIn(e.target.value);
-                      if (checkOut && e.target.value >= checkOut) setCheckOut("");
-                    }}
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label className="label" htmlFor="checkOut">
-                    {t.checkOut}
-                  </label>
-                  <input
-                    id="checkOut"
-                    type="date"
-                    min={checkIn || today}
-                    required
-                    value={checkOut}
-                    onChange={(e) => setCheckOut(e.target.value)}
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label className="label" htmlFor="guests">
-                    {t.guests}
-                  </label>
-                  <input
-                    id="guests"
-                    type="number"
-                    min={1}
-                    max={20}
-                    required
-                    value={guests}
-                    onChange={(e) => setGuests(Number(e.target.value))}
-                    className="input"
-                  />
-                </div>
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-sand-200 p-4 sm:p-5">
+                <AvailabilityCalendar
+                  locale={locale}
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  onSelect={(ci, co) => { setCheckIn(ci); setCheckOut(co); setError(null); }}
+                />
               </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex gap-3">
+                  <DatePill label={t.checkIn} value={checkIn ? formatDateHuman(parseDateOnly(checkIn)!, locale) : "—"} />
+                  <DatePill label={t.checkOut} value={checkOut ? formatDateHuman(parseDateOnly(checkOut)!, locale) : "—"} />
+                </div>
+                <GuestStepper label={t.guests} value={guests} onChange={setGuests} />
+              </div>
+
               {nights > 0 && (
                 <p className="text-sm text-muted">
-                  {nights}{" "}
-                  {nights > 1 ? dict.common.nights : dict.common.night}
+                  {nights} {nights > 1 ? dict.common.nights : dict.common.night}
                 </p>
               )}
-              {error && <p className="text-sm text-terracotta">{error}</p>}
-              <button type="submit" disabled={loading} className="btn-primary w-full sm:w-auto">
+              {error && <p className="rounded-lg bg-terracotta/5 px-3 py-2 text-sm text-terracotta">{error}</p>}
+              <button type="button" disabled={loading || nights < 1} onClick={onSearch} className="btn-primary w-full sm:w-auto">
                 {loading ? t.searching : t.search}
               </button>
-            </form>
+            </div>
           )}
 
-          {/* STEP 2 — Availability */}
+          {/* STEP 2 — Options */}
           {step === 2 && (
             <div className="space-y-5">
               <h3 className="font-serif text-2xl text-ink">{t.availableTitle}</h3>
               {availability && !availability.isAvailable && (
-                <div className="rounded-xl bg-sand p-5 text-muted">
-                  {error || t.noAvailability}
-                </div>
+                <div className="rounded-xl bg-sand p-5 text-muted">{error || t.noAvailability}</div>
               )}
               {availability?.isAvailable && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {availability.suggestedOptions.map((option) => {
                     const selected = optionKey === option.key;
                     return (
@@ -297,64 +234,54 @@ export function BookingFlow({
                         type="button"
                         key={option.key}
                         onClick={() => setOptionKey(option.key)}
-                        className={`flex w-full flex-col gap-1 rounded-2xl border p-5 text-left transition ${
+                        className={`block w-full rounded-2xl border p-5 text-left transition ${
                           selected
-                            ? "border-terracotta bg-terracotta/5 ring-1 ring-terracotta"
-                            : "border-sand-300 bg-white hover:border-brass"
+                            ? "border-terracotta bg-terracotta/[0.04] ring-2 ring-terracotta/30"
+                            : "border-sand-300 bg-white hover:border-brass hover:shadow-card"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="font-serif text-lg text-ink">
-                            {labelFor(option, locale)}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-serif text-xl text-ink">{optionLabel(option)}</h4>
+                              {option.key === "full_riad" && (
+                                <span className="rounded-full bg-brass/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass">
+                                  {fr ? "Exclusif" : "Exclusive"}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-sm text-muted">{fr ? option.descriptionFr : option.descriptionEn}</p>
+                            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                              <span>🛏 {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}</span>
+                              <span>👤 {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}</span>
+                              <span>🌙 {nights} {nights > 1 ? dict.common.nights : dict.common.night}</span>
+                            </div>
+                          </div>
+                          <div className="shrink-0 text-right">
+                            <p className="font-serif text-2xl text-terracotta">{formatMAD(option.pricePerNight, locale)}</p>
+                            <p className="text-[11px] text-muted">/ {dict.common.night}</p>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between border-t border-sand-200 pt-3">
+                          <span className="text-sm text-muted">
+                            {dict.common.estimatedTotal}: <span className="font-semibold text-ink">{formatMAD(option.estimatedTotal, locale)}</span>
                           </span>
-                          <span className="text-right text-sm font-medium text-terracotta">
-                            {formatMAD(option.estimatedTotal, locale)}
+                          <span className={`rounded-full px-4 py-1.5 text-sm font-medium ${selected ? "bg-terracotta text-white" : "bg-sand-200 text-ink"}`}>
+                            {selected ? `✓ ${t.selected}` : t.selectOption}
                           </span>
                         </div>
-                        <p className="text-sm text-muted">
-                          {locale === "fr"
-                            ? option.descriptionFr
-                            : option.descriptionEn}
-                        </p>
-                        <span className="mt-1 text-xs text-muted">
-                          {option.roomsRequired}{" "}
-                          {option.roomsRequired > 1
-                            ? locale === "fr"
-                              ? "chambres"
-                              : "rooms"
-                            : locale === "fr"
-                              ? "chambre"
-                              : "room"}{" "}
-                          · {option.maxGuests} {dict.common.guests} max ·{" "}
-                          {selected ? (
-                            <span className="font-medium text-terracotta">
-                              {t.selected}
-                            </span>
-                          ) : (
-                            t.selectOption
-                          )}
-                        </span>
                       </button>
                     );
                   })}
-                  <p className="rounded-lg bg-sand px-4 py-3 text-xs text-muted">
-                    {dict.common.estimatedTotal}. {dict.common.finalConfirmation}
-                  </p>
+                  <ul className="flex flex-wrap gap-x-5 gap-y-1 rounded-lg bg-sand px-4 py-3 text-xs text-muted">
+                    {includedFeatures.map((f) => <li key={f} className="flex items-center gap-1.5">✓ {f}</li>)}
+                  </ul>
                 </div>
               )}
               <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(1)} className="btn-outline">
-                  {t.back}
-                </button>
+                <button type="button" onClick={() => setStep(1)} className="btn-outline">{t.back}</button>
                 {availability?.isAvailable && (
-                  <button
-                    type="button"
-                    disabled={!optionKey}
-                    onClick={() => setStep(3)}
-                    className="btn-primary"
-                  >
-                    {t.continue}
-                  </button>
+                  <button type="button" disabled={!optionKey} onClick={() => setStep(3)} className="btn-primary">{t.continue}</button>
                 )}
               </div>
             </div>
@@ -371,232 +298,143 @@ export function BookingFlow({
                 {extras.map((extra) => {
                   const active = !!selectedExtras[extra.id];
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={extra.id}
-                      className={`rounded-2xl border p-4 transition ${
-                        active
-                          ? "border-terracotta bg-terracotta/5"
-                          : "border-sand-300 bg-white"
+                      onClick={() => toggleExtra(extra.id)}
+                      className={`rounded-2xl border p-4 text-left transition ${
+                        active ? "border-terracotta bg-terracotta/[0.04] ring-1 ring-terracotta/30" : "border-sand-300 bg-white hover:border-brass"
                       }`}
                     >
-                      <label className="flex cursor-pointer items-start gap-3">
-                        <input
-                          type="checkbox"
-                          checked={active}
-                          onChange={() => toggleExtra(extra.id)}
-                          className="mt-1 h-4 w-4 accent-terracotta"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-medium text-ink">{extra.name}</span>
-                            <span className="text-sm text-brass">
-                              {extra.price > 0
-                                ? formatMAD(extra.price, locale)
-                                : locale === "fr"
-                                  ? "Inclus"
-                                  : "Included"}
-                            </span>
-                          </div>
-                          <p className="mt-0.5 text-xs text-muted">
-                            {extra.description}
-                          </p>
-                          {extra.price > 0 && (
-                            <span className="text-[11px] text-muted">
-                              {priceTypeLabel(extra.priceType, locale)}
-                            </span>
-                          )}
-                        </div>
-                      </label>
-                      {active && extra.priceType === "per_booking" && extra.price > 0 && (
-                        <div className="mt-3 flex items-center gap-2 pl-7">
-                          <span className="text-xs text-muted">Qté</span>
-                          <input
-                            type="number"
-                            min={1}
-                            max={20}
-                            value={selectedExtras[extra.id]}
-                            onChange={(e) =>
-                              setExtraQty(extra.id, Number(e.target.value))
-                            }
-                            className="w-16 rounded-lg border border-sand-300 px-2 py-1 text-sm"
-                          />
-                        </div>
-                      )}
-                    </div>
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-medium text-ink">{extra.name}</span>
+                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs ${active ? "bg-terracotta text-white" : "border border-sand-300 text-transparent"}`}>✓</span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted">{extra.description}</p>
+                      <p className="mt-2 text-sm font-medium text-brass">
+                        {extra.price > 0 ? formatMAD(extra.price, locale) : (fr ? "Inclus" : "Included")}
+                        {extra.price > 0 && <span className="ml-1 text-[11px] font-normal text-muted">{priceTypeLabel(extra.priceType, locale)}</span>}
+                      </p>
+                    </button>
                   );
                 })}
               </div>
               <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(2)} className="btn-outline">
-                  {t.back}
-                </button>
-                <button type="button" onClick={() => setStep(4)} className="btn-primary">
-                  {t.continue}
-                </button>
+                <button type="button" onClick={() => setStep(2)} className="btn-outline">{t.back}</button>
+                <button type="button" onClick={() => setStep(4)} className="btn-primary">{t.continue}</button>
               </div>
             </div>
           )}
 
-          {/* STEP 4 — Guest details */}
+          {/* STEP 4 — Details */}
           {step === 4 && (
             <form onSubmit={onSubmit} className="space-y-5">
               <h3 className="font-serif text-2xl text-ink">{t.detailsTitle}</h3>
-              {/* honeypot */}
-              <input
-                type="text"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                tabIndex={-1}
-                autoComplete="off"
-                className="hidden"
-                aria-hidden
-              />
+              <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
               <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="label">{t.fullName}</label>
-                  <input
-                    required
-                    value={guestName}
-                    onChange={(e) => setGuestName(e.target.value)}
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label className="label">{t.email}</label>
-                  <input
-                    type="email"
-                    required
-                    value={guestEmail}
-                    onChange={(e) => setGuestEmail(e.target.value)}
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label className="label">{t.phone}</label>
-                  <input
-                    required
-                    value={guestPhone}
-                    onChange={(e) => setGuestPhone(e.target.value)}
-                    placeholder="+212…"
-                    className="input"
-                  />
-                </div>
-                <div>
-                  <label className="label">{t.country}</label>
-                  <input
-                    value={guestCountry}
-                    onChange={(e) => setGuestCountry(e.target.value)}
-                    className="input"
-                  />
-                </div>
+                <Field label={t.fullName} required value={guestName} onChange={setGuestName} />
+                <Field label={t.email} type="email" required value={guestEmail} onChange={setGuestEmail} />
+                <Field label={t.phone} required value={guestPhone} onChange={setGuestPhone} placeholder="+212…" />
+                <Field label={t.country} value={guestCountry} onChange={setGuestCountry} />
               </div>
               <div>
                 <label className="label">{t.specialRequests}</label>
-                <textarea
-                  rows={3}
-                  value={specialRequests}
-                  onChange={(e) => setSpecialRequests(e.target.value)}
-                  className="input"
-                />
+                <textarea rows={3} value={specialRequests} onChange={(e) => setSpecialRequests(e.target.value)} className="input" />
               </div>
-
-              <SummaryBlock
-                t={t}
-                dict={dict}
-                locale={locale}
-                checkIn={checkIn}
-                checkOut={checkOut}
-                guests={guests}
-                nights={nights}
-                optionLabel={selectedOption ? labelFor(selectedOption, locale) : null}
-                extras={extras}
-                selectedExtras={selectedExtras}
-                total={grandTotal}
-              />
-
-              {error && <p className="text-sm text-terracotta">{error}</p>}
+              {error && <p className="rounded-lg bg-terracotta/5 px-3 py-2 text-sm text-terracotta">{error}</p>}
               <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(3)} className="btn-outline">
-                  {t.back}
-                </button>
-                <button type="submit" disabled={submitting} className="btn-primary">
-                  {submitting ? t.submitting : t.submit}
-                </button>
+                <button type="button" onClick={() => setStep(3)} className="btn-outline">{t.back}</button>
+                <button type="submit" disabled={submitting} className="btn-primary">{submitting ? t.submitting : t.submit}</button>
               </div>
             </form>
           )}
         </div>
       </div>
+
+      {/* Sticky summary */}
+      {showSummary && (
+        <aside className="lg:sticky lg:top-20">
+          <Summary
+            fr={fr} dict={dict} locale={locale}
+            checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
+            optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+            chosenExtras={chosenExtras} selectedExtras={selectedExtras} total={grandTotal}
+          />
+        </aside>
+      )}
     </div>
   );
 }
 
-function labelFor(option: StayOption, locale: Locale): string {
-  return locale === "fr" ? option.labelFr : option.labelEn;
+// ---------- Small pieces ----------
+
+function DatePill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-sand-300 bg-white px-3 py-2">
+      <p className="text-[10px] uppercase tracking-wide text-muted">{label}</p>
+      <p className="text-sm font-medium text-ink">{value}</p>
+    </div>
+  );
 }
 
-function SummaryBlock({
-  t,
-  dict,
-  locale,
-  checkIn,
-  checkOut,
-  guests,
-  nights,
-  optionLabel,
-  extras,
-  selectedExtras,
-  total,
-  compact,
-}: {
-  t: Dictionary["stay"];
-  dict: Dictionary;
-  locale: Locale;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  nights: number;
-  optionLabel: string | null;
-  extras: ClientExtra[];
-  selectedExtras: Record<string, number>;
-  total: number;
-  compact?: boolean;
-}) {
-  const chosen = extras.filter((e) => selectedExtras[e.id]);
+function GuestStepper({ label, value, onChange }: { label: string; value: number; onChange: (n: number) => void }) {
   return (
-    <div className={`rounded-2xl bg-sand p-5 ${compact ? "mt-6 text-left" : ""}`}>
+    <div>
+      <p className="text-[10px] uppercase tracking-wide text-muted">{label}</p>
+      <div className="mt-1 flex items-center gap-1 rounded-xl border border-sand-300 bg-white p-1">
+        <button type="button" onClick={() => onChange(Math.max(1, value - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-terracotta hover:bg-sand disabled:opacity-30" disabled={value <= 1}>−</button>
+        <span className="w-8 text-center text-sm font-semibold">{value}</span>
+        <button type="button" onClick={() => onChange(Math.min(20, value + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-terracotta hover:bg-sand disabled:opacity-30" disabled={value >= 20}>+</button>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, type = "text", required, placeholder }: {
+  label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string;
+}) {
+  return (
+    <div>
+      <label className="label">{label}{required && <span className="text-terracotta"> *</span>}</label>
+      <input type={type} required={required} value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} className="input" />
+    </div>
+  );
+}
+
+function Summary({
+  fr, dict, locale, checkIn, checkOut, guests, nights, optionLabel, chosenExtras, selectedExtras, total, flat,
+}: {
+  fr: boolean; dict: Dictionary; locale: Locale;
+  checkIn: string; checkOut: string; guests: number; nights: number;
+  optionLabel: string | null;
+  chosenExtras: ClientExtra[]; selectedExtras: Record<string, number>;
+  total: number; flat?: boolean;
+}) {
+  const t = dict.stay;
+  const a = parseDateOnly(checkIn);
+  const b = parseDateOnly(checkOut);
+  return (
+    <div className={flat ? "mt-6 rounded-2xl bg-sand p-5 text-left" : "card p-5"}>
       <h4 className="font-serif text-lg text-ink">{t.summary}</h4>
-      <dl className="mt-3 space-y-1.5 text-sm">
-        <Row label={t.checkIn} value={checkIn} />
-        <Row label={t.checkOut} value={checkOut} />
-        <Row
-          label={t.guests}
-          value={`${guests} · ${nights} ${
-            nights > 1 ? dict.common.nights : dict.common.night
-          }`}
-        />
-        {optionLabel && <Row label="Formule" value={optionLabel} />}
-        {chosen.length > 0 && (
-          <div className="pt-1">
-            <dt className="text-muted">Extras</dt>
-            <ul className="mt-1 space-y-0.5">
-              {chosen.map((e) => (
-                <li key={e.id} className="flex justify-between">
-                  <span className="text-ink">
-                    {e.name}
-                    {selectedExtras[e.id] > 1 ? ` ×${selectedExtras[e.id]}` : ""}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      <dl className="mt-3 space-y-2 text-sm">
+        <Row label={t.checkIn} value={a ? formatDateHuman(a, locale) : "—"} />
+        <Row label={t.checkOut} value={b ? formatDateHuman(b, locale) : "—"} />
+        <Row label={t.guests} value={`${guests} · ${nights} ${nights > 1 ? dict.common.nights : dict.common.night}`} />
+        {optionLabel && <Row label={fr ? "Formule" : "Option"} value={optionLabel} />}
       </dl>
+      {chosenExtras.length > 0 && (
+        <div className="mt-3 border-t border-sand-200 pt-3">
+          <p className="text-xs uppercase tracking-wide text-muted">Extras</p>
+          <ul className="mt-1 space-y-0.5 text-sm text-ink">
+            {chosenExtras.map((e) => (
+              <li key={e.id}>{e.name}{selectedExtras[e.id] > 1 ? ` ×${selectedExtras[e.id]}` : ""}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="mt-4 flex items-center justify-between border-t border-sand-300 pt-3">
         <span className="text-sm text-muted">{dict.common.estimatedTotal}</span>
-        <span className="font-serif text-xl text-terracotta">
-          {formatMAD(total, locale)}
-        </span>
+        <span className="font-serif text-2xl text-terracotta">{formatMAD(total, locale)}</span>
       </div>
       <p className="mt-2 text-xs text-muted">{dict.common.finalConfirmation}</p>
     </div>

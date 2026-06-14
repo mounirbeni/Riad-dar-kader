@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { checkAvailability } from "@/lib/availability";
+import { checkAvailability, getDailyAvailability } from "@/lib/availability";
 import { availabilitySchema, createBookingSchema } from "@/lib/validation";
 import { rateLimit, sweep } from "@/lib/rate-limit";
 import { generateReference } from "@/lib/reference";
@@ -14,7 +14,7 @@ import {
   ownerNewBooking,
   type EmailBookingData,
 } from "@/lib/email/templates";
-import type { AvailabilityResult } from "@/lib/availability";
+import type { AvailabilityResult, DayAvailability } from "@/lib/availability";
 
 async function clientIp(): Promise<string> {
   const h = await headers();
@@ -26,6 +26,18 @@ async function clientIp(): Promise<string> {
 export type AvailabilityActionResult =
   | { ok: true; result: AvailabilityResult }
   | { ok: false; error: string };
+
+/** Calendar availability for the date-range picker (Step 1). */
+export async function calendarAvailability(
+  fromStr: string,
+  days = 75
+): Promise<DayAvailability[]> {
+  sweep();
+  const ip = await clientIp();
+  const limited = rateLimit(`calendar:${ip}`, 60, 60_000);
+  if (!limited.success) return [];
+  return getDailyAvailability(fromStr, days);
+}
 
 /** Public availability search (Step 2 of booking flow). */
 export async function searchAvailability(input: {
