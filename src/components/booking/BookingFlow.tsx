@@ -99,10 +99,9 @@ export function BookingFlow({
   const grandTotal = roomsTotal + extrasTotal;
   const chosenExtras = extras.filter((e) => selectedExtras[e.id]);
 
-  function toggleRoom(id: string) {
-    setSelectedRoomIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+  function selectRoom(id: string) {
+    // Single-room selection — choosing a room replaces any previous choice.
+    setSelectedRoomIds((prev) => (prev.includes(id) ? [] : [id]));
   }
 
   const errMsg = (code: string) =>
@@ -409,15 +408,19 @@ export function BookingFlow({
                           {availability.availableRoomsDetail.map((room, idx) => {
                             const selected = selectedRoomIds.includes(room.id);
                             const photo = room.photos[0];
+                            const fits = room.capacity >= guests;
                             return (
                               <button
                                 type="button"
                                 key={room.id}
-                                onClick={() => toggleRoom(room.id)}
+                                onClick={() => selectRoom(room.id)}
+                                disabled={!fits}
                                 className={`group block w-full overflow-hidden rounded-2xl border-2 text-left transition-all duration-200 ${
-                                  selected
-                                    ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
-                                    : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
+                                  !fits
+                                    ? "cursor-not-allowed border-sand-200 bg-sand/40 opacity-60"
+                                    : selected
+                                      ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
+                                      : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
                                 }`}
                               >
                                 <div className="flex items-stretch gap-0">
@@ -474,6 +477,13 @@ export function BookingFlow({
                                           {nights} {nights > 1 ? dict.common.nights : dict.common.night}
                                         </span>
                                       </div>
+                                      {!fits && (
+                                        <p className="mt-1.5 text-xs font-medium text-amber-700">
+                                          {fr
+                                            ? `Ne convient pas pour ${guests} voyageurs`
+                                            : `Not suitable for ${guests} guests`}
+                                        </p>
+                                      )}
                                       <p className="mt-2 sm:hidden">
                                         <span className="font-serif text-xl font-semibold text-terracotta">
                                           {formatEUR(room.basePrice, locale)}
@@ -489,15 +499,17 @@ export function BookingFlow({
                                       <p className="text-[11px] text-muted">/ {dict.common.night}</p>
                                     </div>
 
-                                    {/* Check toggle */}
+                                    {/* Radio selector (single choice) */}
                                     <span
-                                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
                                         selected
-                                          ? "border-terracotta bg-terracotta text-white"
-                                          : "border-sand-300 bg-white text-transparent"
+                                          ? "border-terracotta"
+                                          : "border-sand-300"
                                       }`}
                                     >
-                                      <IconCheck size={14} />
+                                      {selected && (
+                                        <span className="h-3 w-3 rounded-full bg-terracotta" />
+                                      )}
                                     </span>
                                   </div>
                                 </div>
@@ -506,13 +518,15 @@ export function BookingFlow({
                           })}
                         </div>
 
-                        {/* Capacity hint when more guests than one room holds */}
-                        {selectedRooms.length > 0 && selectedCapacity < guests && (
+                        {/* No single room can host this many guests */}
+                        {availability.availableRoomsDetail.every(
+                          (r) => r.capacity < guests
+                        ) && (
                           <p className="mt-3 flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
                             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">!</span>
                             {fr
-                              ? `Capacité sélectionnée ${selectedCapacity}/${guests}. Ajoutez une chambre.`
-                              : `Selected capacity ${selectedCapacity}/${guests}. Add another room.`}
+                              ? `Aucune chambre ne peut accueillir ${guests} voyageurs. Réduisez le nombre ou contactez-nous.`
+                              : `No single room can host ${guests} guests. Reduce the count or contact us.`}
                           </p>
                         )}
                       </div>

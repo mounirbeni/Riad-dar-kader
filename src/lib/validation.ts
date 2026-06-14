@@ -19,7 +19,8 @@ export const createBookingSchema = z.object({
   checkIn: dateOnly,
   checkOut: dateOnly,
   guests: z.coerce.number().int().min(1).max(20),
-  roomIds: z.array(z.string().min(1)).min(1, "Select at least one room").max(20),
+  // Guests select exactly one room.
+  roomIds: z.array(z.string().min(1)).length(1, "Select one room"),
   guestName: z.string().trim().min(2, "Name is too short").max(120),
   guestEmail: z.string().trim().email("Invalid email").max(160),
   guestPhone: z
