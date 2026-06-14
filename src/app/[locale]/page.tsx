@@ -7,6 +7,7 @@ import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
+import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { formatMAD } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
@@ -159,20 +160,22 @@ export default async function HomePage({
 
       {/* Selling points */}
       <section className="container-page py-20">
-        <h2 className="text-center font-serif text-3xl text-ink sm:text-4xl">
-          {t.sellingTitle}
-        </h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <Reveal>
+          <h2 className="text-center font-serif text-3xl text-ink sm:text-4xl">
+            {t.sellingTitle}
+          </h2>
+        </Reveal>
+        <RevealGroup className="mt-12 grid gap-6 md:grid-cols-3">
           {t.selling.map((point, i) => (
-            <div key={i} className="card p-7">
+            <RevealItem key={i} className="card p-7">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
                 {SELLING_ICONS[i]}
               </div>
               <h3 className="mt-5 font-serif text-xl text-ink">{point.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{point.text}</p>
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </section>
 
       <div className="pattern-divider" />
@@ -191,47 +194,48 @@ export default async function HomePage({
             {t.roomsCta}
           </Link>
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {rooms.map((room, i) => (
-            <Link
-              key={room.id}
-              href={`${localePath(locale, "rooms")}/${room.slug}`}
-              className="card group overflow-hidden"
-            >
-              {room.photos.length > 0 ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={room.photos[0]}
-                  alt={room.name}
-                  className="aspect-[4/3] w-full object-cover transition group-hover:opacity-95"
-                />
-              ) : (
-                <PhotoSlot
-                  label={`${room.name} — ${locale === "fr" ? "photo principale" : "main photo"}`}
-                  code={`${room.slug}-1`}
-                  ratio="4:3"
-                  variant={i + 1}
-                  rounded={false}
-                  className="aspect-[4/3] w-full"
-                />
-              )}
-              <div className="p-5">
-                <h3 className="font-serif text-xl text-ink">{room.name}</h3>
-                <p className="mt-1 line-clamp-2 text-sm text-muted">
-                  {room.description}
-                </p>
-                <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-muted">
-                    {room.capacity} {dict.common.guests}
-                  </span>
-                  <span className="font-medium text-terracotta">
-                    {dict.common.from} {formatMAD(room.basePrice, locale)}
-                  </span>
+            <RevealItem key={room.id}>
+              <Link
+                href={`${localePath(locale, "rooms")}/${room.slug}`}
+                className="card group block h-full overflow-hidden transition-shadow hover:shadow-soft"
+              >
+                {room.photos.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={room.photos[0]}
+                    alt={room.name}
+                    className="aspect-[4/3] w-full object-cover transition group-hover:opacity-95"
+                  />
+                ) : (
+                  <PhotoSlot
+                    label={`${room.name} — ${locale === "fr" ? "photo principale" : "main photo"}`}
+                    code={`${room.slug}-1`}
+                    ratio="4:3"
+                    variant={i + 1}
+                    rounded={false}
+                    className="aspect-[4/3] w-full"
+                  />
+                )}
+                <div className="p-5">
+                  <h3 className="font-serif text-xl text-ink">{room.name}</h3>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted">
+                    {room.description}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between text-sm">
+                    <span className="text-muted">
+                      {room.capacity} {dict.common.guests}
+                    </span>
+                    <span className="font-medium text-terracotta">
+                      {dict.common.from} {formatMAD(room.basePrice, locale)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </section>
 
       {/* Extras preview */}
