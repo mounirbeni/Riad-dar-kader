@@ -1,12 +1,33 @@
 import { prisma } from "@/lib/prisma";
-import { eachNight, todayUTC } from "@/lib/dates";
+import { eachNight, todayUTC, toDateOnlyString } from "@/lib/dates";
+
+export type TodayArrival = {
+  id: string;
+  reference: string;
+  guestName: string;
+  guests: number;
+  status: string;
+  rooms: string[];
+};
+
+export type TodayDeparture = {
+  id: string;
+  reference: string;
+  guestName: string;
+  guests: number;
+};
 
 export type DashboardStats = {
   pending: number;
   confirmedUpcoming: number;
   bookingsThisMonth: number;
   estimatedRevenueMonth: number;
-  occupancyRate: number; // 0..100 for the current month
+  occupancyRate: number;
+  totalRooms: number;
+  occupiedRoomsToday: number;
+  availableRoomsToday: number;
+  todayArrivals: TodayArrival[];
+  todayDepartures: TodayDeparture[];
   upcomingArrivals: {
     id: string;
     reference: string;
@@ -20,12 +41,9 @@ export type DashboardStats = {
 
 export async function getDashboardStats(): Promise<DashboardStats> {
   const today = todayUTC();
-  const monthStart = new Date(
-    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1)
-  );
-  const monthEnd = new Date(
-    Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1)
-  );
+  const todayStr = toDateOnlyString(today);
+  const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+  const monthEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1));
   const daysInMonth = Math.round(
     (monthEnd.getTime() - monthStart.getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -37,6 +55,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     confirmedThisMonth,
     upcoming,
     confirmedUpcoming,
+    arrivalsToday,
+    departuresToday,
+    occupiedToday,
   ] = await Promise.all([
     prisma.booking.count({ where: { status: "pending" } }),
     prisma.room.count({ where: { isActive: true } }),
@@ -73,15 +94,42 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     prisma.booking.count({
       where: { status: "confirmed", checkIn: { gte: today } },
     }),
+    // Arrivals today = checkIn == today (pending OR confirmed)
+    prisma.booking.findMany({
+      where: {
+        status: { in: ["pending", "confirmed"] },
+        checkIn: today,
+      },
+      include: {
+        rooms: { include: { room: { select: { name: true } } } },
+      },
+      orderBy: { guestName: "asc" },
+    }),
+    // Departures today = checkOut == today, confirmed
+    prisma.booking.findMany({
+      where: {
+        status: { in: ["confirmed", "completed"] },
+        checkOut: today,
+      },
+      select: { id: true, reference: true, guestName: true, guests: true },
+      orderBy: { guestName: "asc" },
+    }),
+    // Occupied today = checkIn <= today < checkOut, confirmed
+    prisma.booking.findMany({
+      where: {
+        status: "confirmed",
+        checkIn: { lte: today },
+        checkOut: { gt: today },
+      },
+      include: { rooms: { select: { roomId: true } } },
+    }),
   ]);
 
-  // Estimated revenue for the month (confirmed bookings touching the month).
   const estimatedRevenueMonth = confirmedThisMonth.reduce(
     (sum, b) => sum + b.estimatedTotal,
     0
   );
 
-  // Occupancy = booked room-nights / available room-nights within the month.
   const capacityRoomNights = activeRooms * daysInMonth;
   let bookedRoomNights = 0;
   for (const b of confirmedThisMonth) {
@@ -95,12 +143,31 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       ? Math.min(100, Math.round((bookedRoomNights / capacityRoomNights) * 100))
       : 0;
 
+  // Count unique occupied rooms today
+  const occupiedRoomIds = new Set<string>();
+  for (const b of occupiedToday) {
+    for (const r of b.rooms) occupiedRoomIds.add(r.roomId);
+  }
+  const occupiedRoomsToday = occupiedRoomIds.size;
+
   return {
     pending,
     confirmedUpcoming,
     bookingsThisMonth,
     estimatedRevenueMonth,
     occupancyRate,
+    totalRooms: activeRooms,
+    occupiedRoomsToday,
+    availableRoomsToday: Math.max(0, activeRooms - occupiedRoomsToday),
+    todayArrivals: arrivalsToday.map((b) => ({
+      id: b.id,
+      reference: b.reference,
+      guestName: b.guestName,
+      guests: b.guests,
+      status: b.status,
+      rooms: b.rooms.map((r) => r.room.name),
+    })),
+    todayDepartures: departuresToday,
     upcomingArrivals: upcoming,
   };
 }
