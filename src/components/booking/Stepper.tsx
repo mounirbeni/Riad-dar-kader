@@ -1,4 +1,5 @@
 import type { Dictionary } from "@/i18n/dictionaries";
+import { IconCheck } from "@/components/Icons";
 
 export function Stepper({
   step,
@@ -31,7 +32,7 @@ export function Stepper({
                     : "bg-sand-300 text-muted"
               }`}
             >
-              {done ? "✓" : n}
+              {done ? <IconCheck size={13} /> : n}
             </span>
             <span
               className={`hidden sm:inline ${

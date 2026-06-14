@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -9,6 +10,14 @@ import { formatMAD } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { RIAD, siteUrl } from "@/lib/constants";
+import { IconStar, IconMapPin, IconShield } from "@/components/Icons";
+
+// Icons that correspond to the 3 selling points (atmosphere, location, direct booking)
+const SELLING_ICONS: ReactNode[] = [
+  <IconStar key="star" size={22} />,
+  <IconMapPin key="pin" size={22} />,
+  <IconShield key="shield" size={22} />,
+];
 
 // Rendered on-demand so the build doesn't require a live database and admin
 // content changes appear immediately.
@@ -145,7 +154,7 @@ export default async function HomePage({
           {t.selling.map((point, i) => (
             <div key={i} className="card p-7">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
-                <span className="font-serif text-xl">{i + 1}</span>
+                {SELLING_ICONS[i]}
               </div>
               <h3 className="mt-5 font-serif text-xl text-ink">{point.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{point.text}</p>

@@ -4,6 +4,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { Placeholder } from "@/components/Placeholder";
+import { IconWalk } from "@/components/Icons";
 
 export async function generateMetadata({
   params,
@@ -97,7 +98,10 @@ export default async function RiadPage({
                   key={w.place}
                   className="flex items-center justify-between border-b border-sand-200 pb-2 text-sm"
                 >
-                  <span className="text-ink">{w.place}</span>
+                  <span className="flex items-center gap-2 text-ink">
+                    <IconWalk size={14} className="shrink-0 text-muted" />
+                    {w.place}
+                  </span>
                   <span className="font-medium text-brass">{w.time}</span>
                 </li>
               ))}

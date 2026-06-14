@@ -14,6 +14,7 @@ import {
 } from "@/lib/dates";
 import { Stepper } from "./Stepper";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
+import { IconCheck, IconBed, IconUser, IconMoon } from "@/components/Icons";
 
 export type ClientExtra = {
   id: string;
@@ -150,7 +151,9 @@ export function BookingFlow({
       <div className="mt-10">
         <div className="card mx-auto max-w-xl overflow-hidden">
           <div className="bg-terracotta px-8 py-10 text-center text-white">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/15 text-3xl">✓</div>
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/15 text-white">
+              <IconCheck size={32} />
+            </div>
             <h2 className="mt-4 font-serif text-3xl">{t.confirmTitle}</h2>
             <p className="mx-auto mt-2 max-w-sm text-white/85">{t.confirmText}</p>
           </div>
@@ -252,9 +255,18 @@ export function BookingFlow({
                             </div>
                             <p className="mt-1 text-sm text-muted">{fr ? option.descriptionFr : option.descriptionEn}</p>
                             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                              <span>🛏 {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}</span>
-                              <span>👤 {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}</span>
-                              <span>🌙 {nights} {nights > 1 ? dict.common.nights : dict.common.night}</span>
+                              <span className="flex items-center gap-1">
+                                <IconBed size={13} />
+                                {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <IconUser size={13} />
+                                {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <IconMoon size={13} />
+                                {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+                              </span>
                             </div>
                           </div>
                           <div className="shrink-0 text-right">
@@ -266,15 +278,21 @@ export function BookingFlow({
                           <span className="text-sm text-muted">
                             {dict.common.estimatedTotal}: <span className="font-semibold text-ink">{formatMAD(option.estimatedTotal, locale)}</span>
                           </span>
-                          <span className={`rounded-full px-4 py-1.5 text-sm font-medium ${selected ? "bg-terracotta text-white" : "bg-sand-200 text-ink"}`}>
-                            {selected ? `✓ ${t.selected}` : t.selectOption}
+                          <span className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium ${selected ? "bg-terracotta text-white" : "bg-sand-200 text-ink"}`}>
+                            {selected && <IconCheck size={13} />}
+                            {selected ? t.selected : t.selectOption}
                           </span>
                         </div>
                       </button>
                     );
                   })}
                   <ul className="flex flex-wrap gap-x-5 gap-y-1 rounded-lg bg-sand px-4 py-3 text-xs text-muted">
-                    {includedFeatures.map((f) => <li key={f} className="flex items-center gap-1.5">✓ {f}</li>)}
+                    {includedFeatures.map((f) => (
+                      <li key={f} className="flex items-center gap-1.5">
+                        <IconCheck size={12} className="text-brass shrink-0" />
+                        {f}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               )}
@@ -308,7 +326,9 @@ export function BookingFlow({
                     >
                       <div className="flex items-start justify-between gap-2">
                         <span className="font-medium text-ink">{extra.name}</span>
-                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs ${active ? "bg-terracotta text-white" : "border border-sand-300 text-transparent"}`}>✓</span>
+                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${active ? "bg-terracotta text-white" : "border border-sand-300 text-transparent"}`}>
+                          {active && <IconCheck size={11} />}
+                        </span>
                       </div>
                       <p className="mt-1 text-xs text-muted">{extra.description}</p>
                       <p className="mt-2 text-sm font-medium text-brass">

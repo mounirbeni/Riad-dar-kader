@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendContactMessage } from "@/app/actions/contact";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { IconCheck } from "@/components/Icons";
 
 export function ContactForm({ dict }: { dict: Dictionary }) {
   const t = dict.contact;
@@ -31,8 +32,8 @@ export function ContactForm({ dict }: { dict: Dictionary }) {
   if (status === "sent") {
     return (
       <div className="card p-8 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-terracotta/10 text-2xl">
-          ✓
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
+          <IconCheck size={28} />
         </div>
         <p className="mt-4 font-serif text-xl text-ink">
           {dict.stay.confirmTitle.replace("séjour", "message")}

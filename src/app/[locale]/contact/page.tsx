@@ -4,6 +4,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { ContactForm } from "@/components/ContactForm";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { contactEmail } from "@/lib/constants";
+import { IconMail, IconMapPin } from "@/components/Icons";
 
 export async function generateMetadata({
   params,
@@ -62,7 +63,7 @@ export default async function ContactPage({
             className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-card transition hover:shadow-soft"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 text-terracotta">
-              ✉
+              <IconMail size={22} />
             </span>
             <div>
               <h2 className="font-serif text-lg text-ink">{t.emailTitle}</h2>
@@ -72,7 +73,7 @@ export default async function ContactPage({
 
           <div className="flex items-center gap-4 rounded-2xl bg-white p-6 shadow-card">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brass/15 text-brass">
-              ⌖
+              <IconMapPin size={22} />
             </span>
             <div>
               <h2 className="font-serif text-lg text-ink">{t.locationTitle}</h2>

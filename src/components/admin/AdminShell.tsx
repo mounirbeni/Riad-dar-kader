@@ -1,24 +1,35 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { logoutAction } from "@/app/actions/admin";
+import {
+  IconLayoutDashboard,
+  IconInbox,
+  IconCalendar,
+  IconBed,
+  IconGift,
+  IconSettings,
+} from "@/components/Icons";
 
-const NAV = [
-  { href: "/admin", label: "Tableau de bord", icon: "▦", exact: true },
-  { href: "/admin/bookings", label: "Demandes & réservations", icon: "✉" },
-  { href: "/admin/calendar", label: "Dates bloquées", icon: "▤" },
-  { href: "/admin/rooms", label: "Chambres", icon: "▭" },
-  { href: "/admin/extras", label: "Extras", icon: "✦" },
-  { href: "/admin/settings", label: "Paramètres", icon: "⚙" },
+type NavItem = { href: string; label: string; icon: ReactNode; exact?: boolean };
+
+const NAV: NavItem[] = [
+  { href: "/admin", label: "Tableau de bord", icon: <IconLayoutDashboard size={16} />, exact: true },
+  { href: "/admin/bookings", label: "Demandes & réservations", icon: <IconInbox size={16} /> },
+  { href: "/admin/calendar", label: "Dates bloquées", icon: <IconCalendar size={16} /> },
+  { href: "/admin/rooms", label: "Chambres", icon: <IconBed size={16} /> },
+  { href: "/admin/extras", label: "Extras", icon: <IconGift size={16} /> },
+  { href: "/admin/settings", label: "Paramètres", icon: <IconSettings size={16} /> },
 ];
 
 export function AdminShell({
   children,
   email,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   email: string;
 }) {
   const pathname = usePathname();
@@ -53,7 +64,9 @@ export function AdminShell({
                     : "text-ink/70 hover:bg-sand"
                 }`}
               >
-                <span className="w-4 text-center">{item.icon}</span>
+                <span className="flex w-4 shrink-0 items-center justify-center">
+                  {item.icon}
+                </span>
                 {item.label}
               </Link>
             );

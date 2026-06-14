@@ -1,38 +1,64 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { getDashboardStats } from "@/lib/stats";
 import { formatMAD } from "@/lib/money";
 import { formatDateHuman } from "@/lib/dates";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import {
+  IconBell,
+  IconCheckCircle,
+  IconCalendar,
+  IconBarChart,
+  IconTrendingUp,
+  IconArrowRight,
+} from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
+
+type StatCard = {
+  label: string;
+  value: string | number;
+  href: string;
+  accent: string;
+  bg: string;
+  icon: ReactNode;
+};
 
 export default async function AdminDashboard() {
   const stats = await getDashboardStats();
 
-  const cards = [
+  const cards: StatCard[] = [
     {
       label: "Nouvelles demandes",
       value: stats.pending,
       href: "/admin/bookings?status=pending",
       accent: "text-terracotta",
+      bg: "bg-terracotta/10 text-terracotta",
+      icon: <IconBell size={18} />,
     },
     {
       label: "Réservations confirmées à venir",
       value: stats.confirmedUpcoming,
       href: "/admin/bookings?status=confirmed",
       accent: "text-brass",
+      bg: "bg-brass/10 text-brass",
+      icon: <IconCheckCircle size={18} />,
     },
     {
       label: "Demandes ce mois-ci",
       value: stats.bookingsThisMonth,
       href: "/admin/bookings",
       accent: "text-ink",
+      bg: "bg-sand-200 text-ink",
+      icon: <IconCalendar size={18} />,
     },
     {
       label: "Taux d'occupation (ce mois)",
       value: `${stats.occupancyRate}%`,
       href: "/admin/calendar",
       accent: "text-ink",
+      bg: "bg-sand-200 text-ink",
+      icon: <IconBarChart size={18} />,
     },
   ];
 
@@ -50,20 +76,33 @@ export default async function AdminDashboard() {
           <Link
             key={c.label}
             href={c.href}
-            className="card p-5 transition hover:shadow-soft"
+            className="card group p-5 transition hover:shadow-soft"
           >
-            <p className="text-sm text-muted">{c.label}</p>
-            <p className={`mt-2 font-serif text-3xl ${c.accent}`}>{c.value}</p>
+            <div className="flex items-start justify-between">
+              <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${c.bg}`}>
+                {c.icon}
+              </span>
+              <IconArrowRight size={14} className="text-muted opacity-0 transition group-hover:opacity-100" />
+            </div>
+            <p className={`mt-3 font-serif text-3xl ${c.accent}`}>{c.value}</p>
+            <p className="mt-1 text-sm text-muted">{c.label}</p>
           </Link>
         ))}
       </div>
 
       <div className="card p-5">
-        <p className="text-sm text-muted">Revenu estimé (réservations confirmées ce mois)</p>
-        <p className="mt-1 font-serif text-3xl text-terracotta">
-          {formatMAD(stats.estimatedRevenueMonth, "fr")}
-        </p>
-        <p className="mt-1 text-xs text-muted">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta">
+            <IconTrendingUp size={18} />
+          </span>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-muted">Revenu estimé · ce mois</p>
+            <p className="font-serif text-2xl text-terracotta">
+              {formatMAD(stats.estimatedRevenueMonth, "fr")}
+            </p>
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-muted">
           Estimation indicative, hors extras non confirmés.
         </p>
       </div>
@@ -88,7 +127,7 @@ export default async function AdminDashboard() {
                     {b.guestName}
                   </Link>
                   <p className="text-xs text-muted">
-                    {formatDateHuman(b.checkIn, "fr")} → {formatDateHuman(b.checkOut, "fr")} ·{" "}
+                    {formatDateHuman(b.checkIn, "fr")} — {formatDateHuman(b.checkOut, "fr")} ·{" "}
                     {b.guests} pers. · {b.reference}
                   </p>
                 </div>
