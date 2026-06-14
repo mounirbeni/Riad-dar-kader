@@ -9,11 +9,12 @@ import { formatEUR } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
 import { nightsBetween, parseDateOnly, formatDateHuman } from "@/lib/dates";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
+import { Placeholder } from "@/components/Placeholder";
 import {
   IconCheck,
-  IconBed,
   IconUser,
   IconMoon,
+  IconCamera,
   IconArrowLeft,
   IconArrowRight,
 } from "@/components/Icons";
@@ -405,67 +406,100 @@ export function BookingFlow({
                           {fr ? "Sélectionnez votre chambre" : "Select your room"}
                         </p>
                         <div className="space-y-3">
-                          {availability.availableRoomsDetail.map((room) => {
+                          {availability.availableRoomsDetail.map((room, idx) => {
                             const selected = selectedRoomIds.includes(room.id);
+                            const photo = room.photos[0];
                             return (
                               <button
                                 type="button"
                                 key={room.id}
                                 onClick={() => toggleRoom(room.id)}
-                                className={`group block w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
+                                className={`group block w-full overflow-hidden rounded-2xl border-2 text-left transition-all duration-200 ${
                                   selected
                                     ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
                                     : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
                                 }`}
                               >
-                                <div className="flex items-center gap-4">
-                                  <span
-                                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors ${
-                                      selected
-                                        ? "bg-terracotta text-white"
-                                        : "bg-terracotta/10 text-terracotta group-hover:bg-terracotta/15"
-                                    }`}
-                                  >
-                                    <IconBed size={22} />
-                                  </span>
-
-                                  <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                      <h4 className="font-serif text-lg text-ink">{room.name}</h4>
-                                      <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
-                                        <IconCheck size={10} />
-                                        {fr ? "Disponible" : "Available"}
+                                <div className="flex items-stretch gap-0">
+                                  {/* Thumbnail */}
+                                  <div className="relative w-28 shrink-0 overflow-hidden sm:w-36">
+                                    {photo ? (
+                                      // eslint-disable-next-line @next/next/no-img-element
+                                      <img
+                                        src={photo}
+                                        alt={room.name}
+                                        className="h-full w-full object-cover"
+                                      />
+                                    ) : (
+                                      <Placeholder
+                                        variant={idx + 1}
+                                        rounded={false}
+                                        className="h-full min-h-[7rem] w-full"
+                                      />
+                                    )}
+                                    {/* Placeholder marker so the owner knows to add a photo */}
+                                    {!photo && (
+                                      <span className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-md bg-black/45 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-white backdrop-blur-sm">
+                                        <IconCamera size={9} />
+                                        {fr ? "Photo à venir" : "Photo soon"}
                                       </span>
-                                    </div>
-                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                                      <span className="flex items-center gap-1">
-                                        <IconUser size={12} />
-                                        {fr ? "jusqu'à" : "up to"} {room.capacity} {dict.common.guests}
-                                      </span>
-                                      <span className="flex items-center gap-1">
-                                        <IconMoon size={12} />
-                                        {nights} {nights > 1 ? dict.common.nights : dict.common.night}
-                                      </span>
-                                    </div>
+                                    )}
+                                    {/* Selected overlay */}
+                                    {selected && (
+                                      <div className="absolute inset-0 flex items-center justify-center bg-terracotta/45">
+                                        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-terracotta shadow">
+                                          <IconCheck size={18} />
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
 
-                                  <div className="shrink-0 text-right">
-                                    <p className="font-serif text-2xl font-semibold text-terracotta">
-                                      {formatEUR(room.basePrice, locale)}
-                                    </p>
-                                    <p className="text-[11px] text-muted">/ {dict.common.night}</p>
-                                  </div>
+                                  {/* Info */}
+                                  <div className="flex min-w-0 flex-1 items-center gap-3 p-4">
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex flex-wrap items-center gap-2">
+                                        <h4 className="font-serif text-lg text-ink">{room.name}</h4>
+                                        <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                          <IconCheck size={10} />
+                                          {fr ? "Disponible" : "Available"}
+                                        </span>
+                                      </div>
+                                      <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                                        <span className="flex items-center gap-1">
+                                          <IconUser size={12} />
+                                          {fr ? "jusqu'à" : "up to"} {room.capacity} {dict.common.guests}
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                          <IconMoon size={12} />
+                                          {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+                                        </span>
+                                      </div>
+                                      <p className="mt-2 sm:hidden">
+                                        <span className="font-serif text-xl font-semibold text-terracotta">
+                                          {formatEUR(room.basePrice, locale)}
+                                        </span>
+                                        <span className="text-[11px] text-muted"> / {dict.common.night}</span>
+                                      </p>
+                                    </div>
 
-                                  {/* Check toggle */}
-                                  <span
-                                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
-                                      selected
-                                        ? "border-terracotta bg-terracotta text-white"
-                                        : "border-sand-300 bg-white text-transparent"
-                                    }`}
-                                  >
-                                    <IconCheck size={14} />
-                                  </span>
+                                    <div className="hidden shrink-0 text-right sm:block">
+                                      <p className="font-serif text-2xl font-semibold text-terracotta">
+                                        {formatEUR(room.basePrice, locale)}
+                                      </p>
+                                      <p className="text-[11px] text-muted">/ {dict.common.night}</p>
+                                    </div>
+
+                                    {/* Check toggle */}
+                                    <span
+                                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                                        selected
+                                          ? "border-terracotta bg-terracotta text-white"
+                                          : "border-sand-300 bg-white text-transparent"
+                                      }`}
+                                    >
+                                      <IconCheck size={14} />
+                                    </span>
+                                  </div>
                                 </div>
                               </button>
                             );
