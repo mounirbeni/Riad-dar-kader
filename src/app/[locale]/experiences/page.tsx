@@ -4,7 +4,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
-import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { formatMAD } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 
@@ -53,8 +53,10 @@ export default async function ExperiencesPage({
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {extras.map((extra, i) => (
           <article key={extra.id} className="card overflow-hidden">
-            <Placeholder
+            <PhotoSlot
               label={locale === "fr" ? extra.nameFr : extra.name}
+              code={`E${i + 1}`}
+              ratio="16:10"
               variant={i}
               rounded={false}
               className="aspect-[16/10] w-full"

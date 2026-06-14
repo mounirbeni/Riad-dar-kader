@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 
 export async function generateMetadata({
   params,
@@ -72,9 +72,11 @@ export default async function GalleryPage({
 
       <div className="mt-10 columns-2 gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-4">
         {captions.map((caption, i) => (
-          <Placeholder
+          <PhotoSlot
             key={i}
             label={caption}
+            code={`G${i + 1}`}
+            ratio={i % 3 === 0 ? "3:4" : "1:1"}
             variant={i}
             className={i % 3 === 0 ? "aspect-[3/4]" : "aspect-square"}
           />

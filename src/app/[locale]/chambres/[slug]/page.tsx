@@ -7,6 +7,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { formatMAD } from "@/lib/money";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { siteUrl } from "@/lib/constants";
@@ -28,6 +29,9 @@ import {
 } from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
+
+// Recommended real photos per room: 1 main + 3 detail shots.
+const ROOM_PHOTO_TARGET = 4;
 
 type IconCmp = ComponentType<{ size?: number; className?: string }>;
 
@@ -126,7 +130,14 @@ export default async function RoomDetailPage({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={photos[0]} alt={room.name} className="h-[44vh] w-full object-cover" />
         ) : (
-          <Placeholder variant={room.sortOrder} rounded={false} className="h-[44vh] w-full" />
+          <PhotoSlot
+            label={`${room.name} — ${fr ? "photo principale" : "main photo"}`}
+            code={`${room.slug}-1`}
+            ratio="16:9"
+            variant={room.sortOrder}
+            rounded={false}
+            className="h-[44vh] w-full"
+          />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
         <div className="container-page absolute inset-0 flex flex-col justify-end pb-8 text-white">
@@ -188,8 +199,8 @@ export default async function RoomDetailPage({
             </div>
           )}
 
-          {/* Extra photos */}
-          {photos.length > 1 && (
+          {/* Extra photos — real ones if present, otherwise numbered slots */}
+          {photos.length > 1 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               {photos.slice(1).map((src, i) => (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -200,6 +211,29 @@ export default async function RoomDetailPage({
                   className="aspect-square w-full rounded-2xl object-cover"
                 />
               ))}
+            </div>
+          ) : (
+            <div>
+              <h2 className="font-serif text-2xl text-ink">
+                {fr ? "Photos de la chambre" : "Room photos"}
+              </h2>
+              <p className="mt-1 text-sm text-muted">
+                {fr
+                  ? `${ROOM_PHOTO_TARGET} photos recommandées pour cette chambre.`
+                  : `${ROOM_PHOTO_TARGET} photos recommended for this room.`}
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                {Array.from({ length: ROOM_PHOTO_TARGET - 1 }).map((_, i) => (
+                  <PhotoSlot
+                    key={i}
+                    label={fr ? `Détail ${i + 1}` : `Detail ${i + 1}`}
+                    code={`${room.slug}-${i + 2}`}
+                    ratio="1:1"
+                    variant={room.sortOrder + i + 1}
+                    className="aspect-square w-full"
+                  />
+                ))}
+              </div>
             </div>
           )}
         </div>

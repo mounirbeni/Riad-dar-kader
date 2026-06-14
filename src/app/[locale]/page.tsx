@@ -6,6 +6,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { formatMAD } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
@@ -89,6 +90,10 @@ export default async function HomePage({
           className="absolute inset-0 h-full w-full xl:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70 xl:hidden" />
+        {/* Photo-slot marker for the hero background (mobile/tablet) */}
+        <span className="absolute right-3 top-3 z-10 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-terracotta xl:hidden">
+          H1 · Photo — {locale === "fr" ? "Façade / Patio" : "Façade / Patio"}
+        </span>
 
         {/* Left pane — text */}
         <div className="relative xl:flex xl:w-[52%] xl:shrink-0 xl:flex-col xl:items-start xl:justify-center xl:bg-terracotta-dark">
@@ -134,7 +139,14 @@ export default async function HomePage({
 
         {/* Right pane — visual (xl+ only) */}
         <div className="relative hidden xl:block xl:flex-1">
-          <Placeholder variant={1} rounded={false} className="h-full w-full" />
+          <PhotoSlot
+            label={locale === "fr" ? "Ambiance du riad — patio / terrasse" : "Riad ambiance — patio / terrace"}
+            code="H2"
+            ratio="Portrait"
+            variant={1}
+            rounded={false}
+            className="h-full w-full"
+          />
           <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-terracotta-dark/25" />
           <div className="absolute bottom-8 left-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-black/30 px-5 py-2.5 text-sm text-white backdrop-blur-sm">
@@ -186,12 +198,23 @@ export default async function HomePage({
               href={`${localePath(locale, "rooms")}/${room.slug}`}
               className="card group overflow-hidden"
             >
-              <Placeholder
-                label={room.name}
-                variant={i + 1}
-                rounded={false}
-                className="aspect-[4/3] w-full transition group-hover:opacity-95"
-              />
+              {room.photos.length > 0 ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={room.photos[0]}
+                  alt={room.name}
+                  className="aspect-[4/3] w-full object-cover transition group-hover:opacity-95"
+                />
+              ) : (
+                <PhotoSlot
+                  label={`${room.name} — ${locale === "fr" ? "photo principale" : "main photo"}`}
+                  code={`${room.slug}-1`}
+                  ratio="4:3"
+                  variant={i + 1}
+                  rounded={false}
+                  className="aspect-[4/3] w-full"
+                />
+              )}
               <div className="p-5">
                 <h3 className="font-serif text-xl text-ink">{room.name}</h3>
                 <p className="mt-1 line-clamp-2 text-sm text-muted">

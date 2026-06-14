@@ -4,7 +4,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
-import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { formatMAD } from "@/lib/money";
 import { IconUser, IconArrowRight, IconEye } from "@/components/Icons";
 
@@ -59,12 +59,23 @@ export default async function RoomsPage({
           return (
             <article key={room.id} className="card group flex flex-col overflow-hidden">
               <Link href={href} className="relative block">
-                <Placeholder
-                  label={room.name}
-                  variant={i + 1}
-                  rounded={false}
-                  className="aspect-[4/3] w-full transition group-hover:opacity-95"
-                />
+                {room.photos.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={room.photos[0]}
+                    alt={room.name}
+                    className="aspect-[4/3] w-full object-cover transition group-hover:opacity-95"
+                  />
+                ) : (
+                  <PhotoSlot
+                    label={`${room.name} — ${locale === "fr" ? "photo principale" : "main photo"}`}
+                    code={`${room.slug}-1`}
+                    ratio="4:3"
+                    variant={i + 1}
+                    rounded={false}
+                    className="aspect-[4/3] w-full"
+                  />
+                )}
                 <span className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-terracotta backdrop-blur-sm">
                   {dict.common.from} {formatMAD(room.basePrice, locale)}
                 </span>

@@ -4,6 +4,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { IconWalk } from "@/components/Icons";
 
 export async function generateMetadata({
@@ -38,6 +39,9 @@ export default async function RiadPage({
       <section className="relative">
         <Placeholder variant={2} rounded={false} className="h-[42vh] w-full" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
+        <span className="absolute right-3 top-3 z-10 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-terracotta">
+          LR1 · Photo — {locale === "fr" ? "Ambiance du riad" : "Riad ambiance"}
+        </span>
         <div className="container-page absolute inset-0 flex flex-col justify-end pb-10 text-white">
           <p className="kicker text-brass-light">{t.kicker}</p>
           <h1 className="mt-2 font-serif text-5xl sm:text-6xl">{t.title}</h1>
@@ -53,7 +57,7 @@ export default async function RiadPage({
             </h2>
             <p className="mt-5 leading-relaxed text-muted">{t.story}</p>
           </div>
-          <Placeholder label={locale === "fr" ? "Le patio" : "The patio"} variant={3} className="aspect-[4/3]" />
+          <PhotoSlot label={locale === "fr" ? "Le patio" : "The patio"} code="LR2" ratio="4:3" variant={3} className="aspect-[4/3]" />
         </div>
       </section>
 
@@ -78,8 +82,10 @@ export default async function RiadPage({
       {/* Location */}
       <section className="container-page py-16">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-          <Placeholder
+          <PhotoSlot
             label={locale === "fr" ? "La Médina" : "The Medina"}
+            code="LR3"
+            ratio="4:3"
             variant={4}
             className="order-2 aspect-[4/3] lg:order-1"
           />
@@ -117,7 +123,14 @@ export default async function RiadPage({
           <p className="mt-2 text-sm text-muted">{dict.gallery.placeholderNote}</p>
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Placeholder key={i} variant={i} className="aspect-square" />
+              <PhotoSlot
+                key={i}
+                label={locale === "fr" ? "Photo galerie" : "Gallery photo"}
+                code={`G${i + 1}`}
+                ratio="1:1"
+                variant={i}
+                className="aspect-square"
+              />
             ))}
           </div>
         </div>
