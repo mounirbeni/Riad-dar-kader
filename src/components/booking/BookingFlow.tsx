@@ -400,7 +400,50 @@ export function BookingFlow({
                         </div>
                       )}
 
-                      <div className="space-y-3">
+                      {/* Available rooms grid — show every room that is free */}
+                      {availability.availableRoomsDetail.length > 0 && (
+                        <div>
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                            {fr ? "Nos chambres disponibles" : "Our available rooms"}
+                          </p>
+                          <div className="grid gap-2.5 sm:grid-cols-2">
+                            {availability.availableRoomsDetail.map((room) => (
+                              <div
+                                key={room.id}
+                                className="flex items-center gap-3 rounded-xl border border-sand-200 bg-white px-3.5 py-3"
+                              >
+                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-terracotta/10 text-terracotta">
+                                  <IconBed size={17} />
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-sm font-medium text-ink">{room.name}</p>
+                                  <p className="flex items-center gap-1 text-xs text-muted">
+                                    <IconUser size={11} />
+                                    {fr ? "jusqu'à" : "up to"} {room.capacity}
+                                  </p>
+                                </div>
+                                <div className="shrink-0 text-right">
+                                  <p className="text-sm font-semibold text-terracotta">
+                                    {formatEUR(room.basePrice, locale)}
+                                  </p>
+                                  <p className="text-[10px] text-muted">/ {dict.common.night}</p>
+                                </div>
+                                <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                  <IconCheck size={10} />
+                                  {fr ? "Libre" : "Free"}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Stay formulas */}
+                      <div>
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                          {fr ? "Choisissez votre formule" : "Choose your stay"}
+                        </p>
+                        <div className="space-y-3">
                         {availability.suggestedOptions.map((option, index) => {
                           const selected = optionKey === option.key;
                           const OptionIcon = OPTION_ICON[option.key];
@@ -493,6 +536,7 @@ export function BookingFlow({
                             </button>
                           );
                         })}
+                        </div>
                       </div>
 
                       {/* Guarantees */}

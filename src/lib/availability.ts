@@ -46,6 +46,7 @@ export type AvailabilityResult = {
   availableRoomsCount: number;
   availableCapacity: number;
   availableRoomNames: string[];
+  availableRoomsDetail: AvailabilityRoom[];
   totalRoomsCount: number;
   suggestedOptions: StayOption[];
   estimatedPriceRange: { min: number; max: number } | null;
@@ -73,6 +74,7 @@ function emptyResult(
     availableRoomsCount: 0,
     availableCapacity: 0,
     availableRoomNames: [],
+    availableRoomsDetail: [],
     totalRoomsCount: 0,
     suggestedOptions: [],
     estimatedPriceRange: null,
@@ -241,6 +243,7 @@ export async function checkAvailability(
     availableRoomsCount,
     availableCapacity,
     availableRoomNames: availableRooms.map((r) => r.name),
+    availableRoomsDetail: availableRooms,
     totalRoomsCount: rooms.length,
     suggestedOptions: [],
     estimatedPriceRange: null,
