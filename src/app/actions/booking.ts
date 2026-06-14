@@ -103,16 +103,28 @@ export async function createBooking(
     return { ok: false, error: availability.reason || "no_capacity" };
   }
 
-  const option = availability.suggestedOptions.find(
-    (o) => o.key === data.optionKey
+  // Resolve the rooms the guest selected against what is actually free.
+  const selectedRooms = availability.availableRoomsDetail.filter((r) =>
+    data.roomIds.includes(r.id)
   );
-  if (!option) {
-    return { ok: false, error: "no_option" };
+  if (selectedRooms.length !== data.roomIds.length) {
+    // One or more chosen rooms are no longer available.
+    return { ok: false, error: "no_capacity" };
+  }
+  const selectedCapacity = selectedRooms.reduce((s, r) => s + r.capacity, 0);
+  if (selectedCapacity < data.guests) {
+    return { ok: false, error: "no_capacity" };
   }
 
   const checkIn = parseDateOnly(data.checkIn)!;
   const checkOut = parseDateOnly(data.checkOut)!;
   const nights = nightsBetween(checkIn, checkOut);
+
+  const roomsTotal = selectedRooms.reduce(
+    (s, r) => s + r.basePrice * nights,
+    0
+  );
+  const optionLabel = selectedRooms.map((r) => r.name).join(" + ");
 
   // Resolve and price extras from the database (don't trust client prices).
   const requestedExtraIds = data.extras.map((e) => e.extraId);
@@ -141,7 +153,7 @@ export async function createBooking(
     })
     .filter((x): x is NonNullable<typeof x> => x !== null);
 
-  const estimatedTotal = option.estimatedTotal + extrasTotal;
+  const estimatedTotal = roomsTotal + extrasTotal;
   const reference = await uniqueReference();
 
   const booking = await prisma.booking.create({
@@ -156,10 +168,10 @@ export async function createBooking(
       guestCountry: data.guestCountry || null,
       specialRequests: data.specialRequests || null,
       status: "pending",
-      optionLabel: option.labelFr,
+      optionLabel,
       estimatedTotal,
       rooms: {
-        create: option.roomIds.map((roomId) => ({ roomId })),
+        create: selectedRooms.map((r) => ({ roomId: r.id })),
       },
       extras: {
         create: bookingExtrasData,

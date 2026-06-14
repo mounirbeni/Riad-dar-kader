@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { searchAvailability, createBooking } from "@/app/actions/booking";
-import type { AvailabilityResult, StayOption } from "@/lib/availability";
+import type { AvailabilityResult } from "@/lib/availability";
 import { formatEUR } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
 import { nightsBetween, parseDateOnly, formatDateHuman } from "@/lib/dates";
@@ -14,20 +14,9 @@ import {
   IconBed,
   IconUser,
   IconMoon,
-  IconUsers,
-  IconHome,
-  IconStar,
   IconArrowLeft,
   IconArrowRight,
 } from "@/components/Icons";
-
-const OPTION_ICON: Record<StayOption["key"], typeof IconBed> = {
-  couple: IconUser,
-  standard: IconBed,
-  family: IconHome,
-  group: IconUsers,
-  full_riad: IconStar,
-};
 
 export type ClientExtra = {
   id: string;
@@ -66,7 +55,7 @@ export function BookingFlow({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [availability, setAvailability] = useState<AvailabilityResult | null>(null);
-  const [optionKey, setOptionKey] = useState<StayOption["key"] | null>(null);
+  const [selectedRoomIds, setSelectedRoomIds] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
 
   const [guestName, setGuestName] = useState("");
@@ -86,10 +75,15 @@ export function BookingFlow({
     return nightsBetween(a, b);
   }, [checkIn, checkOut]);
 
-  const selectedOption = useMemo(
-    () => availability?.suggestedOptions.find((o) => o.key === optionKey) || null,
-    [availability, optionKey]
+  const availableRooms = availability?.availableRoomsDetail ?? [];
+  const selectedRooms = useMemo(
+    () => availableRooms.filter((r) => selectedRoomIds.includes(r.id)),
+    [availableRooms, selectedRoomIds]
   );
+  const selectedCapacity = selectedRooms.reduce((s, r) => s + r.capacity, 0);
+  const roomsTotal = selectedRooms.reduce((s, r) => s + r.basePrice * nights, 0);
+  const canBook = selectedRooms.length > 0 && selectedCapacity >= guests;
+  const selectedRoomNames = selectedRooms.map((r) => r.name).join(" + ");
 
   const extrasTotal = useMemo(
     () =>
@@ -101,8 +95,14 @@ export function BookingFlow({
     [selectedExtras, extras, guests, nights]
   );
 
-  const grandTotal = (selectedOption?.estimatedTotal || 0) + extrasTotal;
+  const grandTotal = roomsTotal + extrasTotal;
   const chosenExtras = extras.filter((e) => selectedExtras[e.id]);
+
+  function toggleRoom(id: string) {
+    setSelectedRoomIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  }
 
   const errMsg = (code: string) =>
     (t.errors as Record<string, string>)[code] || t.errors.generic;
@@ -119,7 +119,7 @@ export function BookingFlow({
     }
     setError(null);
     setLoading(true);
-    setOptionKey(null);
+    setSelectedRoomIds([]);
     const res = await searchAvailability({ checkIn, checkOut, guests });
     setLoading(false);
     if (!res.ok) {
@@ -143,11 +143,11 @@ export function BookingFlow({
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!optionKey) return;
+    if (!canBook) return;
     setError(null);
     setSubmitting(true);
     const res = await createBooking({
-      checkIn, checkOut, guests, optionKey,
+      checkIn, checkOut, guests, roomIds: selectedRoomIds,
       guestName, guestEmail, guestPhone, guestCountry, specialRequests, website,
       extras: Object.entries(selectedExtras).map(([extraId, quantity]) => ({ extraId, quantity })),
     });
@@ -161,7 +161,6 @@ export function BookingFlow({
     goTo(5);
   }
 
-  const optionLabel = (o: StayOption) => (fr ? o.labelFr : o.labelEn);
   const includedFeatures = fr
     ? ["Confirmation directe par le riad", "Sans paiement en ligne", "Annulation flexible"]
     : ["Confirmed directly by the riad", "No online payment", "Flexible cancellation"];
@@ -197,7 +196,7 @@ export function BookingFlow({
               <SummaryRow
                 fr={fr} dict={dict} locale={locale}
                 checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
-                optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+                optionLabel={selectedRoomNames || null}
                 chosenExtras={chosenExtras} selectedExtras={selectedExtras}
                 total={confirmation.estimatedTotal}
               />
@@ -400,143 +399,88 @@ export function BookingFlow({
                         </div>
                       )}
 
-                      {/* Available rooms grid — show every room that is free */}
-                      {availability.availableRoomsDetail.length > 0 && (
-                        <div>
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
-                            {fr ? "Nos chambres disponibles" : "Our available rooms"}
-                          </p>
-                          <div className="grid gap-2.5 sm:grid-cols-2">
-                            {availability.availableRoomsDetail.map((room) => (
-                              <div
-                                key={room.id}
-                                className="flex items-center gap-3 rounded-xl border border-sand-200 bg-white px-3.5 py-3"
-                              >
-                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-terracotta/10 text-terracotta">
-                                  <IconBed size={17} />
-                                </span>
-                                <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-ink">{room.name}</p>
-                                  <p className="flex items-center gap-1 text-xs text-muted">
-                                    <IconUser size={11} />
-                                    {fr ? "jusqu'à" : "up to"} {room.capacity}
-                                  </p>
-                                </div>
-                                <div className="shrink-0 text-right">
-                                  <p className="text-sm font-semibold text-terracotta">
-                                    {formatEUR(room.basePrice, locale)}
-                                  </p>
-                                  <p className="text-[10px] text-muted">/ {dict.common.night}</p>
-                                </div>
-                                <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
-                                  <IconCheck size={10} />
-                                  {fr ? "Libre" : "Free"}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Stay formulas */}
+                      {/* Selectable room cards — pick the room(s) you want */}
                       <div>
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
-                          {fr ? "Choisissez votre formule" : "Choose your stay"}
+                          {fr ? "Sélectionnez votre chambre" : "Select your room"}
                         </p>
                         <div className="space-y-3">
-                        {availability.suggestedOptions.map((option, index) => {
-                          const selected = optionKey === option.key;
-                          const OptionIcon = OPTION_ICON[option.key];
-                          const recommended = index === 0 && availability.suggestedOptions.length > 1;
-                          return (
-                            <button
-                              type="button"
-                              key={option.key}
-                              onClick={() => setOptionKey(option.key)}
-                              className={`group block w-full rounded-2xl border-2 p-5 text-left transition-all duration-200 ${
-                                selected
-                                  ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
-                                  : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
-                              }`}
-                            >
-                              <div className="flex items-start gap-4">
-                                <span
-                                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors ${
-                                    selected
-                                      ? "bg-terracotta text-white"
-                                      : "bg-terracotta/10 text-terracotta group-hover:bg-terracotta/15"
-                                  }`}
-                                >
-                                  <OptionIcon size={22} />
-                                </span>
+                          {availability.availableRoomsDetail.map((room) => {
+                            const selected = selectedRoomIds.includes(room.id);
+                            return (
+                              <button
+                                type="button"
+                                key={room.id}
+                                onClick={() => toggleRoom(room.id)}
+                                className={`group block w-full rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
+                                  selected
+                                    ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
+                                    : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
+                                }`}
+                              >
+                                <div className="flex items-center gap-4">
+                                  <span
+                                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                                      selected
+                                        ? "bg-terracotta text-white"
+                                        : "bg-terracotta/10 text-terracotta group-hover:bg-terracotta/15"
+                                    }`}
+                                  >
+                                    <IconBed size={22} />
+                                  </span>
 
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <h4 className="font-serif text-lg text-ink">{optionLabel(option)}</h4>
-                                    {recommended && (
-                                      <span className="rounded-full bg-brass/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brass">
-                                        {fr ? "Recommandé" : "Best choice"}
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <h4 className="font-serif text-lg text-ink">{room.name}</h4>
+                                      <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                        <IconCheck size={10} />
+                                        {fr ? "Disponible" : "Available"}
                                       </span>
-                                    )}
-                                    {option.key === "full_riad" && (
-                                      <span className="rounded-full bg-terracotta/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-terracotta">
-                                        {fr ? "Exclusif" : "Exclusive"}
+                                    </div>
+                                    <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                                      <span className="flex items-center gap-1">
+                                        <IconUser size={12} />
+                                        {fr ? "jusqu'à" : "up to"} {room.capacity} {dict.common.guests}
                                       </span>
-                                    )}
+                                      <span className="flex items-center gap-1">
+                                        <IconMoon size={12} />
+                                        {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+                                      </span>
+                                    </div>
                                   </div>
-                                  <p className="mt-0.5 text-sm text-muted leading-snug">
-                                    {fr ? option.descriptionFr : option.descriptionEn}
-                                  </p>
-                                  <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                                    <span className="flex items-center gap-1">
-                                      <IconBed size={12} />
-                                      {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <IconUser size={12} />
-                                      {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <IconMoon size={12} />
-                                      {nights} {nights > 1 ? dict.common.nights : dict.common.night}
-                                    </span>
-                                  </div>
-                                  {option.roomNames.length > 0 && (
-                                    <p className="mt-1.5 text-xs text-muted/80">
-                                      {option.roomNames.join(" · ")}
+
+                                  <div className="shrink-0 text-right">
+                                    <p className="font-serif text-2xl font-semibold text-terracotta">
+                                      {formatEUR(room.basePrice, locale)}
                                     </p>
-                                  )}
-                                </div>
-
-                                <div className="shrink-0 text-right">
-                                  <p className="font-serif text-2xl font-semibold text-terracotta">
-                                    {formatEUR(option.pricePerNight, locale)}
-                                  </p>
-                                  <p className="text-[11px] text-muted">/ {dict.common.night}</p>
-                                  <div className="mt-2">
-                                    <span
-                                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                                        selected
-                                          ? "bg-terracotta text-white"
-                                          : "bg-sand-200 text-muted"
-                                      }`}
-                                    >
-                                      {selected && <IconCheck size={11} />}
-                                      {selected ? (fr ? "Sélectionné" : "Selected") : (fr ? "Choisir" : "Select")}
-                                    </span>
+                                    <p className="text-[11px] text-muted">/ {dict.common.night}</p>
                                   </div>
-                                </div>
-                              </div>
 
-                              {/* Total row */}
-                              <div className="mt-4 flex items-center justify-between rounded-xl bg-sand/60 px-4 py-2.5">
-                                <span className="text-xs text-muted">{dict.common.estimatedTotal}</span>
-                                <span className="font-semibold text-ink">{formatEUR(option.estimatedTotal, locale)}</span>
-                              </div>
-                            </button>
-                          );
-                        })}
+                                  {/* Check toggle */}
+                                  <span
+                                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                                      selected
+                                        ? "border-terracotta bg-terracotta text-white"
+                                        : "border-sand-300 bg-white text-transparent"
+                                    }`}
+                                  >
+                                    <IconCheck size={14} />
+                                  </span>
+                                </div>
+                              </button>
+                            );
+                          })}
                         </div>
+
+                        {/* Capacity hint when more guests than one room holds */}
+                        {selectedRooms.length > 0 && selectedCapacity < guests && (
+                          <p className="mt-3 flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">!</span>
+                            {fr
+                              ? `Capacité sélectionnée ${selectedCapacity}/${guests}. Ajoutez une chambre.`
+                              : `Selected capacity ${selectedCapacity}/${guests}. Add another room.`}
+                          </p>
+                        )}
                       </div>
 
                       {/* Guarantees */}
@@ -559,7 +503,7 @@ export function BookingFlow({
                     {availability?.isAvailable && (
                       <button
                         type="button"
-                        disabled={!optionKey}
+                        disabled={!canBook}
                         onClick={() => goTo(3)}
                         className="btn-primary flex flex-1 items-center justify-center gap-1.5 disabled:opacity-50"
                       >
@@ -721,7 +665,7 @@ export function BookingFlow({
               <SummaryRow
                 fr={fr} dict={dict} locale={locale}
                 checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
-                optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+                optionLabel={selectedRoomNames || null}
                 chosenExtras={chosenExtras} selectedExtras={selectedExtras}
                 total={grandTotal}
               />
@@ -812,7 +756,7 @@ function SummaryRow({
         <Row label={t.checkIn} value={a ? formatDateHuman(a, locale) : "—"} />
         <Row label={t.checkOut} value={b ? formatDateHuman(b, locale) : "—"} />
         <Row label={t.guests} value={`${guests} · ${nights} ${nights > 1 ? dict.common.nights : dict.common.night}`} />
-        {optionLabel && <Row label={fr ? "Formule" : "Option"} value={optionLabel} />}
+        {optionLabel && <Row label={fr ? "Chambre" : "Room"} value={optionLabel} />}
       </dl>
       {chosenExtras.length > 0 && (
         <div className="mt-3 border-t border-sand-200 pt-3">
