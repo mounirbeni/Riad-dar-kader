@@ -56,7 +56,7 @@ export function RoomForm({ room }: { room?: RoomFormData }) {
             />
           </div>
           <div>
-            <label className="label">Prix / nuit (MAD)</label>
+            <label className="label">Prix / nuit (€)</label>
             <input
               name="basePrice"
               type="number"

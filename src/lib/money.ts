@@ -1,13 +1,17 @@
-// Currency formatting. All amounts are whole MAD (Moroccan dirham).
+// Currency formatting. All amounts are whole EUR (euros).
 
-export function formatMAD(amount: number, locale: "fr" | "en" = "fr"): string {
-  const formatted = new Intl.NumberFormat(locale === "fr" ? "fr-MA" : "en-US", {
+export function formatEUR(amount: number, locale: "fr" | "en" = "fr"): string {
+  return new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
     maximumFractionDigits: 0,
   }).format(Math.round(amount));
-  return locale === "fr" ? `${formatted} MAD` : `${formatted} MAD`;
 }
 
+// Keep old name as alias so callers can be migrated gradually.
+export const formatMAD = formatEUR;
+
 export function formatRange(min: number, max: number, locale: "fr" | "en" = "fr"): string {
-  if (min === max) return formatMAD(min, locale);
-  return `${formatMAD(min, locale)} – ${formatMAD(max, locale)}`;
+  if (min === max) return formatEUR(min, locale);
+  return `${formatEUR(min, locale)} – ${formatEUR(max, locale)}`;
 }

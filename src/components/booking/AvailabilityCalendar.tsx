@@ -3,12 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import type { Locale } from "@/i18n/config";
 import { calendarAvailability } from "@/app/actions/booking";
-import {
-  parseDateOnly,
-  toDateOnlyString,
-  todayUTC,
-  eachNight,
-} from "@/lib/dates";
+import { parseDateOnly, toDateOnlyString, todayUTC, eachNight } from "@/lib/dates";
 
 type Props = {
   locale: Locale;
@@ -20,17 +15,17 @@ type Props = {
 const WINDOW_DAYS = 100;
 
 const WEEKDAYS = {
-  fr: ["lun", "mar", "mer", "jeu", "ven", "sam", "dim"],
-  en: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  fr: ["L", "M", "M", "J", "V", "S", "D"],
+  en: ["M", "T", "W", "T", "F", "S", "S"],
 };
 const MONTHS = {
-  fr: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+  fr: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
   en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 };
 
 function monthGrid(year: number, month: number): (Date | null)[] {
   const first = new Date(Date.UTC(year, month, 1));
-  const startWeekday = (first.getUTCDay() + 6) % 7; // Monday = 0
+  const startWeekday = (first.getUTCDay() + 6) % 7;
   const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
   const cells: (Date | null)[] = [];
   for (let i = 0; i < startWeekday; i++) cells.push(null);
@@ -70,13 +65,10 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
   function handleClick(date: Date) {
     const key = toDateOnlyString(date);
     if (date < today || soldOut.has(key)) return;
-
-    // Start fresh if nothing chosen, both chosen, or click before current check-in.
     if (!ci || (ci && co) || date <= ci) {
       onSelect(key, "");
       return;
     }
-    // ci set, choosing checkout: ensure no sold-out night in [ci, date)
     if (rangeHasSoldOut(ci, date)) {
       onSelect(key, "");
       return;
@@ -91,7 +83,8 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
     const isCheckIn = ci && toDateOnlyString(ci) === key;
     const isCheckOut = co && toDateOnlyString(co) === key;
     const inRange = ci && co && date > ci && date < co;
-    return { isPast, isSold, isCheckIn, isCheckOut, inRange };
+    const isToday = toDateOnlyString(date) === toDateOnlyString(today);
+    return { isPast, isSold, isCheckIn, isCheckOut, inRange, isToday };
   }
 
   function shiftMonth(delta: number) {
@@ -106,10 +99,8 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
   const canPrev =
     viewYear > today.getUTCFullYear() ||
     (viewYear === today.getUTCFullYear() && viewMonth > today.getUTCMonth());
-  const canNext =
-    new Date(Date.UTC(viewYear, viewMonth + 1, 1)) <= maxDate;
+  const canNext = new Date(Date.UTC(viewYear, viewMonth + 1, 1)) <= maxDate;
 
-  // Render current month and the next one (2-up on desktop).
   const months = [
     { y: viewYear, m: viewMonth },
     { y: viewMonth === 11 ? viewYear + 1 : viewYear, m: (viewMonth + 1) % 12 },
@@ -117,47 +108,68 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
 
   return (
     <div className="select-none">
-      <div className="mb-3 flex items-center justify-between">
+      {/* Month navigation */}
+      <div className="mb-5 flex items-center justify-between gap-2">
         <button
           type="button"
           onClick={() => shiftMonth(-1)}
           disabled={!canPrev}
-          aria-label="Mois précédent"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 text-terracotta transition hover:bg-sand disabled:opacity-30"
+          aria-label={locale === "fr" ? "Mois précédent" : "Previous month"}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 bg-white text-ink transition hover:border-terracotta hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-30"
         >
-          ‹
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
         </button>
-        <span className="text-xs font-medium uppercase tracking-wider text-muted">
-          {locale === "fr" ? "Sélectionnez vos dates" : "Select your dates"}
-        </span>
+
+        <div className="flex flex-1 justify-center gap-8">
+          {months.map(({ y, m }, idx) => (
+            <p
+              key={`${y}-${m}`}
+              className={`font-serif text-base font-semibold text-ink ${idx === 1 ? "hidden sm:block" : ""}`}
+            >
+              {MONTHS[locale][m]} {y}
+            </p>
+          ))}
+        </div>
+
         <button
           type="button"
           onClick={() => shiftMonth(1)}
           disabled={!canNext}
-          aria-label="Mois suivant"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 text-terracotta transition hover:bg-sand disabled:opacity-30"
+          aria-label={locale === "fr" ? "Mois suivant" : "Next month"}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 bg-white text-ink transition hover:border-terracotta hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-30"
         >
-          ›
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
         </button>
       </div>
 
+      {/* Calendar grid(s) */}
       <div className="grid gap-6 sm:grid-cols-2">
         {months.map(({ y, m }, idx) => (
           <div key={`${y}-${m}`} className={idx === 1 ? "hidden sm:block" : ""}>
-            <p className="mb-2 text-center font-serif text-lg text-ink">
-              {MONTHS[locale][m]} {y}
-            </p>
-            <div className="grid grid-cols-7 gap-1">
-              {WEEKDAYS[locale].map((w) => (
-                <div key={w} className="py-1 text-center text-[10px] font-medium uppercase text-muted">
+            {/* Day-of-week headers */}
+            <div className="mb-1 grid grid-cols-7">
+              {WEEKDAYS[locale].map((w, wi) => (
+                <div
+                  key={wi}
+                  className="py-1.5 text-center text-[11px] font-semibold uppercase tracking-widest text-muted"
+                >
                   {w}
                 </div>
               ))}
+            </div>
+
+            {/* Day cells */}
+            <div className="grid grid-cols-7">
               {monthGrid(y, m).map((date, i) => {
-                if (!date) return <div key={i} />;
-                const { isPast, isSold, isCheckIn, isCheckOut, inRange } = cellState(date);
+                if (!date) return <div key={i} className="aspect-square" />;
+                const { isPast, isSold, isCheckIn, isCheckOut, inRange, isToday } = cellState(date);
                 const disabled = isPast || isSold;
-                const selected = isCheckIn || isCheckOut;
+                const isEndpoint = isCheckIn || isCheckOut;
+
                 return (
                   <button
                     key={i}
@@ -165,17 +177,41 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
                     disabled={disabled}
                     onClick={() => handleClick(date)}
                     className={[
-                      "relative aspect-square rounded-lg text-sm transition",
-                      selected
-                        ? "bg-terracotta font-semibold text-white"
-                        : inRange
-                          ? "bg-terracotta/10 text-terracotta"
-                          : disabled
-                            ? "cursor-not-allowed text-sand-300 line-through"
-                            : "text-ink hover:bg-sand-200",
+                      "relative aspect-square text-sm font-medium transition-all duration-150 focus:outline-none",
+                      // Range background — no border-radius on range cells so they merge
+                      inRange
+                        ? "bg-terracotta/10 text-terracotta"
+                        : "",
+                      // Endpoint circles — rounded
+                      isEndpoint
+                        ? "z-10"
+                        : "",
+                      // Disabled
+                      disabled
+                        ? "cursor-not-allowed text-sand-300"
+                        : !isEndpoint && !inRange
+                          ? "text-ink hover:bg-sand-200 rounded-lg"
+                          : "",
+                      // Today ring
+                      isToday && !isEndpoint
+                        ? "font-bold underline decoration-terracotta decoration-2 underline-offset-2"
+                        : "",
                     ].join(" ")}
                   >
-                    {date.getUTCDate()}
+                    {/* Endpoint circle */}
+                    {isEndpoint && (
+                      <span className="absolute inset-1 flex items-center justify-center rounded-full bg-terracotta text-white shadow-sm shadow-terracotta/40">
+                        {date.getUTCDate()}
+                      </span>
+                    )}
+                    {/* Sold-out line */}
+                    {isSold && (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sand-300 line-through">{date.getUTCDate()}</span>
+                      </span>
+                    )}
+                    {/* Normal date */}
+                    {!isEndpoint && !isSold && date.getUTCDate()}
                   </button>
                 );
               })}
@@ -184,10 +220,20 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted">
-        <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-terracotta" /> {locale === "fr" ? "Sélectionné" : "Selected"}</span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-terracotta/10" /> {locale === "fr" ? "Votre séjour" : "Your stay"}</span>
-        <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-sand-200 line-through" /> {locale === "fr" ? "Indisponible" : "Unavailable"}</span>
+      {/* Legend */}
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-terracotta text-[10px] text-white">1</span>
+          {locale === "fr" ? "Sélectionné" : "Selected"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-5 w-5 rounded-lg bg-terracotta/10" />
+          {locale === "fr" ? "Votre séjour" : "Your stay"}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-5 w-5 rounded-lg bg-sand-100 text-[10px] text-sand-300 line-through flex items-center justify-center">7</span>
+          {locale === "fr" ? "Indisponible" : "Unavailable"}
+        </span>
       </div>
     </div>
   );

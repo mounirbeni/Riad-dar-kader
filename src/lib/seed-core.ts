@@ -1,6 +1,7 @@
 // Shared, idempotent seed logic used by both the Prisma CLI seed
 // (prisma/seed.ts) and the protected bootstrap route (/api/seed).
 // Safe to run multiple times — everything is upserted.
+// All prices are in EUR (euros).
 
 import type { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
@@ -14,7 +15,7 @@ export const seedRooms = [
     descriptionEn:
       "An elegant double room with handmade zellige and a patio view. Perfect for a couple seeking calm in the heart of the Medina. Terracotta tones and the soft patio light make it a peaceful retreat.",
     capacity: 2,
-    basePrice: 850,
+    basePrice: 85,
     sizeM2: 18,
     bedType: "double",
     view: "patio",
@@ -29,7 +30,7 @@ export const seedRooms = [
     descriptionEn:
       "A light-filled room in terracotta tones, adorned with hand-carved traditional stucco. Its warm atmosphere invites rest after a day in the souks.",
     capacity: 2,
-    basePrice: 900,
+    basePrice: 90,
     sizeM2: 20,
     bedType: "double",
     view: "patio",
@@ -44,7 +45,7 @@ export const seedRooms = [
     descriptionEn:
       "A refined room inspired by the palaces of the Medina, cool and quiet. Carved woodwork and polished tadelakt create a setting that is both understated and noble.",
     capacity: 2,
-    basePrice: 950,
+    basePrice: 95,
     sizeM2: 22,
     bedType: "twin",
     view: "patio",
@@ -59,7 +60,7 @@ export const seedRooms = [
     descriptionEn:
       "A comfortable room that can host a third guest — perfect for small families or friends. Spacious and bathed in natural light.",
     capacity: 3,
-    basePrice: 1100,
+    basePrice: 110,
     sizeM2: 26,
     bedType: "double_sofa",
     view: "patio",
@@ -74,7 +75,7 @@ export const seedRooms = [
     descriptionEn:
       "A spacious suite with a Moroccan lounge corner, designed for families. A true traditional little apartment where everyone finds their own space.",
     capacity: 4,
-    basePrice: 1450,
+    basePrice: 145,
     sizeM2: 34,
     bedType: "family",
     view: "medina",
@@ -89,7 +90,7 @@ export const seedRooms = [
     descriptionEn:
       "A large suite opening onto the central patio, with soft light all day long. Its prime location offers the soothing murmur of the fountain.",
     capacity: 3,
-    basePrice: 1300,
+    basePrice: 130,
     sizeM2: 30,
     bedType: "double_sofa",
     view: "patio",
@@ -104,7 +105,7 @@ export const seedRooms = [
     descriptionEn:
       "The finest suite in the riad, with privileged access to the panoramic terrace. Wake up to the rooftops of the Medina and the Atlas mountains on the horizon.",
     capacity: 4,
-    basePrice: 1600,
+    basePrice: 160,
     sizeM2: 38,
     bedType: "family",
     view: "terrace",
@@ -114,14 +115,14 @@ export const seedRooms = [
 ];
 
 export const seedExtras = [
-  { slug: "airport-transfer", nameFr: "Transfert aéroport", name: "Airport transfer", descriptionFr: "Accueil et transfert privé depuis l'aéroport de Marrakech.", description: "Private pick-up and transfer from Marrakech airport.", price: 250, priceType: "per_booking" as const, sortOrder: 1 },
-  { slug: "moroccan-breakfast", nameFr: "Petit-déjeuner marocain", name: "Moroccan breakfast", descriptionFr: "Petit-déjeuner traditionnel servi sur la terrasse ou au patio.", description: "Traditional breakfast served on the terrace or patio.", price: 90, priceType: "per_guest" as const, sortOrder: 2 },
-  { slug: "terrace-dinner", nameFr: "Dîner sur la terrasse", name: "Dinner on the terrace", descriptionFr: "Dîner marocain aux chandelles sous le ciel de Marrakech.", description: "Candlelit Moroccan dinner under the Marrakech sky.", price: 220, priceType: "per_guest" as const, sortOrder: 3 },
-  { slug: "guided-medina-tour", nameFr: "Visite guidée de la Médina", name: "Guided Medina tour", descriptionFr: "Découverte des souks et monuments avec un guide local.", description: "Explore the souks and monuments with a local guide.", price: 350, priceType: "per_booking" as const, sortOrder: 4 },
-  { slug: "hammam-spa", nameFr: "Hammam / spa partenaire", name: "Hammam / spa request", descriptionFr: "Réservation d'un moment bien-être dans un hammam partenaire.", description: "Booking a wellness moment at a partner hammam.", price: 300, priceType: "per_guest" as const, sortOrder: 5 },
-  { slug: "romantic-decoration", nameFr: "Décoration romantique", name: "Romantic room decoration", descriptionFr: "Pétales, bougies et attentions pour une occasion spéciale.", description: "Petals, candles and special touches for a memorable moment.", price: 200, priceType: "per_booking" as const, sortOrder: 6 },
-  { slug: "birthday-setup", nameFr: "Décoration anniversaire", name: "Birthday setup", descriptionFr: "Une mise en place festive pour célébrer un anniversaire.", description: "A festive setup to celebrate a birthday.", price: 250, priceType: "per_booking" as const, sortOrder: 7 },
-  { slug: "cooking-experience", nameFr: "Atelier cuisine privé", name: "Private cooking experience", descriptionFr: "Apprenez à préparer un tajine avec notre cuisinière.", description: "Learn to prepare a tagine with our cook.", price: 400, priceType: "per_guest" as const, sortOrder: 8 },
+  { slug: "airport-transfer", nameFr: "Transfert aéroport", name: "Airport transfer", descriptionFr: "Accueil et transfert privé depuis l'aéroport de Marrakech.", description: "Private pick-up and transfer from Marrakech airport.", price: 25, priceType: "per_booking" as const, sortOrder: 1 },
+  { slug: "moroccan-breakfast", nameFr: "Petit-déjeuner marocain", name: "Moroccan breakfast", descriptionFr: "Petit-déjeuner traditionnel servi sur la terrasse ou au patio.", description: "Traditional breakfast served on the terrace or patio.", price: 9, priceType: "per_guest" as const, sortOrder: 2 },
+  { slug: "terrace-dinner", nameFr: "Dîner sur la terrasse", name: "Dinner on the terrace", descriptionFr: "Dîner marocain aux chandelles sous le ciel de Marrakech.", description: "Candlelit Moroccan dinner under the Marrakech sky.", price: 22, priceType: "per_guest" as const, sortOrder: 3 },
+  { slug: "guided-medina-tour", nameFr: "Visite guidée de la Médina", name: "Guided Medina tour", descriptionFr: "Découverte des souks et monuments avec un guide local.", description: "Explore the souks and monuments with a local guide.", price: 35, priceType: "per_booking" as const, sortOrder: 4 },
+  { slug: "hammam-spa", nameFr: "Hammam / spa partenaire", name: "Hammam / spa request", descriptionFr: "Réservation d'un moment bien-être dans un hammam partenaire.", description: "Booking a wellness moment at a partner hammam.", price: 30, priceType: "per_guest" as const, sortOrder: 5 },
+  { slug: "romantic-decoration", nameFr: "Décoration romantique", name: "Romantic room decoration", descriptionFr: "Pétales, bougies et attentions pour une occasion spéciale.", description: "Petals, candles and special touches for a memorable moment.", price: 20, priceType: "per_booking" as const, sortOrder: 6 },
+  { slug: "birthday-setup", nameFr: "Décoration anniversaire", name: "Birthday setup", descriptionFr: "Une mise en place festive pour célébrer un anniversaire.", description: "A festive setup to celebrate a birthday.", price: 25, priceType: "per_booking" as const, sortOrder: 7 },
+  { slug: "cooking-experience", nameFr: "Atelier cuisine privé", name: "Private cooking experience", descriptionFr: "Apprenez à préparer un tajine avec notre cuisinière.", description: "Learn to prepare a tagine with our cook.", price: 40, priceType: "per_guest" as const, sortOrder: 8 },
   { slug: "early-check-in", nameFr: "Arrivée anticipée", name: "Early check-in request", descriptionFr: "Demande d'arrivée avant l'heure standard (selon disponibilité).", description: "Request to arrive before standard check-in (subject to availability).", price: 0, priceType: "per_booking" as const, sortOrder: 9 },
   { slug: "late-check-out", nameFr: "Départ tardif", name: "Late check-out request", descriptionFr: "Demande de départ après l'heure standard (selon disponibilité).", description: "Request to leave after standard check-out (subject to availability).", price: 0, priceType: "per_booking" as const, sortOrder: 10 },
 ];

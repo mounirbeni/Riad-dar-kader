@@ -316,7 +316,7 @@ function lodgingSchema() {
       addressCountry: "MA",
       streetAddress: "Médina, près du Musée Mouassine",
     },
-    priceRange: "MAD 850 - 1600",
+    priceRange: "€85 - €160",
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "Patio" },
       { "@type": "LocationFeatureSpecification", name: "Terrasse" },

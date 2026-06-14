@@ -59,7 +59,7 @@ export function ExtraForm({ extra }: { extra?: ExtraFormData }) {
           <input name="slug" required defaultValue={extra?.slug} className="input" />
         </div>
         <div>
-          <label className="label">Prix (MAD)</label>
+          <label className="label">Prix (€)</label>
           <input
             name="price"
             type="number"

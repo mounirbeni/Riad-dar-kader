@@ -5,14 +5,9 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { searchAvailability, createBooking } from "@/app/actions/booking";
 import type { AvailabilityResult, StayOption } from "@/lib/availability";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
-import {
-  nightsBetween,
-  parseDateOnly,
-  formatDateHuman,
-} from "@/lib/dates";
-import { Stepper } from "./Stepper";
+import { nightsBetween, parseDateOnly, formatDateHuman } from "@/lib/dates";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
 import {
   IconCheck,
@@ -22,9 +17,10 @@ import {
   IconUsers,
   IconHome,
   IconStar,
+  IconArrowLeft,
+  IconArrowRight,
 } from "@/components/Icons";
 
-// A distinct icon per stay-option type, keyed to the option's `key`.
 const OPTION_ICON: Record<StayOption["key"], typeof IconBed> = {
   couple: IconUser,
   standard: IconBed,
@@ -47,6 +43,8 @@ type Confirmation = {
   whatsappOwnerUrl: string;
 };
 
+const TOTAL_STEPS = 4;
+
 export function BookingFlow({
   locale,
   dict,
@@ -60,6 +58,7 @@ export function BookingFlow({
   const fr = locale === "fr";
 
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -108,6 +107,11 @@ export function BookingFlow({
   const errMsg = (code: string) =>
     (t.errors as Record<string, string>)[code] || t.errors.generic;
 
+  function goTo(n: number) {
+    setDirection(n > step ? "forward" : "back");
+    setStep(n);
+  }
+
   async function onSearch() {
     if (!checkIn || !checkOut || nights < 1) {
       setError(errMsg("invalid_dates"));
@@ -125,7 +129,7 @@ export function BookingFlow({
     }
     setAvailability(res.result);
     if (!res.result.isAvailable) setError(errMsg(res.result.reason || "no_capacity"));
-    setStep(2);
+    goTo(2);
   }
 
   function toggleExtra(id: string) {
@@ -154,7 +158,7 @@ export function BookingFlow({
       estimatedTotal: res.estimatedTotal,
       whatsappOwnerUrl: res.whatsappOwnerUrl,
     });
-    setStep(5);
+    goTo(5);
   }
 
   const optionLabel = (o: StayOption) => (fr ? o.labelFr : o.labelEn);
@@ -165,31 +169,53 @@ export function BookingFlow({
   // ---------- Confirmation ----------
   if (step === 5 && confirmation) {
     return (
-      <div className="mt-10">
-        <div className="card mx-auto max-w-xl overflow-hidden">
-          <div className="bg-terracotta px-8 py-10 text-center text-white">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/15 text-white">
-              <IconCheck size={32} />
+      <div className="mt-10 animate-step-in">
+        <div className="mx-auto max-w-xl overflow-hidden rounded-3xl shadow-xl">
+          {/* Celebratory header */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-terracotta to-terracotta-dark px-8 py-12 text-center text-white">
+            <div className="absolute inset-0 bg-zellige opacity-20" />
+            <div className="relative">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/30 backdrop-blur-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-terracotta">
+                  <IconCheck size={28} />
+                </div>
+              </div>
+              <h2 className="mt-5 font-serif text-3xl">{t.confirmTitle}</h2>
+              <p className="mx-auto mt-2 max-w-sm text-white/85 text-sm leading-relaxed">{t.confirmText}</p>
             </div>
-            <h2 className="mt-4 font-serif text-3xl">{t.confirmTitle}</h2>
-            <p className="mx-auto mt-2 max-w-sm text-white/85">{t.confirmText}</p>
           </div>
-          <div className="p-8">
-            <div className="rounded-xl border border-dashed border-brass/40 bg-sand p-4 text-center">
-              <p className="text-xs uppercase tracking-wider text-muted">{t.confirmReference}</p>
-              <p className="mt-1 font-serif text-2xl tracking-wide text-terracotta">{confirmation.reference}</p>
+
+          <div className="bg-white p-8">
+            {/* Reference number */}
+            <div className="rounded-2xl border-2 border-dashed border-brass/30 bg-sand/60 p-5 text-center">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted">{t.confirmReference}</p>
+              <p className="mt-1.5 font-mono text-3xl font-bold tracking-widest text-terracotta">{confirmation.reference}</p>
             </div>
-            <Summary
-              fr={fr} dict={dict} locale={locale}
-              checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
-              optionLabel={selectedOption ? optionLabel(selectedOption) : null}
-              chosenExtras={chosenExtras} selectedExtras={selectedExtras}
-              total={confirmation.estimatedTotal} flat
-            />
-            <a href={confirmation.whatsappOwnerUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp mt-6 w-full">
+
+            {/* Stay summary */}
+            <div className="mt-6 space-y-3">
+              <SummaryRow
+                fr={fr} dict={dict} locale={locale}
+                checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
+                optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+                chosenExtras={chosenExtras} selectedExtras={selectedExtras}
+                total={confirmation.estimatedTotal}
+              />
+            </div>
+
+            <a
+              href={confirmation.whatsappOwnerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-whatsapp mt-6 w-full"
+            >
               {t.confirmWhatsapp}
             </a>
-            <button type="button" onClick={() => window.location.reload()} className="btn-outline mt-3 w-full">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="btn-outline mt-3 w-full"
+            >
               {t.newSearch}
             </button>
           </div>
@@ -199,244 +225,456 @@ export function BookingFlow({
   }
 
   const showSummary = nights > 0 && step >= 2;
+  const progress = Math.round(((step - 1) / TOTAL_STEPS) * 100);
 
   return (
-    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_340px] lg:items-start">
-      <div className="card p-5 sm:p-7">
-        <Stepper step={step} dict={dict} />
-
-        <div key={step} className="mt-6 animate-step">
-          {/* STEP 1 — Dates */}
-          {step === 1 && (
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-sand-200 p-4 sm:p-5">
-                <AvailabilityCalendar
-                  locale={locale}
-                  checkIn={checkIn}
-                  checkOut={checkOut}
-                  onSelect={(ci, co) => { setCheckIn(ci); setCheckOut(co); setError(null); }}
-                />
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="flex gap-3">
-                  <DatePill label={t.checkIn} value={checkIn ? formatDateHuman(parseDateOnly(checkIn)!, locale) : "—"} />
-                  <DatePill label={t.checkOut} value={checkOut ? formatDateHuman(parseDateOnly(checkOut)!, locale) : "—"} />
+    <div className="mt-6">
+      {/* Progress bar + step indicator */}
+      <div className="mb-6">
+        <div className="mb-3 flex items-center justify-between text-xs text-muted">
+          <span className="font-medium text-ink">
+            {step <= TOTAL_STEPS
+              ? `${fr ? "Étape" : "Step"} ${step} ${fr ? "sur" : "of"} ${TOTAL_STEPS}`
+              : fr ? "Réservation envoyée" : "Booking sent"}
+          </span>
+          {nights > 0 && (
+            <span className="font-medium text-terracotta">
+              {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+            </span>
+          )}
+        </div>
+        {/* Progress track */}
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-sand-300">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-terracotta to-brass transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        {/* Step pills */}
+        <div className="mt-3 flex justify-between">
+          {[
+            t.step1 || (fr ? "Dates" : "Dates"),
+            t.step2 || (fr ? "Chambre" : "Room"),
+            t.step3 || (fr ? "Extras" : "Extras"),
+            t.step4 || (fr ? "Détails" : "Details"),
+          ].map((label, i) => {
+            const n = i + 1;
+            const active = step === n;
+            const done = step > n;
+            return (
+              <div key={label} className="flex flex-col items-center gap-1">
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-semibold transition-all duration-300 ${
+                    active
+                      ? "bg-terracotta text-white shadow-md shadow-terracotta/30 scale-110"
+                      : done
+                        ? "bg-brass text-white"
+                        : "bg-sand-200 text-muted"
+                  }`}
+                >
+                  {done ? <IconCheck size={12} /> : n}
                 </div>
-                <GuestStepper label={t.guests} value={guests} onChange={setGuests} />
+                <span className={`hidden text-[10px] sm:block transition-colors ${active ? "font-semibold text-ink" : "text-muted"}`}>
+                  {label}
+                </span>
               </div>
-
-              {nights > 0 && (
-                <p className="text-sm text-muted">
-                  {nights} {nights > 1 ? dict.common.nights : dict.common.night}
-                </p>
-              )}
-              {error && <p className="rounded-lg bg-terracotta/5 px-3 py-2 text-sm text-terracotta">{error}</p>}
-              <button type="button" disabled={loading || nights < 1} onClick={onSearch} className="btn-primary w-full sm:w-auto">
-                {loading ? t.searching : t.search}
-              </button>
-            </div>
-          )}
-
-          {/* STEP 2 — Options */}
-          {step === 2 && (
-            <div className="space-y-5">
-              <h3 className="font-serif text-2xl text-ink">{t.availableTitle}</h3>
-              {availability && !availability.isAvailable && (
-                <div className="rounded-xl bg-sand p-5 text-muted">{error || t.noAvailability}</div>
-              )}
-              {availability?.isAvailable && (
-                <div className="space-y-4">
-                  {availability.suggestedOptions.map((option, index) => {
-                    const selected = optionKey === option.key;
-                    const OptionIcon = OPTION_ICON[option.key];
-                    // The first option is the cheapest fitting formula — flag it.
-                    const recommended =
-                      index === 0 && availability.suggestedOptions.length > 1;
-                    return (
-                      <button
-                        type="button"
-                        key={option.key}
-                        onClick={() => setOptionKey(option.key)}
-                        className={`block w-full rounded-2xl border p-5 text-left transition ${
-                          selected
-                            ? "border-terracotta bg-terracotta/[0.04] ring-2 ring-terracotta/30"
-                            : "border-sand-300 bg-white hover:border-brass hover:shadow-card"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex min-w-0 gap-4">
-                            {/* Option-type icon badge */}
-                            <span
-                              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                                selected
-                                  ? "bg-terracotta text-white"
-                                  : "bg-terracotta/10 text-terracotta"
-                              }`}
-                            >
-                              <OptionIcon size={20} />
-                            </span>
-                            <div className="min-w-0">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <h4 className="font-serif text-xl text-ink">{optionLabel(option)}</h4>
-                                {recommended && (
-                                  <span className="rounded-full bg-terracotta/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-terracotta">
-                                    {fr ? "Recommandé" : "Recommended"}
-                                  </span>
-                                )}
-                                {option.key === "full_riad" && (
-                                  <span className="rounded-full bg-brass/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass">
-                                    {fr ? "Exclusif" : "Exclusive"}
-                                  </span>
-                                )}
-                              </div>
-                              <p className="mt-1 text-sm text-muted">{fr ? option.descriptionFr : option.descriptionEn}</p>
-                              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                                <span className="flex items-center gap-1">
-                                  <IconBed size={13} />
-                                  {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <IconUser size={13} />
-                                  {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <IconMoon size={13} />
-                                  {nights} {nights > 1 ? dict.common.nights : dict.common.night}
-                                </span>
-                              </div>
-                              {option.roomNames.length > 0 && (
-                                <p className="mt-2 text-xs text-muted">
-                                  <span className="text-ink/60">{fr ? "Chambres : " : "Rooms: "}</span>
-                                  {option.roomNames.join(" · ")}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="shrink-0 text-right">
-                            <p className="font-serif text-2xl text-terracotta">{formatMAD(option.pricePerNight, locale)}</p>
-                            <p className="text-[11px] text-muted">/ {dict.common.night}</p>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex items-center justify-between border-t border-sand-200 pt-3">
-                          <span className="text-sm text-muted">
-                            {dict.common.estimatedTotal}: <span className="font-semibold text-ink">{formatMAD(option.estimatedTotal, locale)}</span>
-                          </span>
-                          <span className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium ${selected ? "bg-terracotta text-white" : "bg-sand-200 text-ink"}`}>
-                            {selected && <IconCheck size={13} />}
-                            {selected ? t.selected : t.selectOption}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                  <ul className="flex flex-wrap gap-x-5 gap-y-1 rounded-lg bg-sand px-4 py-3 text-xs text-muted">
-                    {includedFeatures.map((f) => (
-                      <li key={f} className="flex items-center gap-1.5">
-                        <IconCheck size={12} className="text-brass shrink-0" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(1)} className="btn-outline">{t.back}</button>
-                {availability?.isAvailable && (
-                  <button type="button" disabled={!optionKey} onClick={() => setStep(3)} className="btn-primary">{t.continue}</button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* STEP 3 — Extras */}
-          {step === 3 && (
-            <div className="space-y-5">
-              <div>
-                <h3 className="font-serif text-2xl text-ink">{t.extrasTitle}</h3>
-                <p className="text-sm text-muted">{t.extrasSubtitle}</p>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {extras.map((extra) => {
-                  const active = !!selectedExtras[extra.id];
-                  return (
-                    <button
-                      type="button"
-                      key={extra.id}
-                      onClick={() => toggleExtra(extra.id)}
-                      className={`rounded-2xl border p-4 text-left transition ${
-                        active ? "border-terracotta bg-terracotta/[0.04] ring-1 ring-terracotta/30" : "border-sand-300 bg-white hover:border-brass"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="font-medium text-ink">{extra.name}</span>
-                        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${active ? "bg-terracotta text-white" : "border border-sand-300 text-transparent"}`}>
-                          {active && <IconCheck size={11} />}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-xs text-muted">{extra.description}</p>
-                      <p className="mt-2 text-sm font-medium text-brass">
-                        {extra.price > 0 ? formatMAD(extra.price, locale) : (fr ? "Inclus" : "Included")}
-                        {extra.price > 0 && <span className="ml-1 text-[11px] font-normal text-muted">{priceTypeLabel(extra.priceType, locale)}</span>}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(2)} className="btn-outline">{t.back}</button>
-                <button type="button" onClick={() => setStep(4)} className="btn-primary">{t.continue}</button>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4 — Details */}
-          {step === 4 && (
-            <form onSubmit={onSubmit} className="space-y-5">
-              <h3 className="font-serif text-2xl text-ink">{t.detailsTitle}</h3>
-              <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label={t.fullName} required value={guestName} onChange={setGuestName} />
-                <Field label={t.email} type="email" required value={guestEmail} onChange={setGuestEmail} />
-                <Field label={t.phone} required value={guestPhone} onChange={setGuestPhone} placeholder="+212…" />
-                <Field label={t.country} value={guestCountry} onChange={setGuestCountry} />
-              </div>
-              <div>
-                <label className="label">{t.specialRequests}</label>
-                <textarea rows={3} value={specialRequests} onChange={(e) => setSpecialRequests(e.target.value)} className="input" />
-              </div>
-              {error && <p className="rounded-lg bg-terracotta/5 px-3 py-2 text-sm text-terracotta">{error}</p>}
-              <div className="flex gap-3">
-                <button type="button" onClick={() => setStep(3)} className="btn-outline">{t.back}</button>
-                <button type="submit" disabled={submitting} className="btn-primary">{submitting ? t.submitting : t.submit}</button>
-              </div>
-            </form>
-          )}
+            );
+          })}
         </div>
       </div>
 
-      {/* Sticky summary */}
-      {showSummary && (
-        <aside className="lg:sticky lg:top-20">
-          <Summary
-            fr={fr} dict={dict} locale={locale}
-            checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
-            optionLabel={selectedOption ? optionLabel(selectedOption) : null}
-            chosenExtras={chosenExtras} selectedExtras={selectedExtras} total={grandTotal}
-          />
-        </aside>
-      )}
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
+        {/* Main card */}
+        <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-card">
+          <div key={step} className={direction === "forward" ? "animate-step-in" : "animate-step-back"}>
+
+            {/* ── STEP 1 — Calendar ── */}
+            {step === 1 && (
+              <div>
+                {/* Header bar */}
+                <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
+                  <h2 className="font-serif text-xl text-ink">
+                    {fr ? "Choisissez vos dates" : "Choose your dates"}
+                  </h2>
+                  <p className="text-sm text-muted">
+                    {fr ? "Sélectionnez votre arrivée et votre départ" : "Select your check-in and check-out"}
+                  </p>
+                </div>
+
+                <div className="p-5 sm:p-7">
+                  {/* Calendar — centered, fills the card */}
+                  <AvailabilityCalendar
+                    locale={locale}
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    onSelect={(ci, co) => { setCheckIn(ci); setCheckOut(co); setError(null); }}
+                  />
+
+                  {/* Date + guest row */}
+                  <div className="mt-5 flex flex-wrap items-center gap-3">
+                    <DateChip
+                      label={t.checkIn}
+                      value={checkIn ? formatDateHuman(parseDateOnly(checkIn)!, locale) : undefined}
+                      active={!!checkIn}
+                    />
+                    <span className="text-sand-300">→</span>
+                    <DateChip
+                      label={t.checkOut}
+                      value={checkOut ? formatDateHuman(parseDateOnly(checkOut)!, locale) : undefined}
+                      active={!!checkOut}
+                    />
+                    <div className="ml-auto">
+                      <GuestStepper label={t.guests} value={guests} onChange={setGuests} />
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="mt-4 flex items-center gap-2 rounded-xl bg-terracotta/5 px-4 py-3 text-sm text-terracotta">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-terracotta/15 text-xs font-bold">!</span>
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    disabled={loading || nights < 1}
+                    onClick={onSearch}
+                    className="btn-primary mt-5 w-full py-3.5 text-base disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        {t.searching}
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-2">
+                        {t.search}
+                        <IconArrowRight size={16} />
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 2 — Options ── */}
+            {step === 2 && (
+              <div>
+                <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
+                  <h2 className="font-serif text-xl text-ink">{t.availableTitle}</h2>
+                  <p className="text-sm text-muted">
+                    {checkIn && checkOut
+                      ? `${formatDateHuman(parseDateOnly(checkIn)!, locale)} → ${formatDateHuman(parseDateOnly(checkOut)!, locale)} · ${guests} ${dict.common.guests}`
+                      : ""}
+                  </p>
+                </div>
+
+                <div className="p-5 sm:p-7 space-y-4">
+                  {availability && !availability.isAvailable && (
+                    <div className="rounded-2xl bg-sand p-6 text-center text-muted">
+                      <p className="font-serif text-xl text-ink mb-1">{fr ? "Désolé" : "Sorry"}</p>
+                      <p className="text-sm">{error || t.noAvailability}</p>
+                    </div>
+                  )}
+
+                  {availability?.isAvailable && (
+                    <>
+                      <div className="space-y-3">
+                        {availability.suggestedOptions.map((option, index) => {
+                          const selected = optionKey === option.key;
+                          const OptionIcon = OPTION_ICON[option.key];
+                          const recommended = index === 0 && availability.suggestedOptions.length > 1;
+                          return (
+                            <button
+                              type="button"
+                              key={option.key}
+                              onClick={() => setOptionKey(option.key)}
+                              className={`group block w-full rounded-2xl border-2 p-5 text-left transition-all duration-200 ${
+                                selected
+                                  ? "border-terracotta bg-terracotta/[0.03] shadow-md shadow-terracotta/10"
+                                  : "border-sand-200 bg-white hover:border-terracotta/40 hover:shadow-sm"
+                              }`}
+                            >
+                              <div className="flex items-start gap-4">
+                                <span
+                                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                                    selected
+                                      ? "bg-terracotta text-white"
+                                      : "bg-terracotta/10 text-terracotta group-hover:bg-terracotta/15"
+                                  }`}
+                                >
+                                  <OptionIcon size={22} />
+                                </span>
+
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <h4 className="font-serif text-lg text-ink">{optionLabel(option)}</h4>
+                                    {recommended && (
+                                      <span className="rounded-full bg-brass/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brass">
+                                        {fr ? "Recommandé" : "Best choice"}
+                                      </span>
+                                    )}
+                                    {option.key === "full_riad" && (
+                                      <span className="rounded-full bg-terracotta/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-terracotta">
+                                        {fr ? "Exclusif" : "Exclusive"}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="mt-0.5 text-sm text-muted leading-snug">
+                                    {fr ? option.descriptionFr : option.descriptionEn}
+                                  </p>
+                                  <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                                    <span className="flex items-center gap-1">
+                                      <IconBed size={12} />
+                                      {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <IconUser size={12} />
+                                      {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <IconMoon size={12} />
+                                      {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+                                    </span>
+                                  </div>
+                                  {option.roomNames.length > 0 && (
+                                    <p className="mt-1.5 text-xs text-muted/80">
+                                      {option.roomNames.join(" · ")}
+                                    </p>
+                                  )}
+                                </div>
+
+                                <div className="shrink-0 text-right">
+                                  <p className="font-serif text-2xl font-semibold text-terracotta">
+                                    {formatEUR(option.pricePerNight, locale)}
+                                  </p>
+                                  <p className="text-[11px] text-muted">/ {dict.common.night}</p>
+                                  <div className="mt-2">
+                                    <span
+                                      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                                        selected
+                                          ? "bg-terracotta text-white"
+                                          : "bg-sand-200 text-muted"
+                                      }`}
+                                    >
+                                      {selected && <IconCheck size={11} />}
+                                      {selected ? (fr ? "Sélectionné" : "Selected") : (fr ? "Choisir" : "Select")}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Total row */}
+                              <div className="mt-4 flex items-center justify-between rounded-xl bg-sand/60 px-4 py-2.5">
+                                <span className="text-xs text-muted">{dict.common.estimatedTotal}</span>
+                                <span className="font-semibold text-ink">{formatEUR(option.estimatedTotal, locale)}</span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Guarantees */}
+                      <div className="flex flex-wrap gap-x-5 gap-y-1.5 rounded-xl bg-sand/50 px-4 py-3 text-xs text-muted">
+                        {includedFeatures.map((f) => (
+                          <span key={f} className="flex items-center gap-1.5">
+                            <IconCheck size={11} className="text-brass shrink-0" />
+                            {f}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  <div className="flex gap-3 pt-1">
+                    <button type="button" onClick={() => goTo(1)} className="btn-outline flex items-center gap-1.5">
+                      <IconArrowLeft size={14} />
+                      {t.back}
+                    </button>
+                    {availability?.isAvailable && (
+                      <button
+                        type="button"
+                        disabled={!optionKey}
+                        onClick={() => goTo(3)}
+                        className="btn-primary flex flex-1 items-center justify-center gap-1.5 disabled:opacity-50"
+                      >
+                        {t.continue}
+                        <IconArrowRight size={14} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 3 — Extras ── */}
+            {step === 3 && (
+              <div>
+                <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
+                  <h2 className="font-serif text-xl text-ink">{t.extrasTitle}</h2>
+                  <p className="text-sm text-muted">{t.extrasSubtitle}</p>
+                </div>
+
+                <div className="p-5 sm:p-7">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {extras.map((extra) => {
+                      const active = !!selectedExtras[extra.id];
+                      return (
+                        <button
+                          type="button"
+                          key={extra.id}
+                          onClick={() => toggleExtra(extra.id)}
+                          className={`group relative rounded-2xl border-2 p-4 text-left transition-all duration-200 ${
+                            active
+                              ? "border-terracotta bg-terracotta/[0.03] shadow-sm"
+                              : "border-sand-200 bg-white hover:border-terracotta/40"
+                          }`}
+                        >
+                          {/* Check indicator */}
+                          <span
+                            className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-200 ${
+                              active
+                                ? "border-terracotta bg-terracotta text-white"
+                                : "border-sand-300 bg-white"
+                            }`}
+                          >
+                            {active && <IconCheck size={12} />}
+                          </span>
+
+                          <p className="pr-8 font-medium text-ink">{extra.name}</p>
+                          <p className="mt-1 text-xs leading-snug text-muted">{extra.description}</p>
+                          <p className="mt-2.5 text-sm font-semibold text-brass">
+                            {extra.price > 0
+                              ? `${formatEUR(extra.price, locale)} `
+                              : (fr ? "Inclus " : "Included ")}
+                            {extra.price > 0 && (
+                              <span className="text-[11px] font-normal text-muted">
+                                {priceTypeLabel(extra.priceType, locale)}
+                              </span>
+                            )}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-5 flex gap-3">
+                    <button type="button" onClick={() => goTo(2)} className="btn-outline flex items-center gap-1.5">
+                      <IconArrowLeft size={14} />
+                      {t.back}
+                    </button>
+                    <button type="button" onClick={() => goTo(4)} className="btn-primary flex flex-1 items-center justify-center gap-1.5">
+                      {t.continue}
+                      <IconArrowRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 4 — Guest details ── */}
+            {step === 4 && (
+              <div>
+                <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
+                  <h2 className="font-serif text-xl text-ink">{t.detailsTitle}</h2>
+                  <p className="text-sm text-muted">
+                    {fr ? "Dernière étape — vos coordonnées" : "Last step — your contact details"}
+                  </p>
+                </div>
+
+                <form onSubmit={onSubmit} className="p-5 sm:p-7 space-y-4">
+                  {/* honeypot */}
+                  <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Field label={t.fullName} required value={guestName} onChange={setGuestName} />
+                    <Field label={t.email} type="email" required value={guestEmail} onChange={setGuestEmail} />
+                    <Field label={t.phone} required value={guestPhone} onChange={setGuestPhone} placeholder="+33…" />
+                    <Field label={t.country} value={guestCountry} onChange={setGuestCountry} />
+                  </div>
+
+                  <div>
+                    <label className="label">{t.specialRequests}</label>
+                    <textarea
+                      rows={3}
+                      value={specialRequests}
+                      onChange={(e) => setSpecialRequests(e.target.value)}
+                      className="input resize-none"
+                    />
+                  </div>
+
+                  {/* Total summary */}
+                  <div className="rounded-2xl bg-gradient-to-br from-terracotta/5 to-brass/5 border border-sand-200 px-5 py-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted">{dict.common.estimatedTotal}</span>
+                      <span className="font-serif text-2xl text-terracotta">{formatEUR(grandTotal, locale)}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted">{dict.common.finalConfirmation}</p>
+                  </div>
+
+                  {error && (
+                    <div className="flex items-center gap-2 rounded-xl bg-terracotta/5 px-4 py-3 text-sm text-terracotta">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-terracotta/15 text-xs font-bold">!</span>
+                      {error}
+                    </div>
+                  )}
+
+                  <div className="flex gap-3 pt-1">
+                    <button type="button" onClick={() => goTo(3)} className="btn-outline flex items-center gap-1.5">
+                      <IconArrowLeft size={14} />
+                      {t.back}
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="btn-primary flex flex-1 items-center justify-center gap-2 disabled:opacity-60"
+                    >
+                      {submitting ? (
+                        <>
+                          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          {t.submitting}
+                        </>
+                      ) : (
+                        <>
+                          {t.submit}
+                          <IconCheck size={15} />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Sticky summary sidebar */}
+        {showSummary && (
+          <aside className="lg:sticky lg:top-20 animate-step-in">
+            <div className="rounded-2xl border border-sand-200 bg-white p-5 shadow-card">
+              <h4 className="font-serif text-lg text-ink">{t.summary}</h4>
+              <SummaryRow
+                fr={fr} dict={dict} locale={locale}
+                checkIn={checkIn} checkOut={checkOut} guests={guests} nights={nights}
+                optionLabel={selectedOption ? optionLabel(selectedOption) : null}
+                chosenExtras={chosenExtras} selectedExtras={selectedExtras}
+                total={grandTotal}
+              />
+            </div>
+          </aside>
+        )}
+      </div>
     </div>
   );
 }
 
-// ---------- Small pieces ----------
+// ─── Sub-components ──────────────────────────────────────────────
 
-function DatePill({ label, value }: { label: string; value: string }) {
+function DateChip({ label, value, active }: { label: string; value?: string; active: boolean }) {
   return (
-    <div className="rounded-xl border border-sand-300 bg-white px-3 py-2">
+    <div className={`rounded-xl border px-3 py-2 transition-colors ${active ? "border-terracotta/40 bg-terracotta/5" : "border-sand-300 bg-white"}`}>
       <p className="text-[10px] uppercase tracking-wide text-muted">{label}</p>
-      <p className="text-sm font-medium text-ink">{value}</p>
+      <p className={`text-sm font-medium ${active ? "text-ink" : "text-muted"}`}>{value || "—"}</p>
     </div>
   );
 }
@@ -445,41 +683,66 @@ function GuestStepper({ label, value, onChange }: { label: string; value: number
   return (
     <div>
       <p className="text-[10px] uppercase tracking-wide text-muted">{label}</p>
-      <div className="mt-1 flex items-center gap-1 rounded-xl border border-sand-300 bg-white p-1">
-        <button type="button" onClick={() => onChange(Math.max(1, value - 1))} className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-terracotta hover:bg-sand disabled:opacity-30" disabled={value <= 1}>−</button>
-        <span className="w-8 text-center text-sm font-semibold">{value}</span>
-        <button type="button" onClick={() => onChange(Math.min(20, value + 1))} className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-terracotta hover:bg-sand disabled:opacity-30" disabled={value >= 20}>+</button>
+      <div className="mt-1 flex items-center gap-0.5 rounded-xl border border-sand-300 bg-white p-0.5">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(1, value - 1))}
+          disabled={value <= 1}
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-light text-terracotta transition hover:bg-sand disabled:opacity-30"
+        >
+          −
+        </button>
+        <span className="w-8 text-center text-sm font-semibold text-ink">{value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(20, value + 1))}
+          disabled={value >= 20}
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-light text-terracotta transition hover:bg-sand disabled:opacity-30"
+        >
+          +
+        </button>
       </div>
     </div>
   );
 }
 
-function Field({ label, value, onChange, type = "text", required, placeholder }: {
+function Field({
+  label, value, onChange, type = "text", required, placeholder,
+}: {
   label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean; placeholder?: string;
 }) {
   return (
     <div>
-      <label className="label">{label}{required && <span className="text-terracotta"> *</span>}</label>
-      <input type={type} required={required} value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} className="input" />
+      <label className="label">
+        {label}
+        {required && <span className="text-terracotta"> *</span>}
+      </label>
+      <input
+        type={type}
+        required={required}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        className="input"
+      />
     </div>
   );
 }
 
-function Summary({
-  fr, dict, locale, checkIn, checkOut, guests, nights, optionLabel, chosenExtras, selectedExtras, total, flat,
+function SummaryRow({
+  fr, dict, locale, checkIn, checkOut, guests, nights, optionLabel, chosenExtras, selectedExtras, total,
 }: {
   fr: boolean; dict: Dictionary; locale: Locale;
   checkIn: string; checkOut: string; guests: number; nights: number;
   optionLabel: string | null;
   chosenExtras: ClientExtra[]; selectedExtras: Record<string, number>;
-  total: number; flat?: boolean;
+  total: number;
 }) {
   const t = dict.stay;
   const a = parseDateOnly(checkIn);
   const b = parseDateOnly(checkOut);
   return (
-    <div className={flat ? "mt-6 rounded-2xl bg-sand p-5 text-left" : "card p-5"}>
-      <h4 className="font-serif text-lg text-ink">{t.summary}</h4>
+    <>
       <dl className="mt-3 space-y-2 text-sm">
         <Row label={t.checkIn} value={a ? formatDateHuman(a, locale) : "—"} />
         <Row label={t.checkOut} value={b ? formatDateHuman(b, locale) : "—"} />
@@ -491,17 +754,20 @@ function Summary({
           <p className="text-xs uppercase tracking-wide text-muted">Extras</p>
           <ul className="mt-1 space-y-0.5 text-sm text-ink">
             {chosenExtras.map((e) => (
-              <li key={e.id}>{e.name}{selectedExtras[e.id] > 1 ? ` ×${selectedExtras[e.id]}` : ""}</li>
+              <li key={e.id}>
+                {e.name}
+                {selectedExtras[e.id] > 1 ? ` ×${selectedExtras[e.id]}` : ""}
+              </li>
             ))}
           </ul>
         </div>
       )}
-      <div className="mt-4 flex items-center justify-between border-t border-sand-300 pt-3">
+      <div className="mt-4 flex items-center justify-between rounded-xl bg-terracotta/5 px-4 py-3">
         <span className="text-sm text-muted">{dict.common.estimatedTotal}</span>
-        <span className="font-serif text-2xl text-terracotta">{formatMAD(total, locale)}</span>
+        <span className="font-serif text-xl text-terracotta">{formatEUR(total, locale)}</span>
       </div>
       <p className="mt-2 text-xs text-muted">{dict.common.finalConfirmation}</p>
-    </div>
+    </>
   );
 }
 

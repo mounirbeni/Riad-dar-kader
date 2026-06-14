@@ -5,8 +5,8 @@ export const RIAD = {
   totalRooms: 7,
   city: "Marrakech",
   area: "Médina, près du Musée Mouassine",
-  currency: "MAD",
-  currencyLabel: "MAD",
+  currency: "EUR",
+  currencyLabel: "€",
   openingNote: {
     fr: "Ouverture prévue début octobre",
     en: "Opening early October",
