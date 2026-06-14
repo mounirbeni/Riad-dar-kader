@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { searchAvailability, createBooking } from "@/app/actions/booking";
@@ -34,6 +35,25 @@ type Confirmation = {
 };
 
 const TOTAL_STEPS = 4;
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+// Sliding step transition — direction-aware.
+const stepVariants = {
+  enter: (dir: "forward" | "back") => ({ opacity: 0, x: dir === "forward" ? 48 : -48 }),
+  center: { opacity: 1, x: 0 },
+  exit: (dir: "forward" | "back") => ({ opacity: 0, x: dir === "forward" ? -48 : 48 }),
+};
+
+// Staggered list reveal for the room cards.
+const listVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+};
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } },
+};
 
 export function BookingFlow({
   locale,
@@ -168,18 +188,35 @@ export function BookingFlow({
   // ---------- Confirmation ----------
   if (step === 5 && confirmation) {
     return (
-      <div className="mt-10 animate-step-in">
+      <motion.div
+        className="mt-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: EASE }}
+      >
         <div className="mx-auto max-w-xl overflow-hidden rounded-3xl shadow-xl">
           {/* Celebratory header */}
           <div className="relative overflow-hidden bg-gradient-to-br from-terracotta to-terracotta-dark px-8 py-12 text-center text-white">
             <div className="absolute inset-0 bg-zellige opacity-20" />
             <div className="relative">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/30 backdrop-blur-sm">
+              <motion.div
+                className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/20 ring-4 ring-white/30 backdrop-blur-sm"
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.15 }}
+              >
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-terracotta">
                   <IconCheck size={28} />
                 </div>
-              </div>
-              <h2 className="mt-5 font-serif text-3xl">{t.confirmTitle}</h2>
+              </motion.div>
+              <motion.h2
+                className="mt-5 font-serif text-3xl"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                {t.confirmTitle}
+              </motion.h2>
               <p className="mx-auto mt-2 max-w-sm text-white/85 text-sm leading-relaxed">{t.confirmText}</p>
             </div>
           </div>
@@ -219,7 +256,7 @@ export function BookingFlow({
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -285,7 +322,16 @@ export function BookingFlow({
       <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
         {/* Main card */}
         <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-card">
-          <div key={step} className={direction === "forward" ? "animate-step-in" : "animate-step-back"}>
+          <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <motion.div
+            key={step}
+            custom={direction}
+            variants={stepVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.32, ease: EASE }}
+          >
 
             {/* ── STEP 1 — Calendar ── */}
             {step === 1 && (
@@ -404,18 +450,26 @@ export function BookingFlow({
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">
                           {fr ? "Sélectionnez votre chambre" : "Select your room"}
                         </p>
-                        <div className="space-y-3">
+                        <motion.div
+                          className="space-y-3"
+                          variants={listVariants}
+                          initial="hidden"
+                          animate="show"
+                        >
                           {availability.availableRoomsDetail.map((room, idx) => {
                             const selected = selectedRoomIds.includes(room.id);
                             const photo = room.photos[0];
                             const fits = room.capacity >= guests;
                             return (
-                              <button
+                              <motion.button
                                 type="button"
                                 key={room.id}
+                                variants={cardVariants}
+                                whileHover={fits ? { y: -2 } : undefined}
+                                whileTap={fits ? { scale: 0.985 } : undefined}
                                 onClick={() => selectRoom(room.id)}
                                 disabled={!fits}
-                                className={`group block w-full overflow-hidden rounded-2xl border-2 text-left transition-all duration-200 ${
+                                className={`group block w-full overflow-hidden rounded-2xl border-2 text-left transition-colors duration-200 ${
                                   !fits
                                     ? "cursor-not-allowed border-sand-200 bg-sand/40 opacity-60"
                                     : selected
@@ -448,13 +502,27 @@ export function BookingFlow({
                                       </span>
                                     )}
                                     {/* Selected overlay */}
-                                    {selected && (
-                                      <div className="absolute inset-0 flex items-center justify-center bg-terracotta/45">
-                                        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-terracotta shadow">
-                                          <IconCheck size={22} />
-                                        </span>
-                                      </div>
-                                    )}
+                                    <AnimatePresence>
+                                      {selected && (
+                                        <motion.div
+                                          className="absolute inset-0 flex items-center justify-center bg-terracotta/45"
+                                          initial={{ opacity: 0 }}
+                                          animate={{ opacity: 1 }}
+                                          exit={{ opacity: 0 }}
+                                          transition={{ duration: 0.2 }}
+                                        >
+                                          <motion.span
+                                            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-terracotta shadow"
+                                            initial={{ scale: 0.4, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            exit={{ scale: 0.4, opacity: 0 }}
+                                            transition={{ type: "spring", stiffness: 500, damping: 22 }}
+                                          >
+                                            <IconCheck size={22} />
+                                          </motion.span>
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
                                   </div>
 
                                   {/* Info */}
@@ -501,22 +569,30 @@ export function BookingFlow({
 
                                     {/* Radio selector (single choice) */}
                                     <span
-                                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
                                         selected
                                           ? "border-terracotta"
                                           : "border-sand-300"
                                       }`}
                                     >
-                                      {selected && (
-                                        <span className="h-3 w-3 rounded-full bg-terracotta" />
-                                      )}
+                                      <AnimatePresence>
+                                        {selected && (
+                                          <motion.span
+                                            className="h-3 w-3 rounded-full bg-terracotta"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            exit={{ scale: 0 }}
+                                            transition={{ type: "spring", stiffness: 600, damping: 24 }}
+                                          />
+                                        )}
+                                      </AnimatePresence>
                                     </span>
                                   </div>
                                 </div>
-                              </button>
+                              </motion.button>
                             );
                           })}
-                        </div>
+                        </motion.div>
 
                         {/* No single room can host this many guests */}
                         {availability.availableRoomsDetail.every(
@@ -702,7 +778,8 @@ export function BookingFlow({
                 </form>
               </div>
             )}
-          </div>
+          </motion.div>
+          </AnimatePresence>
         </div>
 
         {/* Sticky summary sidebar */}
