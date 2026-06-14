@@ -1,11 +1,20 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { formatDateHuman, nightsBetween } from "@/lib/dates";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { BookingActions } from "@/components/admin/BookingActions";
 import { ownerWhatsAppLink } from "@/lib/whatsapp";
+import {
+  IconArrowLeft,
+  IconCalendar,
+  IconUser,
+  IconMoon,
+  IconBed,
+  IconCheck,
+  IconMail,
+} from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
 
@@ -44,117 +53,178 @@ export default async function BookingDetailPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <Link
-            href="/admin/bookings"
-            className="text-sm text-muted hover:text-terracotta"
-          >
-            ← Retour aux réservations
-          </Link>
-          <h1 className="mt-1 font-serif text-3xl text-ink">
-            {booking.guestName}
-          </h1>
-          <p className="text-sm text-muted">Référence {booking.reference}</p>
+      {/* Back + title */}
+      <div>
+        <Link
+          href="/admin/bookings"
+          className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-terracotta"
+        >
+          <IconArrowLeft size={14} />
+          Retour aux réservations
+        </Link>
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-terracotta/10 font-serif text-xl text-terracotta">
+              {booking.guestName.slice(0, 1).toUpperCase()}
+            </span>
+            <div>
+              <h1 className="font-serif text-3xl text-ink">{booking.guestName}</h1>
+              <p className="text-sm text-muted font-mono">{booking.reference}</p>
+            </div>
+          </div>
+          <StatusBadge status={booking.status} large />
         </div>
-        <StatusBadge status={booking.status} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          {/* Stay */}
-          <div className="card p-5">
-            <h2 className="font-serif text-lg text-ink">Séjour</h2>
-            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Field label="Arrivée" value={formatDateHuman(booking.checkIn, "fr")} />
-              <Field label="Départ" value={formatDateHuman(booking.checkOut, "fr")} />
-              <Field label="Nuits" value={String(nights)} />
-              <Field label="Voyageurs" value={String(booking.guests)} />
+        {/* Left — stay, guest, extras */}
+        <div className="space-y-5 lg:col-span-2">
+
+          {/* Stay overview strip */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <MiniStat icon={<IconCalendar size={14} />} label="Arrivée" value={formatDateHuman(booking.checkIn, "fr")} />
+            <MiniStat icon={<IconCalendar size={14} />} label="Départ" value={formatDateHuman(booking.checkOut, "fr")} />
+            <MiniStat icon={<IconMoon size={14} />} label="Nuits" value={String(nights)} />
+            <MiniStat icon={<IconUser size={14} />} label="Voyageurs" value={String(booking.guests)} />
+          </div>
+
+          {/* Stay details */}
+          <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+            <div className="border-b border-sand-100 bg-sand/30 px-5 py-3.5">
+              <h2 className="flex items-center gap-2 font-serif text-lg text-ink">
+                <IconBed size={16} className="text-terracotta" />
+                Séjour
+              </h2>
+            </div>
+            <dl className="grid gap-4 p-5 sm:grid-cols-2">
               {booking.optionLabel && (
-                <Field label="Formule" value={booking.optionLabel} />
+                <DetailField label="Formule" value={booking.optionLabel} />
               )}
-              <Field
+              <DetailField
                 label="Chambres attribuées"
-                value={
-                  booking.rooms.map((r) => r.room.name).join(", ") || "—"
-                }
+                value={booking.rooms.map((r) => r.room.name).join(", ") || "—"}
+              />
+              <DetailField
+                label="Demande reçue"
+                value={formatDateHuman(booking.createdAt, "fr")}
               />
             </dl>
           </div>
 
-          {/* Guest */}
-          <div className="card p-5">
-            <h2 className="font-serif text-lg text-ink">Coordonnées</h2>
-            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Field label="Email" value={booking.guestEmail} />
-              <Field label="Téléphone" value={booking.guestPhone} />
-              <Field label="Pays" value={booking.guestCountry || "—"} />
-            </dl>
-            {booking.specialRequests && (
-              <div className="mt-4">
-                <p className="text-sm text-muted">Demandes particulières</p>
-                <p className="mt-1 text-sm text-ink">{booking.specialRequests}</p>
+          {/* Guest contact */}
+          <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+            <div className="border-b border-sand-100 bg-sand/30 px-5 py-3.5">
+              <h2 className="flex items-center gap-2 font-serif text-lg text-ink">
+                <IconUser size={16} className="text-terracotta" />
+                Coordonnées
+              </h2>
+            </div>
+            <div className="p-5">
+              <dl className="grid gap-4 sm:grid-cols-2">
+                <DetailField label="Email" value={booking.guestEmail} copyable />
+                <DetailField label="Téléphone" value={booking.guestPhone} copyable />
+                <DetailField label="Pays" value={booking.guestCountry || "—"} />
+              </dl>
+              {booking.specialRequests && (
+                <div className="mt-4 rounded-xl bg-sand/60 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+                    Demandes particulières
+                  </p>
+                  <p className="mt-1 text-sm text-ink">{booking.specialRequests}</p>
+                </div>
+              )}
+              <div className="mt-5 flex flex-wrap gap-3">
+                <a
+                  href={`mailto:${booking.guestEmail}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-sand-200 bg-white px-4 py-2.5 text-sm font-medium text-ink transition hover:border-terracotta/30 hover:text-terracotta"
+                >
+                  <IconMail size={14} />
+                  Envoyer un email
+                </a>
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-whatsapp"
+                >
+                  WhatsApp
+                </a>
               </div>
-            )}
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp mt-5"
-            >
-              WhatsApp au propriétaire
-            </a>
+            </div>
           </div>
 
-          {/* Extras */}
-          <div className="card p-5">
-            <h2 className="font-serif text-lg text-ink">Extras demandés</h2>
-            {booking.extras.length === 0 ? (
-              <p className="mt-3 text-sm text-muted">Aucun extra.</p>
-            ) : (
-              <ul className="mt-3 divide-y divide-sand-200">
-                {booking.extras.map((e) => (
-                  <li key={e.id} className="flex justify-between py-2 text-sm">
-                    <span className="text-ink">
-                      {e.nameSnapshot}
-                      {e.quantity > 1 ? ` ×${e.quantity}` : ""}
-                    </span>
-                    <span className="text-muted">
-                      {formatMAD(e.priceSnapshot, "fr")} / unité
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <div className="mt-4 flex items-center justify-between border-t border-sand-200 pt-3">
-              <span className="text-sm text-muted">Total estimé</span>
-              <span className="font-serif text-xl text-terracotta">
-                {formatMAD(booking.estimatedTotal, "fr")}
-              </span>
+          {/* Extras + total */}
+          <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+            <div className="border-b border-sand-100 bg-sand/30 px-5 py-3.5">
+              <h2 className="flex items-center gap-2 font-serif text-lg text-ink">
+                <IconCheck size={16} className="text-terracotta" />
+                Extras & total
+              </h2>
+            </div>
+            <div className="p-5">
+              {booking.extras.length === 0 ? (
+                <p className="text-sm text-muted">Aucun extra demandé.</p>
+              ) : (
+                <ul className="space-y-2">
+                  {booking.extras.map((e) => (
+                    <li
+                      key={e.id}
+                      className="flex items-center justify-between rounded-xl bg-sand/50 px-4 py-3 text-sm"
+                    >
+                      <span className="font-medium text-ink">
+                        {e.nameSnapshot}
+                        {e.quantity > 1 && (
+                          <span className="ml-1 text-muted">×{e.quantity}</span>
+                        )}
+                      </span>
+                      <span className="text-muted">
+                        {formatEUR(e.priceSnapshot, "fr")} / unité
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {/* Total */}
+              <div className="mt-4 flex items-center justify-between rounded-2xl bg-gradient-to-r from-terracotta/5 to-brass/5 border border-sand-200 px-5 py-4">
+                <span className="text-sm font-medium text-muted">Total estimé</span>
+                <span className="font-serif text-2xl text-terracotta">
+                  {formatEUR(booking.estimatedTotal, "fr")}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="space-y-6">
+        {/* Right — actions */}
+        <div className="space-y-5">
           <BookingActions
             bookingId={booking.id}
             status={booking.status}
             adminNotes={booking.adminNotes}
           />
-          <div className="card p-5 text-xs text-muted">
-            <p>Demande reçue le {formatDateHuman(booking.createdAt, "fr")}</p>
-          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+function MiniStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-sand-200 bg-white p-4 shadow-sm">
+      <div className="flex items-center gap-1.5 text-muted">
+        {icon}
+        <span className="text-[11px] uppercase tracking-wide">{label}</span>
+      </div>
+      <p className="mt-1.5 font-medium text-ink">{value}</p>
+    </div>
+  );
+}
+
+function DetailField({ label, value, copyable }: { label: string; value: string; copyable?: boolean }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-muted">{label}</dt>
-      <dd className="mt-0.5 text-sm font-medium text-ink">{value}</dd>
+      <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted">{label}</dt>
+      <dd className={`mt-1 text-sm font-medium text-ink ${copyable ? "font-mono" : ""}`}>{value}</dd>
     </div>
   );
 }
