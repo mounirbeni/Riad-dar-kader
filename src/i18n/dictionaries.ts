@@ -146,7 +146,9 @@ export const dictionaries = {
       guests: "Voyageurs",
       search: "Vérifier les disponibilités",
       searching: "Recherche en cours…",
-      availableTitle: "Options disponibles",
+      availableTitle: "Chambres disponibles",
+      roomsAvailableAll: "Toutes nos chambres sont disponibles pour ces dates",
+      roomsAvailableSome: "chambres disponibles pour ces dates",
       noAvailability:
         "Aucune disponibilité pour ces dates. Essayez d'autres dates ou contactez-nous directement.",
       selectOption: "Choisir cette option",
@@ -358,7 +360,9 @@ export const dictionaries = {
       guests: "Guests",
       search: "Check availability",
       searching: "Searching…",
-      availableTitle: "Available options",
+      availableTitle: "Available rooms",
+      roomsAvailableAll: "All our rooms are available for these dates",
+      roomsAvailableSome: "rooms available for these dates",
       noAvailability:
         "No availability for these dates. Try other dates or contact us directly.",
       selectOption: "Select this option",
