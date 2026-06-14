@@ -14,7 +14,24 @@ import {
 } from "@/lib/dates";
 import { Stepper } from "./Stepper";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
-import { IconCheck, IconBed, IconUser, IconMoon } from "@/components/Icons";
+import {
+  IconCheck,
+  IconBed,
+  IconUser,
+  IconMoon,
+  IconUsers,
+  IconHome,
+  IconStar,
+} from "@/components/Icons";
+
+// A distinct icon per stay-option type, keyed to the option's `key`.
+const OPTION_ICON: Record<StayOption["key"], typeof IconBed> = {
+  couple: IconUser,
+  standard: IconBed,
+  family: IconHome,
+  group: IconUsers,
+  full_riad: IconStar,
+};
 
 export type ClientExtra = {
   id: string;
@@ -230,8 +247,12 @@ export function BookingFlow({
               )}
               {availability?.isAvailable && (
                 <div className="space-y-4">
-                  {availability.suggestedOptions.map((option) => {
+                  {availability.suggestedOptions.map((option, index) => {
                     const selected = optionKey === option.key;
+                    const OptionIcon = OPTION_ICON[option.key];
+                    // The first option is the cheapest fitting formula — flag it.
+                    const recommended =
+                      index === 0 && availability.suggestedOptions.length > 1;
                     return (
                       <button
                         type="button"
@@ -244,29 +265,52 @@ export function BookingFlow({
                         }`}
                       >
                         <div className="flex items-start justify-between gap-4">
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-serif text-xl text-ink">{optionLabel(option)}</h4>
-                              {option.key === "full_riad" && (
-                                <span className="rounded-full bg-brass/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass">
-                                  {fr ? "Exclusif" : "Exclusive"}
+                          <div className="flex min-w-0 gap-4">
+                            {/* Option-type icon badge */}
+                            <span
+                              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                                selected
+                                  ? "bg-terracotta text-white"
+                                  : "bg-terracotta/10 text-terracotta"
+                              }`}
+                            >
+                              <OptionIcon size={20} />
+                            </span>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <h4 className="font-serif text-xl text-ink">{optionLabel(option)}</h4>
+                                {recommended && (
+                                  <span className="rounded-full bg-terracotta/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-terracotta">
+                                    {fr ? "Recommandé" : "Recommended"}
+                                  </span>
+                                )}
+                                {option.key === "full_riad" && (
+                                  <span className="rounded-full bg-brass/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brass">
+                                    {fr ? "Exclusif" : "Exclusive"}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="mt-1 text-sm text-muted">{fr ? option.descriptionFr : option.descriptionEn}</p>
+                              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                                <span className="flex items-center gap-1">
+                                  <IconBed size={13} />
+                                  {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
                                 </span>
+                                <span className="flex items-center gap-1">
+                                  <IconUser size={13} />
+                                  {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <IconMoon size={13} />
+                                  {nights} {nights > 1 ? dict.common.nights : dict.common.night}
+                                </span>
+                              </div>
+                              {option.roomNames.length > 0 && (
+                                <p className="mt-2 text-xs text-muted">
+                                  <span className="text-ink/60">{fr ? "Chambres : " : "Rooms: "}</span>
+                                  {option.roomNames.join(" · ")}
+                                </p>
                               )}
-                            </div>
-                            <p className="mt-1 text-sm text-muted">{fr ? option.descriptionFr : option.descriptionEn}</p>
-                            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-                              <span className="flex items-center gap-1">
-                                <IconBed size={13} />
-                                {option.roomsRequired} {option.roomsRequired > 1 ? (fr ? "chambres" : "rooms") : (fr ? "chambre" : "room")}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <IconUser size={13} />
-                                {fr ? "jusqu'à" : "up to"} {option.maxGuests} {dict.common.guests}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <IconMoon size={13} />
-                                {nights} {nights > 1 ? dict.common.nights : dict.common.night}
-                              </span>
                             </div>
                           </div>
                           <div className="shrink-0 text-right">
