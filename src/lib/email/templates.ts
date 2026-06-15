@@ -2,6 +2,15 @@ import { formatDateHuman } from "@/lib/dates";
 import { formatEUR } from "@/lib/money";
 import { RIAD } from "@/lib/constants";
 
+function escHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 export type EmailBookingData = {
   reference: string;
   guestName: string;
@@ -123,7 +132,7 @@ export function guestRequestReceived(data: EmailBookingData, locale: "fr" | "en"
     : `Thank you for your stay request at ${RIAD.name}. We are checking availability and will get back to you shortly to confirm.`;
   const closing = locale === "fr" ? `À très bientôt,<br/>${t.team}` : `See you soon,<br/>${t.team}`;
 
-  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">Bonjour ${data.guestName},</p>
+  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">Bonjour ${escHtml(data.guestName)},</p>
      <p style="font-size:14px;line-height:1.6;">${intro}</p>
      ${detailsTable(data, locale)}
      ${estimatedNote(locale)}
@@ -144,9 +153,9 @@ export function ownerNewBooking(data: EmailBookingData): RenderedEmail {
     `<p style="font-size:14px;line-height:1.6;">Une nouvelle demande vient d'arriver.</p>
      ${detailsTable(data, "fr")}
      <table role="presentation" width="100%" style="margin-top:12px;">
-       <tr><td style="padding:6px 0;color:${COLORS.muted};font-size:13px;">Contact</td><td style="padding:6px 0;font-size:14px;font-weight:600;">${data.guestEmail} · ${data.guestPhone}${data.guestCountry ? ` (${data.guestCountry})` : ""}</td></tr>
+       <tr><td style="padding:6px 0;color:${COLORS.muted};font-size:13px;">Contact</td><td style="padding:6px 0;font-size:14px;font-weight:600;">${escHtml(data.guestEmail)} · ${escHtml(data.guestPhone)}${data.guestCountry ? ` (${escHtml(data.guestCountry)})` : ""}</td></tr>
      </table>
-     ${data.specialRequests ? `<p style="font-size:13px;color:${COLORS.muted};margin-top:12px;"><strong>Demandes :</strong> ${data.specialRequests}</p>` : ""}`,
+     ${data.specialRequests ? `<p style="font-size:13px;color:${COLORS.muted};margin-top:12px;"><strong>Demandes :</strong> ${escHtml(data.specialRequests)}</p>` : ""}`,
     "fr"
   );
   const text = `Nouvelle demande ${data.reference}\n${data.guestName} — ${data.guestEmail} — ${data.guestPhone}\n${formatDateHuman(data.checkIn, "fr")} → ${formatDateHuman(data.checkOut, "fr")} · ${data.guests} voyageurs\nTotal estimé : ${formatEUR(data.estimatedTotal)}`;
@@ -168,7 +177,7 @@ export function bookingConfirmed(data: EmailBookingData, locale: "fr" | "en" = "
     ? `À très bientôt à Marrakech,<br/>${t.team}`
     : `See you soon in Marrakech,<br/>${t.team}`;
 
-  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${data.guestName},</p>
+  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${escHtml(data.guestName)},</p>
      <p style="font-size:14px;line-height:1.6;">${intro}</p>
      ${detailsTable(data, locale)}
      <p style="font-size:14px;line-height:1.6;margin-top:20px;">${closing}</p>`, locale);
@@ -192,7 +201,7 @@ export function bookingCancelled(data: EmailBookingData, locale: "fr" | "en" = "
     ? `Nous sommes désolés, nous ne pouvons malheureusement pas confirmer votre séjour pour les dates demandées (${formatDateHuman(data.checkIn, dateLocale)} → ${formatDateHuman(data.checkOut, dateLocale)}). N'hésitez pas à nous contacter pour trouver d'autres dates.`
     : `We are sorry, we are unable to confirm your stay for the requested dates (${formatDateHuman(data.checkIn, dateLocale)} → ${formatDateHuman(data.checkOut, dateLocale)}). Please contact us to find alternative dates.`;
 
-  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${data.guestName},</p>
+  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${escHtml(data.guestName)},</p>
      <p style="font-size:14px;line-height:1.6;">${body}</p>
      <p style="font-size:14px;line-height:1.6;margin-top:20px;">${locale === "fr" ? "Bien à vous" : "Kind regards"},<br/>${t.team}</p>`, locale);
 
@@ -215,7 +224,7 @@ export function preArrival(data: EmailBookingData, locale: "fr" | "en" = "fr"): 
     ? `Votre séjour au ${RIAD.name} approche (arrivée le ${formatDateHuman(data.checkIn, dateLocale)}). Le riad se trouve dans la Médina, près du Musée Mouassine. Comme les ruelles sont piétonnes, écrivez-nous sur WhatsApp à votre arrivée et nous viendrons vous accueillir.`
     : `Your stay at ${RIAD.name} is approaching (arrival on ${formatDateHuman(data.checkIn, dateLocale)}). The riad is located in the Medina, near Mouassine Museum. As the alleys are pedestrian, please message us on WhatsApp upon arrival and we will come to welcome you.`;
 
-  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${data.guestName},</p>
+  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${escHtml(data.guestName)},</p>
      <p style="font-size:14px;line-height:1.6;">${body}</p>
      ${detailsTable(data, locale)}
      <p style="font-size:14px;line-height:1.6;margin-top:20px;">${locale === "fr" ? "À très vite" : "See you soon"},<br/>${t.team}</p>`, locale);
@@ -242,7 +251,7 @@ export function passwordResetEmail(data: { name: string; resetUrl: string }, loc
     ? "Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail."
     : "If you did not request this reset, please ignore this email.";
 
-  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${data.name},</p>
+  const html = layout(title, `<p style="font-size:14px;line-height:1.6;">${locale === "fr" ? "Bonjour" : "Hello"} ${escHtml(data.name)},</p>
      <p style="font-size:14px;line-height:1.6;">${intro}</p>
      <div style="text-align:center;margin:28px 0;">
        <a href="${data.resetUrl}" style="display:inline-block;background:${COLORS.primary};color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:600;">${btnLabel}</a>

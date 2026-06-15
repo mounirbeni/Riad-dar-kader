@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 const COOKIE_NAME = "rdk_admin_session";
@@ -36,7 +37,7 @@ export async function verifyPassword(
 }
 
 export async function createSession(payload: SessionPayload): Promise<void> {
-  const token = await new SignJWT({ email: payload.email, role: payload.role })
+  const token = await new SignJWT({ email: payload.email, role: payload.role, type: "admin" })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(payload.sub)
     .setIssuedAt()
@@ -64,7 +65,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, secret());
-    if (!payload.sub) return null;
+    if (!payload.sub || payload["type"] !== "admin") return null;
     return {
       sub: payload.sub,
       email: String(payload.email ?? ""),
@@ -95,6 +96,6 @@ export async function authenticate(
 
 export async function requireSession(): Promise<SessionPayload> {
   const session = await getSession();
-  if (!session) throw new Error("UNAUTHORIZED");
+  if (!session) redirect("/admin/login");
   return session;
 }

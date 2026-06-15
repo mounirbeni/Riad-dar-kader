@@ -7,6 +7,8 @@ import { authenticateGuest, createGuestSession, destroyGuestSession } from "@/li
 import { randomBytes, createHash } from "crypto";
 import { sendEmail } from "@/lib/email/send";
 import { passwordResetEmail } from "@/lib/email/templates";
+import { headers } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
 
 type ActionState = { ok: boolean; error?: string; message?: string };
 
@@ -14,6 +16,11 @@ export async function guestLoginAction(_prev: ActionState, formData: FormData): 
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
   const locale = String(formData.get("locale") || "fr");
+
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const loginLimit = rateLimit(`guest-login:${ip}`, 8, 10 * 60_000);
+  if (!loginLimit.success) return { ok: false, error: "Trop de tentatives. Réessayez dans 10 minutes." };
 
   if (!email || !password) return { ok: false, error: "Veuillez remplir tous les champs." };
 
@@ -31,6 +38,11 @@ export async function guestSignupAction(_prev: ActionState, formData: FormData):
   const phone = String(formData.get("phone") || "").trim();
   const country = String(formData.get("country") || "").trim();
   const locale = String(formData.get("locale") || "fr");
+
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const signupLimit = rateLimit(`guest-signup:${ip}`, 5, 10 * 60_000);
+  if (!signupLimit.success) return { ok: false, error: "Trop de tentatives. Réessayez dans 10 minutes." };
 
   if (!name || !email || !password) return { ok: false, error: "Veuillez remplir tous les champs obligatoires." };
   if (password.length < 8) return { ok: false, error: "Le mot de passe doit contenir au moins 8 caractères." };
@@ -68,6 +80,10 @@ export type BookingAuthResult =
 export async function bookingLoginAction(_prev: BookingAuthResult, formData: FormData): Promise<BookingAuthResult> {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const loginLimit = rateLimit(`booking-login:${ip}`, 8, 10 * 60_000);
+  if (!loginLimit.success) return { ok: false, error: "Trop de tentatives. Réessayez plus tard." };
   if (!email || !password) return { ok: false, error: "Veuillez remplir tous les champs." };
   const session = await authenticateGuest(email, password);
   if (!session) return { ok: false, error: "Email ou mot de passe incorrect." };
@@ -81,6 +97,10 @@ export async function bookingSignupAction(_prev: BookingAuthResult, formData: Fo
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
   const phone = String(formData.get("phone") || "").trim() || null;
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const signupLimit = rateLimit(`booking-signup:${ip}`, 5, 10 * 60_000);
+  if (!signupLimit.success) return { ok: false, error: "Trop de tentatives. Réessayez plus tard." };
   if (!name || !email || !password) return { ok: false, error: "Veuillez remplir tous les champs obligatoires." };
   if (password.length < 8) return { ok: false, error: "Mot de passe : 8 caractères minimum." };
   const normalizedPhone = phone || null;
@@ -105,6 +125,10 @@ export async function guestLogoutAction(locale: string = "fr"): Promise<void> {
 export async function requestPasswordResetAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const locale = String(formData.get("locale") || "fr") as "fr" | "en";
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const resetLimit = rateLimit(`pwd-reset:${ip}`, 3, 15 * 60_000);
+  if (!resetLimit.success) return { ok: true, message: "Si un compte existe, un lien de réinitialisation a été envoyé." };
   if (!email) return { ok: false, error: "Veuillez saisir votre adresse e-mail." };
 
   const user = await prisma.guestUser.findUnique({ where: { email } });

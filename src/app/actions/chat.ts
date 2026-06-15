@@ -13,6 +13,7 @@ export async function sendGuestMessageAction(formData: FormData): Promise<void> 
   const bookingId = String(formData.get("bookingId") || "");
   const content = String(formData.get("content") || "").trim();
   if (!bookingId || !content) return;
+  if (content.length > 2000) return;
 
   const h = await headers();
   const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
@@ -36,6 +37,9 @@ export async function sendAdminMessageAction(_prev: undefined, formData: FormDat
   const bookingId = String(formData.get("bookingId") || "");
   const content = String(formData.get("content") || "").trim();
   if (!bookingId || !content) return undefined;
+  if (content.length > 5000) return undefined;
+  const bookingExists = await prisma.booking.findUnique({ where: { id: bookingId }, select: { id: true } });
+  if (!bookingExists) return undefined;
 
   await prisma.bookingMessage.create({
     data: { bookingId, sender: "admin", senderName: "Riad Dar Kader", content },

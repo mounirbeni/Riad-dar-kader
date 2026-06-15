@@ -36,7 +36,7 @@ export async function calendarAvailability(
   const ip = await clientIp();
   const limited = rateLimit(`calendar:${ip}`, 60, 60_000);
   if (!limited.success) return [];
-  return getDailyAvailability(fromStr, days);
+  return getDailyAvailability(fromStr, Math.min(days, 180));
 }
 
 /** Public availability search (Step 2 of booking flow). */
@@ -170,7 +170,7 @@ export async function createBooking(
       status: "pending",
       optionLabel,
       estimatedTotal,
-      guestUserId: (data as { guestUserId?: string | null }).guestUserId || null,
+      guestUserId: null,
       rooms: {
         create: selectedRooms.map((r) => ({ roomId: r.id })),
       },
