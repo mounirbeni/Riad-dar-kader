@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { BottomNav } from "@/components/BottomNav";
+import { DemoBanner } from "@/components/DemoBanner";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -29,6 +30,7 @@ export default async function LocaleLayout({
       <Footer locale={locale as Locale} dict={dict} />
       <BottomNav locale={locale as Locale} />
       <WhatsAppFloat locale={locale as Locale} />
+      <DemoBanner />
     </div>
   );
 }
