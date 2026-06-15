@@ -13,7 +13,8 @@ import { formatEUR } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { RIAD, siteUrl } from "@/lib/constants";
-import { IconStar, IconMapPin, IconShield, IconCheck, IconWifi, IconWind, IconBath, IconCoffee, IconSun } from "@/components/Icons";
+import { IconStar, IconMapPin, IconShield, IconWifi, IconWind, IconBath, IconCoffee, IconSun } from "@/components/Icons";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 
 // Icons that correspond to the 3 selling points (atmosphere, location, direct booking)
 const SELLING_ICONS: ReactNode[] = [
@@ -147,20 +148,6 @@ export default async function HomePage({
               Médina de Marrakech · Maroc
             </span>
           </div>
-        </div>
-      </section>
-
-      {/* Stats strip */}
-      <section className="border-y border-sand-200 bg-white">
-        <div className="container-page grid grid-cols-2 divide-x divide-sand-200 sm:grid-cols-4">
-          {t.stats.map((stat, i) => (
-            <div key={i} className="flex flex-col items-center px-4 py-8 text-center">
-              <span className="font-serif text-3xl font-bold text-terracotta sm:text-4xl">
-                {stat.value}
-              </span>
-              <span className="mt-1 text-xs text-muted">{stat.label}</span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -304,34 +291,7 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-white py-20">
-        <div className="container-page">
-          <Reveal>
-            <h2 className="text-center font-serif text-3xl text-ink sm:text-4xl">
-              {t.testimonialsTitle}
-            </h2>
-          </Reveal>
-          <RevealGroup className="mt-12 grid gap-6 md:grid-cols-3">
-            {t.testimonials.map((testimonial, i) => (
-              <RevealItem key={i} className="card flex flex-col gap-4 p-7">
-                <div className="flex gap-0.5 text-brass">
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <IconStar key={s} size={14} className="fill-brass stroke-brass" />
-                  ))}
-                </div>
-                <p className="flex-1 text-sm leading-relaxed text-muted italic">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
-                <div>
-                  <p className="text-sm font-medium text-ink">{testimonial.name}</p>
-                  <p className="text-xs text-muted">{testimonial.origin}</p>
-                </div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
+      <TestimonialsCarousel reviews={t.testimonials} title={t.testimonialsTitle} />
 
       {/* Gallery teaser */}
       <section className="container-page py-16">
