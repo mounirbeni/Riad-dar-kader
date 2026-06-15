@@ -297,7 +297,7 @@ export function BookingFlow({
             </button>
 
             {/* Create account CTA — only shown to guests */}
-            {!isLoggedIn && (
+            {!authedUser && (
               <div className="mt-6 rounded-2xl border border-sand-200 bg-sand/60 p-5 text-center">
                 <p className="font-serif text-base text-ink">{dict.auth.confirmCtaTitle}</p>
                 <p className="mt-1 text-xs text-muted">{dict.auth.confirmCtaText}</p>
