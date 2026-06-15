@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useEffect } from "react";
-import { sendAdminMessageAction } from "@/app/actions/chat";
+import { sendAdminMessageAction, markAdminMessagesReadAction } from "@/app/actions/chat";
 
 type Message = {
   id: string;
@@ -27,6 +27,10 @@ export function AdminBookingChat({
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [, formAction, pending] = useActionState(sendAdminMessageAction, undefined);
+
+  useEffect(() => {
+    markAdminMessagesReadAction(bookingId).catch(() => {});
+  }, [bookingId]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });

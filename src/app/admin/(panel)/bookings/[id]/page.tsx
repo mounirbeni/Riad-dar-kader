@@ -7,7 +7,6 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { BookingActions } from "@/components/admin/BookingActions";
 import { ownerWhatsAppLink } from "@/lib/whatsapp";
 import { AdminBookingChat } from "@/components/admin/AdminBookingChat";
-import { markAdminMessagesReadAction } from "@/app/actions/chat";
 import {
   IconArrowLeft,
   IconCalendar,
@@ -35,9 +34,6 @@ export default async function BookingDetailPage({
     },
   });
   if (!booking) notFound();
-
-  // Mark guest messages as read when admin opens the booking
-  await markAdminMessagesReadAction(id);
 
   const nights = nightsBetween(booking.checkIn, booking.checkOut);
   const waUrl = ownerWhatsAppLink({
