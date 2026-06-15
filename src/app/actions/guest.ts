@@ -8,7 +8,7 @@ import { randomBytes, createHash } from "crypto";
 import { sendEmail } from "@/lib/email/send";
 import { passwordResetEmail } from "@/lib/email/templates";
 
-type ActionState = { ok: boolean; error?: string };
+type ActionState = { ok: boolean; error?: string; message?: string };
 
 export async function guestLoginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const email = String(formData.get("email") || "").trim().toLowerCase();
