@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { formatEUR } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 
@@ -48,9 +49,9 @@ export default async function ReportsPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Revenu total" value={`${totalRevenue.toLocaleString("fr-FR")} MAD`} icon="💰" />
+        <KpiCard label="Revenu total" value={formatEUR(totalRevenue)} icon="💰" />
         <KpiCard label="Réservations" value={String(totalBookings)} icon="📋" />
-        <KpiCard label="Revenu moyen / rés." value={`${avgPerBooking.toLocaleString("fr-FR")} MAD`} icon="📊" />
+        <KpiCard label="Revenu moyen / rés." value={formatEUR(avgPerBooking)} icon="📊" />
         <KpiCard label="Taux d'annulation" value={`${cancelRate}%`} icon="❌" />
       </div>
 
@@ -69,7 +70,7 @@ export default async function ReportsPage() {
                   <div
                     className="w-full rounded-t-lg bg-terracotta/80 hover:bg-terracotta transition-colors"
                     style={{ height: `${Math.max(4, (m.revenue / maxRevenue) * 100)}%` }}
-                    title={`${m.revenue.toLocaleString("fr-FR")} MAD · ${m.bookings} rés.`}
+                    title={`${formatEUR(m.revenue)} · ${m.bookings} rés.`}
                   />
                   <span className="text-[10px] text-muted text-center leading-tight">{m.month}</span>
                 </div>
@@ -92,7 +93,7 @@ export default async function ReportsPage() {
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="text-sm font-medium text-ink">{rs.room.name}</span>
                       <div className="text-right">
-                        <span className="text-sm font-bold text-terracotta">{rs.revenue.toLocaleString("fr-FR")} MAD</span>
+                        <span className="text-sm font-bold text-terracotta">{formatEUR(rs.revenue)}</span>
                         <span className="text-xs text-muted ml-2">({rs.bookings} rés.)</span>
                       </div>
                     </div>

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { SETTING_KEYS } from "@/lib/constants";
 import { SettingsForm } from "@/components/admin/SettingsForm";
+import { DangerZone } from "@/components/admin/DangerZone";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +21,7 @@ export default async function SettingsAdminPage() {
       </div>
       <SettingsForm holdPending={holdPending} minNights={minNights} />
 
-      <div className="card max-w-xl p-6 text-sm text-muted">
-        <h2 className="font-serif text-lg text-ink">Contenu & images</h2>
-        <p className="mt-2">
-          Les photos réelles pourront être ajoutées plus tard depuis la gestion des
-          chambres (champ photos), en remplacement des visuels provisoires.
-        </p>
-      </div>
+      <DangerZone />
     </div>
   );
 }

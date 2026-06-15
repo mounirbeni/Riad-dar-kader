@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { formatEUR } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ export default async function PaymentsPage() {
                     {Math.round((new Date(b.checkOut).getTime() - new Date(b.checkIn).getTime()) / 86400000)}
                   </td>
                   <td className="px-4 py-3.5 font-bold text-ink whitespace-nowrap">
-                    {b.estimatedTotal.toLocaleString("fr-FR")} MAD
+                    {formatEUR(b.estimatedTotal)}
                   </td>
                   <td className="px-4 py-3.5"><StatusBadge status={b.status} /></td>
                   <td className="px-4 py-3.5">
@@ -77,7 +78,7 @@ export default async function PaymentsPage() {
         <div className="px-5 py-3 border-t border-sand-200 flex items-center justify-between text-xs text-muted">
           <span>{bookings.length} réservations</span>
           <span className="font-medium text-ink">
-            Total confirmé : {totalConfirmed.toLocaleString("fr-FR")} MAD
+            Total confirmé : {formatEUR(totalConfirmed)}
           </span>
         </div>
       </div>
@@ -99,7 +100,7 @@ function SummaryCard({ label, amount, count, color }: { label: string; amount: n
   return (
     <div className={`rounded-2xl border p-5 ${styles[color]}`}>
       <p className={`text-xs font-medium mb-1 ${textStyles[color]}`}>{label}</p>
-      <p className={`text-2xl font-bold ${textStyles[color]}`}>{amount.toLocaleString("fr-FR")} <span className="text-base font-normal">MAD</span></p>
+      <p className={`text-2xl font-bold ${textStyles[color]}`}>{formatEUR(amount)}</p>
       <p className={`text-xs mt-1 ${textStyles[color]} opacity-70`}>{count} réservation{count !== 1 ? "s" : ""}</p>
     </div>
   );

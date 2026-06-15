@@ -5,6 +5,7 @@ import { contactSchema } from "@/lib/validation";
 import { rateLimit, sweep } from "@/lib/rate-limit";
 import { sendEmail } from "@/lib/email/send";
 import { RIAD } from "@/lib/constants";
+import { prisma } from "@/lib/prisma";
 
 export type ContactResult = { ok: true } | { ok: false; error: string };
 
@@ -26,6 +27,18 @@ export async function sendContactMessage(raw: unknown): Promise<ContactResult> {
     process.env.OWNER_NOTIFICATION_EMAIL ||
     process.env.ADMIN_EMAIL ||
     "owner@riaddarkader.com";
+
+  // Persist to DB for admin inbox
+  await prisma.contactMessage.create({
+    data: {
+      from: data.name,
+      email: data.email,
+      subject: `Message du site — ${data.name}`,
+      body: data.message,
+      channel: "form",
+      status: "new",
+    },
+  });
 
   await sendEmail({
     to: ownerEmail,

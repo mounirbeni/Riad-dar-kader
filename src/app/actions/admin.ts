@@ -308,6 +308,33 @@ export async function unblockDateAction(
   return { ok: true };
 }
 
+// --- Data management ---
+
+export async function clearAllDataAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  await requireSession();
+  const confirm = String(formData.get("confirm") || "");
+  if (confirm !== "EFFACER") {
+    return { ok: false, error: "Confirmation incorrecte. Tapez exactement : EFFACER" };
+  }
+  await prisma.bookingExtra.deleteMany();
+  await prisma.bookingRoom.deleteMany();
+  await prisma.booking.deleteMany();
+  await prisma.blockedDate.deleteMany();
+  // Clear transactional inbox + tasks — rooms/extras/settings/admin kept
+  try { await prisma.contactMessage.deleteMany(); } catch { /* table may not exist yet */ }
+  try { await prisma.housekeepingTask.deleteMany(); } catch { /* table may not exist yet */ }
+  revalidatePath("/admin");
+  revalidatePath("/admin/bookings");
+  revalidatePath("/admin/calendar");
+  revalidatePath("/admin/payments");
+  revalidatePath("/admin/reports");
+  revalidatePath("/admin/guests");
+  return { ok: true, message: "Toutes les réservations et dates bloquées ont été supprimées." };
+}
+
 // --- Settings ---
 
 export async function saveSettingsAction(

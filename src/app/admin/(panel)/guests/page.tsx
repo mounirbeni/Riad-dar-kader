@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { formatEUR } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 
@@ -80,7 +81,7 @@ export default async function GuestsPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3.5 text-right font-medium text-ink">
-                        {g.totalSpent.toLocaleString("fr-FR")} MAD
+                        {formatEUR(g.totalSpent)}
                       </td>
                     </tr>
                   );
@@ -89,7 +90,7 @@ export default async function GuestsPage() {
             </table>
           </div>
           <div className="px-5 py-3 border-t border-sand-200 text-xs text-muted">
-            Total : {guests.reduce((s, g) => s + g.totalSpent, 0).toLocaleString("fr-FR")} MAD généré · {guests.length} clients
+            Total : {formatEUR(guests.reduce((s, g) => s + g.totalSpent, 0))} générés · {guests.length} clients
           </div>
         </div>
       )}
@@ -120,7 +121,7 @@ export default async function GuestsPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-ink">{b.estimatedTotal.toLocaleString("fr-FR")} MAD</p>
+                  <p className="text-sm font-medium text-ink">{formatEUR(b.estimatedTotal)}</p>
                   <StatusBadge status={b.status} />
                 </div>
               </Link>
