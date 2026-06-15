@@ -7,10 +7,18 @@ import { contactEmail } from "@/lib/constants";
 
 const LINKS: NavKey[] = ["home", "riad", "rooms", "stay", "experiences", "gallery", "contact"];
 
+const LEGAL_LINKS: { key: "privacy" | "terms" | "bookingTerms" | "cancellation" | "cookies"; anchor: string }[] = [
+  { key: "privacy", anchor: "#privacy" },
+  { key: "terms", anchor: "#terms" },
+  { key: "bookingTerms", anchor: "#booking" },
+  { key: "cancellation", anchor: "#cancellation" },
+  { key: "cookies", anchor: "#cookies" },
+];
+
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   return (
     <footer className="mt-24 border-t border-sand-200 bg-terracotta text-sand">
-      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <h3 className="font-serif text-2xl text-white">Riad Dar Kader</h3>
           <p className="mt-3 max-w-sm text-sm text-sand/80">{dict.footer.tagline}</p>
@@ -60,6 +68,24 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             </li>
           </ul>
         </div>
+
+        <div>
+          <h4 className="text-sm font-semibold uppercase tracking-wider text-brass-light">
+            {dict.footer.legalTitle}
+          </h4>
+          <ul className="mt-4 space-y-2 text-sm">
+            {LEGAL_LINKS.map(({ key, anchor }) => (
+              <li key={key}>
+                <Link
+                  href={`/${locale}/legal${anchor}`}
+                  className="text-sand/80 transition hover:text-white"
+                >
+                  {dict.footer[key]}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="border-t border-white/10">
@@ -67,17 +93,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <span>
             © {new Date().getFullYear()} Riad Dar Kader. {dict.footer.rights}
           </span>
-          <div className="flex items-center gap-4">
-            <Link href={`/${locale}/legal`} className="hover:text-white transition-colors">
-              {dict.footer.privacy}
-            </Link>
-            <span>·</span>
-            <Link href={`/${locale}/legal#terms`} className="hover:text-white transition-colors">
-              {dict.footer.terms}
-            </Link>
-            <span>·</span>
-            <span>Marrakech · Maroc</span>
-          </div>
+          <span>Marrakech · Maroc</span>
         </div>
       </div>
     </footer>

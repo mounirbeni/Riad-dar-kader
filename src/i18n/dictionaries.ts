@@ -333,6 +333,9 @@ export const dictionaries = {
       legalTitle: "Légal",
       privacy: "Politique de confidentialité",
       terms: "Conditions générales",
+      bookingTerms: "Conditions de réservation",
+      cancellation: "Annulation & remboursement",
+      cookies: "Politique de cookies",
     },
     account: {
       loginTitle: "Mon espace voyageur",
@@ -741,6 +744,9 @@ export const dictionaries = {
       legalTitle: "Legal",
       privacy: "Privacy policy",
       terms: "Terms & conditions",
+      bookingTerms: "Booking terms",
+      cancellation: "Cancellation & refund",
+      cookies: "Cookie policy",
     },
     account: {
       loginTitle: "My traveller space",
