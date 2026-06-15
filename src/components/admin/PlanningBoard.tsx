@@ -391,7 +391,7 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
                   <label className="text-[10px] font-semibold text-muted uppercase tracking-wide block mb-1">Catégorie</label>
                   <select name="category" defaultValue="general" className="w-full rounded-xl border border-sand-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/30">
                     {Object.entries(CATEGORY_CONFIG).map(([k, v]) => (
-                      <option key={k} value={k}>{v.emoji} {v.label}</option>
+                      <option key={k} value={k}>{v.waEmoji} {v.label}</option>
                     ))}
                   </select>
                 </div>
