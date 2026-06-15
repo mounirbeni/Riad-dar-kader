@@ -315,13 +315,13 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
       {/* Scrollable table */}
       <div ref={scrollRef} className="overflow-x-auto rounded-2xl border border-sand-200 bg-white shadow-sm">
         <table
-          className="border-collapse"
+          className="border-separate border-spacing-0"
           style={{ minWidth: dateStrs.length * CELL_W + ROOM_COL_W, tableLayout: "fixed" }}
         >
           <thead>
             {/* Month label row */}
             <tr>
-              <th className="sticky left-0 z-20 bg-white border-b-0" style={{ width: ROOM_COL_W, minWidth: ROOM_COL_W }} />
+              <th className="sticky left-0 z-30 bg-white border-b-0" style={{ width: ROOM_COL_W, minWidth: ROOM_COL_W }} />
               {dateStrs.map((d, i) => (
                 <th key={d} className="p-0 border-b-0" style={{ width: CELL_W }}>
                   {isMonthStart(dateStrs, i) && (
@@ -336,8 +336,8 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
             {/* Day header row */}
             <tr>
               <th
-                className="sticky left-0 z-20 bg-white border-b border-r border-sand-200 px-4 text-left"
-                style={{ width: ROOM_COL_W, minWidth: ROOM_COL_W, height: 52 }}
+                className="sticky left-0 z-30 bg-white border-b border-r border-sand-200 px-4 text-left"
+                style={{ width: ROOM_COL_W, minWidth: ROOM_COL_W, height: 52, boxShadow: "2px 0 6px -2px rgba(0,0,0,0.08)" }}
               >
                 <span className="text-xs font-semibold text-muted">Chambre</span>
               </th>
@@ -372,8 +372,8 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
               return (
                 <tr key={room.id}>
                   <td
-                    className="sticky left-0 z-10 border-b border-r border-sand-200 px-4"
-                    style={{ background: rowBg, height: ROW_H, width: ROOM_COL_W }}
+                    className="sticky left-0 z-20 border-b border-r border-sand-200 px-4"
+                    style={{ background: rowBg, height: ROW_H, width: ROOM_COL_W, boxShadow: "2px 0 6px -2px rgba(0,0,0,0.08)" }}
                   >
                     <span className="text-sm font-medium text-ink leading-tight">{room.name}</span>
                   </td>
