@@ -123,11 +123,12 @@ model BookingExtra {
 }
 
 model BookingMessage {
-  id        String   @id @default(cuid())
-  bookingId String
-  sender    String   // "guest" | "admin"
-  content   String
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  bookingId  String
+  senderName String
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
