@@ -170,34 +170,37 @@ export function Header({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04 + NAV_ORDER.length * 0.045, duration: 0.22, ease: EASE }}
-              >
-                <Link
-                  href={`/${locale}/compte`}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 py-2.5 text-sm text-ink/80 hover:text-terracotta border-t border-sand-200 mt-1 pt-3"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
-                  </svg>
-                  Mon espace voyageur
-                </Link>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.04 + (NAV_ORDER.length + 1) * 0.045,
-                  duration: 0.22,
-                  ease: EASE,
-                }}
+                className="mt-3 border-t border-sand-200 pt-4 space-y-2"
               >
                 <Link
                   href={localePath(locale, "stay")}
                   onClick={() => setOpen(false)}
-                  className="btn-primary mt-3 w-full"
+                  className="btn-primary w-full text-center"
                 >
-                  {dict.nav.book}
+                  {locale === "fr" ? "Réserver maintenant" : "Book now"}
                 </Link>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href={`/${locale}/compte/inscription`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-sand-200 bg-white py-2.5 text-sm font-medium text-ink hover:border-terracotta/30 hover:text-terracotta transition-colors"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                    {locale === "fr" ? "S'inscrire" : "Sign up"}
+                  </Link>
+                  <Link
+                    href={`/${locale}/compte/connexion`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-sand-200 bg-white py-2.5 text-sm font-medium text-ink hover:border-terracotta/30 hover:text-terracotta transition-colors"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    {locale === "fr" ? "Se connecter" : "Sign in"}
+                  </Link>
+                </div>
               </motion.div>
             </div>
           </motion.nav>
