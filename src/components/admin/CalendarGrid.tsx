@@ -262,8 +262,8 @@ function BookingPopup({
 export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Props) {
   const [popup, setPopup] = useState<PopupState | null>(null);
 
-  const CELL_W = 38;
-  const ROW_H = 40;
+  const CELL_W = 40;
+  const ROW_H = 44;
 
   function handleCellClick(e: React.MouseEvent, cell: CellKind) {
     if (cell.type !== "booking") return;
@@ -277,7 +277,7 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
     <div className="relative">
       {/* Scrollable table wrapper */}
       <div className="overflow-x-auto rounded-2xl border border-sand-200 bg-white shadow-sm">
-        <table className="border-collapse" style={{ minWidth: dateStrs.length * CELL_W + 160 }}>
+        <table className="border-collapse w-full" style={{ minWidth: dateStrs.length * CELL_W + 160 }}>
           <thead>
             <tr>
               <th className="sticky left-0 z-10 bg-white border-b border-r border-sand-100 px-3 py-2.5 text-left text-xs font-semibold text-muted min-w-[140px]">
@@ -307,10 +307,14 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
                 </td>
                 {dateStrs.map((d) => {
                   const cell = grid[room.id]?.[d] ?? { type: "free" as const };
+                  // Remove right border on non-last booking cells so bars look continuous
+                  const isNonLastBooking = cell.type === "booking" && !cell.actualEnd;
+                  // Don't show today highlight under a booking bar — it causes apparent color shift
+                  const isBooking = cell.type === "booking";
                   return (
                     <td
                       key={d}
-                      className={`border-b border-r border-sand-100 p-0 relative ${d === todayStr ? "bg-terracotta/5" : ""}`}
+                      className={`border-b p-0 relative ${isNonLastBooking ? "" : "border-r border-r-sand-100"} ${d === todayStr && !isBooking ? "bg-terracotta/5" : ""}`}
                       style={{ height: ROW_H, width: CELL_W }}
                     >
                       <CellContent cell={cell} onCellClick={handleCellClick} />
@@ -380,10 +384,15 @@ function CellContent({
   // booking
   const sk = statusKey(cell);
   const s = STATUS[sk];
+
+  // Margin/rounding: only at true start/end of the booking, not at window edges
   const roundLeft = cell.actualStart ? "rounded-l-md" : "";
   const roundRight = cell.actualEnd ? "rounded-r-md" : "";
-  const marginLeft = cell.actualStart ? "ml-0.5" : "";
-  const marginRight = cell.actualEnd ? "mr-0.5" : "";
+  // Small inset at start/end so the bar looks "placed" rather than flush with the cell edge
+  const style: CSSProperties = {
+    marginLeft: cell.actualStart ? 2 : 0,
+    marginRight: cell.actualEnd ? 2 : 0,
+  };
 
   return (
     <div
@@ -391,7 +400,8 @@ function CellContent({
       onClick={(e) => onCellClick(e, cell)}
     >
       <div
-        className={`h-6 w-full ${s.bar} ${roundLeft} ${roundRight} ${marginLeft} ${marginRight} flex items-center px-1.5 overflow-hidden transition-opacity hover:opacity-80`}
+        className={`h-7 w-full ${s.bar} ${roundLeft} ${roundRight} flex items-center px-1.5 overflow-hidden hover:opacity-80 transition-opacity`}
+        style={style}
         title={`${cell.guestName} · ${s.label}`}
       >
         {cell.isFirst && (
