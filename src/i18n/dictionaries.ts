@@ -13,7 +13,7 @@ export const dictionaries = {
       experiences: "Expériences",
       gallery: "Galerie",
       contact: "Contact",
-      book: "Demander un séjour",
+      book: "Réserver maintenant",
     },
     common: {
       whatsapp: "Contacter sur WhatsApp",
@@ -34,7 +34,7 @@ export const dictionaries = {
       heroTitle: "Riad Dar Kader",
       heroSubtitle:
         "Un riad marocain authentique à deux pas du Musée Mouassine, au cœur de la Médina de Marrakech.",
-      heroCta: "Demander un séjour",
+      heroCta: "Réserver maintenant",
       heroSecondary: "Découvrir le riad",
       openingNote: "Ouverture prévue début octobre — réservations ouvertes.",
       sellingTitle: "Pourquoi choisir Dar Kader",
@@ -286,7 +286,7 @@ export const dictionaries = {
       experiences: "Experiences",
       gallery: "Gallery",
       contact: "Contact",
-      book: "Request a stay",
+      book: "Book now",
     },
     common: {
       whatsapp: "Contact on WhatsApp",
@@ -306,7 +306,7 @@ export const dictionaries = {
       heroTitle: "Riad Dar Kader",
       heroSubtitle:
         "An authentic Moroccan riad steps from Musée Mouassine, in the heart of the Marrakech Medina.",
-      heroCta: "Request a stay",
+      heroCta: "Book now",
       heroSecondary: "Discover the riad",
       openingNote: "Opening early October — reservations now open.",
       sellingTitle: "Why choose Dar Kader",
