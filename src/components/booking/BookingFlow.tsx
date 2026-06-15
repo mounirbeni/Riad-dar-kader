@@ -424,27 +424,6 @@ export function BookingFlow({
 
                   {availability?.isAvailable && (
                     <>
-                      {/* Availability banner — reassure the guest rooms are free */}
-                      {availability.availableRoomsCount > 0 && (
-                        <div className="flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 px-4 py-3.5">
-                          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-600 text-white">
-                            <IconCheck size={13} />
-                          </span>
-                          <div>
-                            <p className="text-sm font-semibold text-green-800">
-                              {availability.availableRoomsCount >= availability.totalRoomsCount
-                                ? t.roomsAvailableAll
-                                : `${availability.availableRoomsCount} ${t.roomsAvailableSome}`}
-                            </p>
-                            {availability.availableRoomNames.length > 0 && (
-                              <p className="mt-0.5 text-xs text-green-700/80">
-                                {availability.availableRoomNames.join(" · ")}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
                       {/* Selectable room cards — pick the room(s) you want */}
                       <div>
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted">

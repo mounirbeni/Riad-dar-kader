@@ -79,6 +79,16 @@ export function Header({
             {otherLocale}
           </Link>
           <Link
+            href={`/${locale}/compte`}
+            className="hidden items-center justify-center h-9 w-9 rounded-full border border-sand-200 bg-white text-muted hover:text-terracotta hover:border-terracotta/30 transition-colors sm:flex"
+            title="Mon espace voyageur"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </Link>
+          <Link
             href={localePath(locale, "stay")}
             className="hidden btn-primary !px-5 !py-2.5 text-sm sm:inline-flex"
           >

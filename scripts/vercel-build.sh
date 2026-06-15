@@ -29,7 +29,7 @@ fi
 prisma generate
 
 echo "→ Syncing database schema (prisma db push)…"
-DATABASE_URL="$MIGRATE_URL" prisma db push --skip-generate
+DATABASE_URL="$MIGRATE_URL" prisma db push --skip-generate --accept-data-loss
 
 echo "→ Seeding database…"
 tsx prisma/seed.ts || echo "seed step skipped (non-fatal)"
