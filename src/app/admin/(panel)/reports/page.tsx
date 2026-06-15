@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { formatEUR } from "@/lib/money";
+import type { ReactNode } from "react";
+import { IconEuro, IconInbox, IconTrendingUp, IconPercent } from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
 
@@ -49,10 +51,10 @@ export default async function ReportsPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Revenu total" value={formatEUR(totalRevenue)} icon="💰" />
-        <KpiCard label="Réservations" value={String(totalBookings)} icon="📋" />
-        <KpiCard label="Revenu moyen / rés." value={formatEUR(avgPerBooking)} icon="📊" />
-        <KpiCard label="Taux d'annulation" value={`${cancelRate}%`} icon="❌" />
+        <KpiCard label="Revenu total" value={formatEUR(totalRevenue)} icon={<IconEuro size={20} />} color="text-terracotta" />
+        <KpiCard label="Réservations" value={String(totalBookings)} icon={<IconInbox size={20} />} color="text-blue-600" />
+        <KpiCard label="Revenu moyen / rés." value={formatEUR(avgPerBooking)} icon={<IconTrendingUp size={20} />} color="text-emerald-600" />
+        <KpiCard label="Taux d'annulation" value={`${cancelRate}%`} icon={<IconPercent size={20} />} color="text-amber-600" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -118,10 +120,10 @@ export default async function ReportsPage() {
   );
 }
 
-function KpiCard({ label, value, icon }: { label: string; value: string; icon: string }) {
+function KpiCard({ label, value, icon, color }: { label: string; value: string; icon: ReactNode; color: string }) {
   return (
     <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5">
-      <div className="text-2xl mb-2">{icon}</div>
+      <div className={`mb-3 ${color}`}>{icon}</div>
       <p className="text-xs text-muted">{label}</p>
       <p className="text-xl font-bold text-ink mt-1">{value}</p>
     </div>

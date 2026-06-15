@@ -145,7 +145,11 @@ export default async function HousekeepingPage() {
 
       {tasks.length === 0 && (
         <div className="rounded-2xl bg-white border border-sand-200 p-12 text-center">
-          <p className="text-2xl mb-3">🧹</p>
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sand text-muted">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+            </svg>
+          </div>
           <p className="font-medium text-ink mb-1">Aucune tâche pour aujourd'hui</p>
           <p className="text-sm text-muted">Cliquez sur "Générer les tâches du jour" pour créer automatiquement les tâches basées sur les arrivées et départs.</p>
         </div>

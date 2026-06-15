@@ -96,7 +96,10 @@ export function HousekeepingBoard({ tasks, updateAction, deleteAction }: Props) 
                   {task.assignee && (
                     <>
                       <span className="text-xs text-muted">·</span>
-                      <span className="text-xs text-muted">👤 {task.assignee}</span>
+                      <span className="flex items-center gap-1 text-xs text-muted">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        {task.assignee}
+                      </span>
                     </>
                   )}
                   {task.notes && (

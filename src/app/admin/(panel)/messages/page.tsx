@@ -53,7 +53,11 @@ export default async function MessagesPage() {
 
       {messages.length === 0 ? (
         <div className="rounded-2xl bg-white border border-sand-200 p-16 text-center">
-          <p className="text-3xl mb-3">✉️</p>
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sand text-muted">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+            </svg>
+          </div>
           <p className="font-medium text-ink mb-1">Boîte de réception vide</p>
           <p className="text-sm text-muted">Les messages envoyés via le formulaire de contact apparaîtront ici.</p>
         </div>

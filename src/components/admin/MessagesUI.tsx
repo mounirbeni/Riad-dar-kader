@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { IconMail, IconMessageCircle, IconClipboardList } from "@/components/Icons";
 
 type Message = {
   id: string;
@@ -21,7 +22,12 @@ type Props = {
   deleteAction: (fd: FormData) => Promise<void>;
 };
 
-const CHANNEL_ICONS: Record<string, string> = { email: "✉️", whatsapp: "💬", form: "📋" };
+function ChannelIcon({ channel }: { channel: string }) {
+  if (channel === "email") return <IconMail size={15} />;
+  if (channel === "whatsapp") return <IconMessageCircle size={15} />;
+  return <IconClipboardList size={15} />;
+}
+const CHANNEL_LABELS: Record<string, string> = { email: "Email", whatsapp: "WhatsApp", form: "Formulaire" };
 
 export function MessagesUI({ messages, markReadAction, replyAction, deleteAction }: Props) {
   const [selected, setSelected] = useState<Message | null>(messages[0] ?? null);
@@ -59,7 +65,7 @@ export function MessagesUI({ messages, markReadAction, replyAction, deleteAction
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="text-[10px]">{CHANNEL_ICONS[m.channel] ?? "📋"}</span>
+                  <span className="text-muted"><ChannelIcon channel={m.channel} /></span>
                   <span className="text-[10px] text-muted whitespace-nowrap">
                     {new Date(m.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
                   </span>
@@ -91,7 +97,7 @@ export function MessagesUI({ messages, markReadAction, replyAction, deleteAction
                 </p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-lg">{CHANNEL_ICONS[selected.channel] ?? "📋"}</span>
+                <span className="text-muted"><ChannelIcon channel={selected.channel} /></span>
                 <form action={deleteAction}>
                   <input type="hidden" name="id" value={selected.id} />
                   <button
@@ -137,9 +143,7 @@ export function MessagesUI({ messages, markReadAction, replyAction, deleteAction
                     className="w-full rounded-xl border border-sand-200 px-3 py-2 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-terracotta/30 resize-none"
                   />
                   <div className="flex items-center justify-between mt-2">
-                    <p className="text-[10px] text-muted">
-                      Canal : {selected.channel === "whatsapp" ? "WhatsApp" : selected.channel === "email" ? "Email" : "Formulaire"}
-                    </p>
+                    <p className="text-[10px] text-muted">Canal : {CHANNEL_LABELS[selected.channel] ?? selected.channel}</p>
                     <button
                       type="submit"
                       disabled={!replyText.trim()}

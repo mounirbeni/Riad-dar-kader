@@ -2,7 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { IconShare } from "@/components/Icons";
+import {
+  IconShare, IconCopy, IconLogIn, IconLogOut,
+  IconBrush, IconBell, IconUtensilsCrossed, IconPin,
+  IconMapPin, IconUser,
+} from "@/components/Icons";
+import type { ReactNode } from "react";
 
 type Entry = {
   id: string;
@@ -33,13 +38,15 @@ type Props = {
   deleteAction: (fd: FormData) => Promise<void>;
 };
 
-const CATEGORY_CONFIG: Record<string, { label: string; emoji: string; color: string; bg: string; border: string }> = {
-  arrival:    { label: "Arrivée",    emoji: "🛬", color: "text-emerald-700", bg: "bg-emerald-50",  border: "border-emerald-200" },
-  departure:  { label: "Départ",    emoji: "🛫", color: "text-blue-700",    bg: "bg-blue-50",     border: "border-blue-200" },
-  housekeeping:{ label: "Ménage",   emoji: "🧹", color: "text-amber-700",   bg: "bg-amber-50",    border: "border-amber-200" },
-  service:    { label: "Service",   emoji: "🛎️", color: "text-purple-700",  bg: "bg-purple-50",   border: "border-purple-200" },
-  meal:       { label: "Repas",     emoji: "🍽️", color: "text-orange-700",  bg: "bg-orange-50",   border: "border-orange-200" },
-  general:    { label: "Général",   emoji: "📌", color: "text-ink",         bg: "bg-sand/40",     border: "border-sand-200" },
+type CategoryCfg = { label: string; waEmoji: string; icon: ReactNode; color: string; bg: string; border: string; dot: string };
+
+const CATEGORY_CONFIG: Record<string, CategoryCfg> = {
+  arrival:     { label: "Arrivée",     waEmoji: "🛬", icon: <IconLogIn size={14} />,           color: "text-emerald-700", bg: "bg-emerald-50",  border: "border-emerald-200", dot: "bg-emerald-400" },
+  departure:   { label: "Départ",      waEmoji: "🛫", icon: <IconLogOut size={14} />,          color: "text-blue-700",    bg: "bg-blue-50",     border: "border-blue-200",   dot: "bg-blue-400" },
+  housekeeping:{ label: "Ménage",      waEmoji: "🧹", icon: <IconBrush size={14} />,           color: "text-amber-700",   bg: "bg-amber-50",    border: "border-amber-200",  dot: "bg-amber-400" },
+  service:     { label: "Service",     waEmoji: "🛎️", icon: <IconBell size={14} />,            color: "text-purple-700",  bg: "bg-purple-50",   border: "border-purple-200", dot: "bg-purple-400" },
+  meal:        { label: "Repas",       waEmoji: "🍽️", icon: <IconUtensilsCrossed size={14} />, color: "text-orange-700",  bg: "bg-orange-50",   border: "border-orange-200", dot: "bg-orange-400" },
+  general:     { label: "Général",     waEmoji: "📌", icon: <IconPin size={14} />,             color: "text-ink",         bg: "bg-sand/40",     border: "border-sand-200",   dot: "bg-sand-300" },
 };
 
 function formatDateFR(dateStr: string) {
@@ -138,7 +145,8 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
             onClick={copyText}
             className="flex items-center gap-2 rounded-xl border border-sand-200 bg-white px-3 py-2 text-xs font-medium text-muted hover:text-ink transition-colors"
           >
-            {copied ? "✓ Copié !" : "📋 Copier le texte"}
+            <IconCopy size={14} />
+            {copied ? "Copié !" : "Copier le texte"}
           </button>
           <button
             onClick={shareWhatsApp}
@@ -183,17 +191,20 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
         <div className="flex gap-3 flex-wrap">
           {autoEvents.filter((e) => e.category === "arrival").length > 0 && (
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-medium text-emerald-700">
-              🛬 {autoEvents.filter((e) => e.category === "arrival").length} arrivée{autoEvents.filter((e) => e.category === "arrival").length > 1 ? "s" : ""}
+              <IconLogIn size={13} />
+              {autoEvents.filter((e) => e.category === "arrival").length} arrivée{autoEvents.filter((e) => e.category === "arrival").length > 1 ? "s" : ""}
             </span>
           )}
           {autoEvents.filter((e) => e.category === "departure").length > 0 && (
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-50 border border-blue-200 px-3 py-1.5 text-xs font-medium text-blue-700">
-              🛫 {autoEvents.filter((e) => e.category === "departure").length} départ{autoEvents.filter((e) => e.category === "departure").length > 1 ? "s" : ""}
+              <IconLogOut size={13} />
+              {autoEvents.filter((e) => e.category === "departure").length} départ{autoEvents.filter((e) => e.category === "departure").length > 1 ? "s" : ""}
             </span>
           )}
           {entries.length > 0 && (
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-sand border border-sand-200 px-3 py-1.5 text-xs font-medium text-muted">
-              📌 {entries.length} tâche{entries.length > 1 ? "s" : ""} planifiée{entries.length > 1 ? "s" : ""}
+              <IconPin size={13} />
+              {entries.length} tâche{entries.length > 1 ? "s" : ""} planifiée{entries.length > 1 ? "s" : ""}
             </span>
           )}
         </div>
@@ -203,7 +214,9 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
       <div className="rounded-2xl bg-white border border-sand-200 shadow-sm overflow-hidden">
         {timeline.length === 0 ? (
           <div className="py-16 text-center">
-            <p className="text-3xl mb-3">📅</p>
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-sand text-muted">
+              <IconPin size={22} />
+            </div>
             <p className="font-medium text-ink mb-1">Aucune activité ce jour</p>
             <p className="text-sm text-muted">Cliquez sur "+ Ajouter" pour planifier une tâche</p>
           </div>
@@ -220,14 +233,14 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
                     <div className={`w-px self-stretch ${cfg.border.replace("border-", "bg-")}`} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-base">{cfg.emoji}</span>
+                        <span className={`shrink-0 ${cfg.color}`}>{cfg.icon}</span>
                         <span className={`text-sm font-semibold ${cfg.color}`}>{item.event.title}</span>
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium ${cfg.bg} ${cfg.color} border ${cfg.border}`}>
                           {cfg.label} · auto
                         </span>
                       </div>
                       {item.event.location && (
-                        <p className="text-xs text-muted mt-0.5">📍 {item.event.location}</p>
+                        <p className="flex items-center gap-1 text-xs text-muted mt-0.5"><IconMapPin size={11} /> {item.event.location}</p>
                       )}
                       <p className="text-[10px] text-muted/60 mt-0.5 font-mono">{item.event.bookingRef}</p>
                     </div>
@@ -264,7 +277,7 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
                         <label className="text-[10px] font-semibold text-muted uppercase tracking-wide block mb-1">Catégorie</label>
                         <select name="category" defaultValue={e.category} className="w-full rounded-xl border border-sand-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta/30">
                           {Object.entries(CATEGORY_CONFIG).map(([k, v]) => (
-                            <option key={k} value={k}>{v.emoji} {v.label}</option>
+                            <option key={k} value={k}>{v.label}</option>
                           ))}
                         </select>
                       </div>
@@ -297,15 +310,15 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
                   <div className={`w-px self-stretch bg-sand-200`} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-base">{cfg.emoji}</span>
+                      <span className={`shrink-0 ${cfg.color}`}>{cfg.icon}</span>
                       <span className="text-sm font-semibold text-ink">{e.title}</span>
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium ${cfg.bg} ${cfg.color} border ${cfg.border}`}>
                         {cfg.label}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                      {e.location && <p className="text-xs text-muted">📍 {e.location}</p>}
-                      {e.assignee && <p className="text-xs text-muted">👤 {e.assignee}</p>}
+                      {e.location && <p className="flex items-center gap-1 text-xs text-muted"><IconMapPin size={11} /> {e.location}</p>}
+                      {e.assignee && <p className="flex items-center gap-1 text-xs text-muted"><IconUser size={11} /> {e.assignee}</p>}
                       {e.description && <p className="text-xs text-muted italic">{e.description}</p>}
                     </div>
                   </div>
@@ -437,11 +450,11 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
     const lines = timeline.map((item) => {
       if (item.kind === "auto") {
         const cfg = CATEGORY_CONFIG[item.event.category] ?? CATEGORY_CONFIG.general;
-        return `${cfg.emoji} *${item.event.time}* — ${item.event.title}${item.event.location ? ` _(${item.event.location})_` : ""}`;
+        return `${cfg.waEmoji} *${item.event.time}* — ${item.event.title}${item.event.location ? ` _(${item.event.location})_` : ""}`;
       } else {
         const e = item.entry;
         const cfg = CATEGORY_CONFIG[e.category] ?? CATEGORY_CONFIG.general;
-        const parts = [`${cfg.emoji} *${e.time}* — ${e.title}`];
+        const parts = [`${cfg.waEmoji} *${e.time}* — ${e.title}`];
         if (e.location) parts.push(`_(${e.location})_`);
         if (e.assignee) parts.push(`👤 ${e.assignee}`);
         if (e.description) parts.push(`\n   💬 ${e.description}`);

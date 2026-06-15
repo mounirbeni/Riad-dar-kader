@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { IconShare } from "@/components/Icons";
+import { IconShare, IconCopy, IconSun, IconLogIn, IconLogOut, IconUtensilsCrossed, IconBrush, IconMoon, IconCar, IconEdit, IconMessageCircle } from "@/components/Icons";
+import type { ReactNode } from "react";
 
 type Arrival = { guestName: string; rooms: string; ref: string; guests: number };
 type Departure = { guestName: string; rooms: string; ref: string };
@@ -22,73 +23,23 @@ function buildTemplates(dateStr: string, arrivals: Arrival[], departures: Depart
   const riad = "Riad Dar Kader";
 
   return [
-    {
-      id: "bonjour",
-      label: "🌅 Bonjour",
-      category: "Équipe",
-      text: `🌅 *Bonjour à toute l'équipe ${riad} !*\n\n📅 Nous sommes le ${date}.\n\n${
-        departures.length > 0
-          ? `🛫 *Départs aujourd'hui :*\n${departures.map((d) => `• ${d.guestName} — ${d.rooms}`).join("\n")}\n\n`
-          : ""
-      }${
-        arrivals.length > 0
-          ? `🛬 *Arrivées aujourd'hui :*\n${arrivals.map((a) => `• ${a.guestName} (${a.guests} pers.) — ${a.rooms}`).join("\n")}\n\n`
-          : ""
-      }Bonne journée à tous ! 💪`,
-    },
-    {
-      id: "accueil",
-      label: "🛬 Accueil client",
-      category: "Client",
-      text: arrivals.length > 0
-        ? `🏡 *${riad} — Message d'accueil*\n\nChers ${arrivals[0].guestName},\n\nNous sommes ravis de vous accueillir au ${riad} ! 🌟\n\nVotre chambre — *${arrivals[0].rooms}* — est prête et vous attend.\n\n🔑 Check-in à partir de 15h00\n📍 Nous vous attendons à l'entrée du riad\n📞 En cas de besoin, contactez-nous ici\n\nBienvenue à Marrakech ! ✨`
-        : `🏡 *${riad} — Message d'accueil*\n\nChers clients,\n\nNous sommes ravis de vous accueillir au ${riad} ! 🌟\n\nVotre chambre est prête et vous attend.\n\n🔑 Check-in à partir de 15h00\n📞 En cas de besoin, contactez-nous ici\n\nBienvenue à Marrakech ! ✨`,
-    },
-    {
-      id: "depart",
-      label: "🛫 Rappel départ",
-      category: "Client",
-      text: departures.length > 0
-        ? `🏡 *${riad} — Rappel départ*\n\nCher(s) ${departures[0].guestName},\n\nNous espérons que votre séjour parmi nous a été agréable ! 😊\n\n⏰ Check-out aujourd'hui avant *11h00*\n🧳 Laissez vos bagages à la réception si besoin\n\nMerci de votre confiance et à très bientôt ! 🙏\n\n— L'équipe ${riad}`
-        : `🏡 *${riad} — Rappel départ*\n\nCher(s) clients,\n\nNous espérons que votre séjour a été agréable ! 😊\n\n⏰ Check-out aujourd'hui avant *11h00*\n🧳 Laissez vos bagages à la réception si besoin\n\nMerci de votre confiance ! 🙏\n\n— L'équipe ${riad}`,
-    },
-    {
-      id: "dejeuner",
-      label: "🍳 Petit-déjeuner",
-      category: "Client",
-      text: `🍳 *Petit-déjeuner — ${riad}*\n\nBonjour ! 😊\n\nVotre petit-déjeuner marocain est servi :\n🕗 De 7h30 à 10h30\n☀️ Sur la terrasse ou dans le patio\n\nAu menu :\n• Msemen & crêpes maison\n• Pain frais & confiture locale\n• Jus d'orange fraîchement pressé\n• Café / thé à la menthe\n• Œufs à la demande\n\nBon appétit ! 🫖`,
-    },
-    {
-      id: "menage",
-      label: "🧹 Ménage équipe",
-      category: "Équipe",
-      text: `🧹 *Planning ménage — ${date}*\n\n${departures.length > 0 ? `🔴 *Nettoyage complet (après départ) :*\n${departures.map((d) => `• ${d.rooms}`).join("\n")}\n\n` : ""}${arrivals.length > 0 ? `🟢 *Préparation avant arrivée :*\n${arrivals.map((a) => `• ${a.rooms}`).join("\n")}\n\n` : ""}✅ Chambres occupées → serviettes + rangement léger\n\nMerci à toute l'équipe ! 💪`,
-    },
-    {
-      id: "bonsoir",
-      label: "🌙 Bonsoir",
-      category: "Client",
-      text: `🌙 *Bonsoir de la part du ${riad}*\n\nNous espérons que vous avez passé une belle journée à Marrakech ! ✨\n\n🍽️ Des recommandations de restaurants ?\n🚶 Besoin d'un guide pour demain ?\n🛁 Souhaitez-vous réserver un hammam ?\n\nNous sommes disponibles pour vous aider. Bonne nuit ! 🌟`,
-    },
-    {
-      id: "transport",
-      label: "🚗 Transfert",
-      category: "Client",
-      text: `🚗 *Transfert — ${riad}*\n\nBonjour,\n\nVotre transfert depuis l'aéroport Marrakech-Ménara est confirmé :\n\n📍 Point de rendez-vous : Sortie des arrivées\n🪧 Signe de reconnaissance : Pancarte "${riad}"\n📞 Contact chauffeur : +212 6XX XXX XXX\n\nBon voyage ! ✈️`,
-    },
-    {
-      id: "libre",
-      label: "✏️ Message libre",
-      category: "Personnalisé",
-      text: `🏡 *${riad}*\n\n`,
-    },
+    { id: "bonjour",   label: "Bonjour équipe",  icon: <IconSun size={14} />,             category: "Équipe",       text: `*Bonjour à toute l'équipe ${riad} !*\n\nNous sommes le ${date}.\n\n${departures.length > 0 ? `*Départs aujourd'hui :*\n${departures.map((d) => `• ${d.guestName} — ${d.rooms}`).join("\n")}\n\n` : ""}${arrivals.length > 0 ? `*Arrivées aujourd'hui :*\n${arrivals.map((a) => `• ${a.guestName} (${a.guests} pers.) — ${a.rooms}`).join("\n")}\n\n` : ""}Bonne journée à tous !` },
+    { id: "accueil",   label: "Accueil client",  icon: <IconLogIn size={14} />,           category: "Client",       text: arrivals.length > 0 ? `*${riad} — Bienvenue*\n\nCher(s) ${arrivals[0].guestName},\n\nNous sommes ravis de vous accueillir au ${riad} !\n\nVotre chambre — *${arrivals[0].rooms}* — est prête.\n\nCheck-in à partir de 15h00.\nNous vous attendons à l'entrée du riad.\n\nEn cas de besoin, contactez-nous directement ici.\n\nBienvenue à Marrakech !\n— L'équipe ${riad}` : `*${riad} — Bienvenue*\n\nChers clients,\n\nNous sommes ravis de vous accueillir au ${riad} !\n\nVotre chambre est prête.\nCheck-in à partir de 15h00.\n\nEn cas de besoin, contactez-nous ici.\n\nBienvenue à Marrakech !\n— L'équipe ${riad}` },
+    { id: "depart",    label: "Rappel départ",   icon: <IconLogOut size={14} />,          category: "Client",       text: departures.length > 0 ? `*${riad} — Rappel départ*\n\nCher(s) ${departures[0].guestName},\n\nNous espérons que votre séjour a été agréable !\n\nCheck-out aujourd'hui avant *11h00*.\nN'hésitez pas à laisser vos bagages à la réception si besoin.\n\nMerci de votre confiance et à très bientôt !\n— L'équipe ${riad}` : `*${riad} — Rappel départ*\n\nChers clients,\n\nCheck-out aujourd'hui avant *11h00*.\n\nMerci de votre confiance !\n— L'équipe ${riad}` },
+    { id: "dejeuner",  label: "Petit-déjeuner",  icon: <IconUtensilsCrossed size={14} />, category: "Client",       text: `*Petit-déjeuner — ${riad}*\n\nBonjour !\n\nVotre petit-déjeuner marocain est servi :\nDe 7h30 à 10h30 — sur la terrasse ou dans le patio\n\nAu menu :\n• Msemen & crêpes maison\n• Pain frais & confiture locale\n• Jus d'orange fraîchement pressé\n• Café / thé à la menthe\n• Oeufs à la demande\n\nBon appétit !\n— L'équipe ${riad}` },
+    { id: "menage",    label: "Ménage équipe",   icon: <IconBrush size={14} />,           category: "Équipe",       text: `*Planning ménage — ${date}*\n\n${departures.length > 0 ? `Nettoyage complet (après départ) :\n${departures.map((d) => `• ${d.rooms}`).join("\n")}\n\n` : ""}${arrivals.length > 0 ? `Préparation avant arrivée :\n${arrivals.map((a) => `• ${a.rooms}`).join("\n")}\n\n` : ""}Chambres occupées → serviettes + rangement léger\n\nMerci à toute l'équipe !` },
+    { id: "bonsoir",   label: "Bonsoir",         icon: <IconMoon size={14} />,            category: "Client",       text: `*Bonsoir de la part du ${riad}*\n\nNous espérons que vous avez passé une belle journée à Marrakech !\n\nDes recommandations de restaurants ?\nBesoin d'un guide pour demain ?\nSouhaitez-vous réserver un hammam ?\n\nNous sommes disponibles pour vous aider.\n\nBonne nuit !\n— L'équipe ${riad}` },
+    { id: "transport", label: "Transfert",        icon: <IconCar size={14} />,             category: "Client",       text: `*Transfert — ${riad}*\n\nBonjour,\n\nVotre transfert depuis l'aéroport Marrakech-Ménara est confirmé.\n\nPoint de rendez-vous : Sortie des arrivées\nSigne de reconnaissance : Pancarte "${riad}"\nContact chauffeur : +212 6XX XXX XXX\n\nBon voyage !\n— L'équipe ${riad}` },
+    { id: "libre",     label: "Message libre",    icon: <IconEdit size={14} />,            category: "Personnalisé", text: `*${riad}*\n\n` },
   ];
 }
 
+type Template = ReturnType<typeof buildTemplates>[number];
+
 const CATEGORY_COLORS: Record<string, string> = {
-  "Équipe": "bg-amber-50 border-amber-200 text-amber-700",
-  "Client": "bg-emerald-50 border-emerald-200 text-emerald-700",
-  "Personnalisé": "bg-sand border-sand-200 text-muted",
+  "Équipe":        "bg-amber-50 border-amber-200 text-amber-700",
+  "Client":        "bg-emerald-50 border-emerald-200 text-emerald-700",
+  "Personnalisé":  "bg-sand border-sand-200 text-muted",
 };
 
 export function QuickMessages({ dateStr, arrivals, departures }: Props) {
@@ -140,12 +91,8 @@ export function QuickMessages({ dateStr, arrivals, departures }: Props) {
                   : "bg-white border-sand-200 text-ink hover:border-terracotta/40 hover:bg-sand/30"
               }`}
             >
+              <span className="shrink-0">{t.icon}</span>
               <span>{t.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${
-                selectedId === t.id ? "bg-white/20 border-white/30 text-white" : CATEGORY_COLORS[t.category] ?? "bg-sand text-muted border-sand-200"
-              }`}>
-                {t.category}
-              </span>
             </button>
           ))}
         </div>
@@ -197,7 +144,8 @@ export function QuickMessages({ dateStr, arrivals, departures }: Props) {
                 disabled={!text.trim()}
                 className="flex items-center gap-2 rounded-xl border border-sand-200 bg-white px-4 py-2.5 text-sm font-medium text-muted hover:text-ink disabled:opacity-40 transition-colors"
               >
-                {copied ? "✓ Copié !" : "📋 Copier"}
+                <IconCopy size={14} />
+                {copied ? "Copié !" : "Copier"}
               </button>
               <button
                 onClick={() => {
@@ -214,7 +162,9 @@ export function QuickMessages({ dateStr, arrivals, departures }: Props) {
 
         {!selectedId && (
           <div className="rounded-xl bg-sand/40 border border-sand-200 py-8 text-center">
-            <p className="text-2xl mb-2">💬</p>
+            <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white border border-sand-200 text-muted">
+              <IconMessageCircle size={18} />
+            </div>
             <p className="text-sm text-muted">Choisissez un modèle ci-dessus pour le modifier et l'envoyer</p>
           </div>
         )}
