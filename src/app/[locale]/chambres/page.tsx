@@ -5,6 +5,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { PhotoSlot } from "@/components/PhotoSlot";
+import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { formatMAD } from "@/lib/money";
 import { IconUser, IconArrowRight, IconEye } from "@/components/Icons";
 
@@ -44,20 +45,23 @@ export default async function RoomsPage({
 
   return (
     <div className="container-page py-16">
-      <div className="max-w-2xl">
-        <p className="kicker">{t.kicker}</p>
-        <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">{t.title}</h1>
-        <p className="mt-4 text-muted">{t.subtitle}</p>
-      </div>
+      <Reveal>
+        <div className="max-w-2xl">
+          <p className="kicker">{t.kicker}</p>
+          <h1 className="mt-2 font-serif text-4xl text-ink sm:text-5xl">{t.title}</h1>
+          <p className="mt-4 text-muted">{t.subtitle}</p>
+        </div>
+      </Reveal>
 
-      <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+      <RevealGroup className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
         {rooms.map((room, i) => {
           const href = `${localePath(locale, "rooms")}/${room.slug}`;
           const desc =
             locale === "fr" ? room.description : room.descriptionEn || room.description;
           const viewKey = room.view as keyof typeof t.views | null;
           return (
-            <article key={room.id} className="card group flex flex-col overflow-hidden">
+            <RevealItem key={room.id}>
+            <article className="card group flex flex-col overflow-hidden h-full">
               <Link href={href} className="relative block">
                 {room.photos.length > 0 ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -106,9 +110,10 @@ export default async function RoomsPage({
                 </Link>
               </div>
             </article>
+            </RevealItem>
           );
         })}
-      </div>
+      </RevealGroup>
     </div>
   );
 }

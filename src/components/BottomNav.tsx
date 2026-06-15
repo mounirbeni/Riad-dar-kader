@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import type { Locale } from "@/i18n/config";
 import { localePath, type NavKey } from "@/i18n/nav";
 
@@ -115,11 +116,23 @@ export function BottomNav({ locale }: { locale: Locale }) {
             <Link
               key={key}
               href={href}
-              className={`flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors duration-150 ${
+              className={`relative flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors duration-150 ${
                 active ? "text-terracotta" : "text-muted"
               }`}
             >
-              {icon(active)}
+              {active && (
+                <motion.div
+                  layoutId="bottom-nav-indicator"
+                  className="absolute inset-x-3 top-0 h-[2px] rounded-full bg-terracotta"
+                  transition={{ type: "spring", stiffness: 520, damping: 35 }}
+                />
+              )}
+              <motion.div
+                animate={{ scale: active ? 1.12 : 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              >
+                {icon(active)}
+              </motion.div>
               <span className="leading-tight">{locale === "fr" ? labelFr : labelEn}</span>
             </Link>
           );
