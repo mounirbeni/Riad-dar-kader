@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { getGuestSession } from "@/lib/guest-auth";
 import { requireSession } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function sendGuestMessageAction(formData: FormData): Promise<void> {
   const session = await getGuestSession();
@@ -11,6 +13,11 @@ export async function sendGuestMessageAction(formData: FormData): Promise<void> 
   const bookingId = String(formData.get("bookingId") || "");
   const content = String(formData.get("content") || "").trim();
   if (!bookingId || !content) return;
+
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for")?.split(",")[0] || "unknown").trim();
+  const limited = rateLimit(`chat:${ip}:${bookingId}`, 20, 60_000); // 20 messages per minute per booking
+  if (!limited.success) return;
 
   // Verify booking belongs to this guest
   const booking = await prisma.booking.findFirst({
@@ -21,8 +28,7 @@ export async function sendGuestMessageAction(formData: FormData): Promise<void> 
   await prisma.bookingMessage.create({
     data: { bookingId, sender: "guest", senderName: session.name, content },
   });
-  revalidatePath(`/fr/compte/reservations/${bookingId}`);
-  revalidatePath(`/en/compte/reservations/${bookingId}`);
+  revalidatePath(`/compte/reservations/${bookingId}`, "page");
 }
 
 export async function sendAdminMessageAction(_prev: undefined, formData: FormData): Promise<undefined> {

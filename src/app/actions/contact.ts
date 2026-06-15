@@ -40,16 +40,24 @@ export async function sendContactMessage(raw: unknown): Promise<ContactResult> {
     },
   });
 
+  const escapedName = data.name
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const escapedMsg = data.message
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br/>");
+
   await sendEmail({
     to: ownerEmail,
     replyTo: data.email,
     email: {
       subject: `📩 Message du site — ${data.name}`,
       text: `De : ${data.name} <${data.email}>\n\n${data.message}`,
-      html: `<p><strong>De :</strong> ${data.name} &lt;${data.email}&gt;</p><p>${data.message.replace(
-        /\n/g,
-        "<br/>"
-      )}</p><hr/><p style="color:#7A6A58;font-size:12px;">${RIAD.name} — message envoyé depuis le formulaire de contact.</p>`,
+      html: `<p><strong>De :</strong> ${escapedName} &lt;${data.email}&gt;</p><p>${escapedMsg}</p><hr/><p style="color:#7A6A58;font-size:12px;">${RIAD.name} — message envoyé depuis le formulaire de contact.</p>`,
     },
   });
 

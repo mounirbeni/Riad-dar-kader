@@ -203,7 +203,7 @@ export async function createBooking(
   const ownerEmail =
     process.env.OWNER_NOTIFICATION_EMAIL ||
     process.env.ADMIN_EMAIL ||
-    booking.guestEmail;
+    "reservations@riaddarkader.com";
 
   // Build owner WhatsApp deep link for the confirmation screen.
   const { ownerWhatsAppLink } = await import("@/lib/whatsapp");
