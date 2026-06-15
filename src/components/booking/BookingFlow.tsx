@@ -295,6 +295,28 @@ export function BookingFlow({
             >
               {t.newSearch}
             </button>
+
+            {/* Create account CTA — only shown to guests */}
+            {!isLoggedIn && (
+              <div className="mt-6 rounded-2xl border border-sand-200 bg-sand/60 p-5 text-center">
+                <p className="font-serif text-base text-ink">{dict.auth.confirmCtaTitle}</p>
+                <p className="mt-1 text-xs text-muted">{dict.auth.confirmCtaText}</p>
+                <div className="mt-4 flex gap-3">
+                  <a
+                    href={`/${locale}/inscription`}
+                    className="flex-1 rounded-xl border border-terracotta/40 bg-terracotta/5 py-2.5 text-center text-sm font-medium text-terracotta transition hover:bg-terracotta/10"
+                  >
+                    {dict.auth.register}
+                  </a>
+                  <a
+                    href={`/${locale}/connexion`}
+                    className="flex-1 rounded-xl border border-sand-300 py-2.5 text-center text-sm font-medium text-ink/80 transition hover:border-terracotta hover:text-terracotta"
+                  >
+                    {dict.auth.login}
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>

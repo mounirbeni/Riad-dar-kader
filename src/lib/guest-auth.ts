@@ -74,3 +74,43 @@ export async function authenticateGuest(email: string, password: string): Promis
   if (!ok) return null;
   return { sub: user.id, email: user.email, name: user.name };
 }
+
+export async function registerGuest(
+  email: string,
+  password: string,
+  name: string
+): Promise<{ ok: true } | { error: "email_taken" | "invalid_input" }> {
+  if (!email || !password || !name) return { error: "invalid_input" };
+  try {
+    const existing = await prisma.guestUser.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+    if (existing) return { error: "email_taken" };
+
+    const passwordHash = await bcrypt.hash(password, 12);
+    const user = await prisma.guestUser.create({
+      data: { email: email.toLowerCase(), passwordHash, name },
+    });
+    await createGuestSession({ sub: user.id, email: user.email, name: user.name ?? "" });
+    return { ok: true };
+  } catch {
+    return { error: "invalid_input" };
+  }
+}
+
+export async function loginGuest(
+  email: string,
+  password: string
+): Promise<{ ok: true } | { error: "invalid_credentials" }> {
+  const user = await prisma.guestUser.findUnique({
+    where: { email: email.toLowerCase() },
+  });
+  if (!user) {
+    await bcrypt.compare(password, "$2a$12$0000000000000000000000000000000000000000000000000000");
+    return { error: "invalid_credentials" };
+  }
+  const ok = await bcrypt.compare(password, user.passwordHash);
+  if (!ok) return { error: "invalid_credentials" };
+  await createGuestSession({ sub: user.id, email: user.email, name: user.name ?? "" });
+  return { ok: true };
+}

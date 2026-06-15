@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { prisma } from "@/lib/prisma";
-import { BookingFlow, type ClientExtra } from "@/components/booking/BookingFlow";
 import { getGuestSession } from "@/lib/guest-auth";
+import { BookingFlow, type ClientExtra } from "@/components/booking/BookingFlow";
 
 // Rendered on-demand (reads active extras from the database).
 export const dynamic = "force-dynamic";
