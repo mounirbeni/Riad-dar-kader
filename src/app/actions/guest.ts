@@ -32,12 +32,19 @@ export async function guestSignupAction(_prev: ActionState, formData: FormData):
   if (!name || !email || !password) return { ok: false, error: "Veuillez remplir tous les champs obligatoires." };
   if (password.length < 8) return { ok: false, error: "Le mot de passe doit contenir au moins 8 caractères." };
 
-  const existing = await prisma.guestUser.findUnique({ where: { email } });
-  if (existing) return { ok: false, error: "Un compte existe déjà avec cet email." };
+  const normalizedPhone = phone || null;
+
+  const [emailConflict, phoneConflict] = await Promise.all([
+    prisma.guestUser.findUnique({ where: { email } }),
+    normalizedPhone ? prisma.guestUser.findUnique({ where: { phone: normalizedPhone } }) : null,
+  ]);
+
+  if (emailConflict) return { ok: false, error: "Un compte existe déjà avec cet email. Connectez-vous ou utilisez une autre adresse." };
+  if (phoneConflict) return { ok: false, error: "Ce numéro de téléphone est déjà associé à un compte existant." };
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.guestUser.create({
-    data: { name, email, passwordHash, phone: phone || null, country: country || null },
+    data: { name, email, passwordHash, phone: normalizedPhone, country: country || null },
   });
 
   // Link any existing bookings made with this email
