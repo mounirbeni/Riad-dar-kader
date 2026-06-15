@@ -73,27 +73,6 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
     return ta.localeCompare(tb);
   });
 
-  // Format as WhatsApp message
-  function buildWhatsAppText() {
-    const dateLine = `🏡 *Riad Dar Kader — Planning du ${formatDateFR(dateStr)}*\n`;
-    if (timeline.length === 0) return dateLine + "\n_(Aucune activité programmée)_";
-    const lines = timeline.map((item) => {
-      if (item.kind === "auto") {
-        const cfg = CATEGORY_CONFIG[item.event.category] ?? CATEGORY_CONFIG.general;
-        return `${cfg.emoji} *${item.event.time}* — ${item.event.title}${item.event.location ? ` _(${item.event.location})_` : ""}`;
-      } else {
-        const e = item.entry;
-        const cfg = CATEGORY_CONFIG[e.category] ?? CATEGORY_CONFIG.general;
-        const parts = [`${cfg.emoji} *${e.time}* — ${e.title}`];
-        if (e.location) parts.push(`_(${e.location})_`);
-        if (e.assignee) parts.push(`👤 ${e.assignee}`);
-        if (e.description) parts.push(`\n   ${e.description}`);
-        return parts.join(" ");
-      }
-    });
-    return dateLine + "\n" + lines.join("\n");
-  }
-
   function shareWhatsApp() {
     const text = buildWhatsAppText();
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
