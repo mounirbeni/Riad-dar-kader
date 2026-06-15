@@ -6,6 +6,8 @@ import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { localePath, type NavKey } from "@/i18n/nav";
 import type { Dictionary } from "@/i18n/dictionaries";
+import type { GuestSessionPayload } from "@/lib/guest-auth";
+import { logoutAction } from "@/app/actions/guest-auth";
 
 const NAV_ORDER: NavKey[] = [
   "home",
@@ -20,14 +22,15 @@ const NAV_ORDER: NavKey[] = [
 export function Header({
   locale,
   dict,
+  user,
 }: {
   locale: Locale;
   dict: Dictionary;
+  user: GuestSessionPayload | null;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Build the equivalent path in the other locale.
   const otherLocale: Locale = locale === "fr" ? "en" : "fr";
   const switchPath = swapLocale(pathname, locale, otherLocale);
 
@@ -69,6 +72,40 @@ export function Header({
           >
             {otherLocale}
           </Link>
+
+          {/* Auth buttons — desktop */}
+          {user ? (
+            <div className="hidden items-center gap-2 lg:flex">
+              <span className="text-sm text-ink/70">
+                {user.firstName || user.email.split("@")[0]}
+              </span>
+              <form action={logoutAction}>
+                <input type="hidden" name="returnTo" value={`/${locale}`} />
+                <button
+                  type="submit"
+                  className="rounded-full border border-sand-300 px-3 py-1 text-xs font-medium text-muted transition hover:border-terracotta hover:text-terracotta"
+                >
+                  {dict.auth.logout}
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div className="hidden items-center gap-2 lg:flex">
+              <Link
+                href={`/${locale}/connexion`}
+                className="rounded-full border border-sand-300 px-3 py-1 text-xs font-medium text-muted transition hover:border-terracotta hover:text-terracotta"
+              >
+                {dict.auth.login}
+              </Link>
+              <Link
+                href={`/${locale}/inscription`}
+                className="rounded-full border border-terracotta/50 bg-terracotta/5 px-3 py-1 text-xs font-medium text-terracotta transition hover:bg-terracotta/10"
+              >
+                {dict.auth.register}
+              </Link>
+            </div>
+          )}
+
           <Link
             href={localePath(locale, "stay")}
             className="hidden btn-primary !px-5 !py-2.5 text-sm sm:inline-flex"
@@ -107,6 +144,45 @@ export function Header({
                 {dict.nav[key]}
               </Link>
             ))}
+
+            {/* Auth links — mobile menu */}
+            <div className="mt-2 border-t border-sand-200 pt-3">
+              {user ? (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-ink">
+                    {user.firstName || user.email.split("@")[0]}
+                  </span>
+                  <form action={logoutAction}>
+                    <input type="hidden" name="returnTo" value={`/${locale}`} />
+                    <button
+                      type="submit"
+                      onClick={() => setOpen(false)}
+                      className="text-sm text-muted hover:text-terracotta"
+                    >
+                      {dict.auth.logout}
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <Link
+                    href={`/${locale}/connexion`}
+                    onClick={() => setOpen(false)}
+                    className="flex-1 rounded-xl border border-sand-300 py-2.5 text-center text-sm font-medium text-ink/80 hover:text-terracotta"
+                  >
+                    {dict.auth.login}
+                  </Link>
+                  <Link
+                    href={`/${locale}/inscription`}
+                    onClick={() => setOpen(false)}
+                    className="flex-1 rounded-xl border border-terracotta/40 bg-terracotta/5 py-2.5 text-center text-sm font-medium text-terracotta"
+                  >
+                    {dict.auth.register}
+                  </Link>
+                </div>
+              )}
+            </div>
+
             <Link
               href={localePath(locale, "stay")}
               onClick={() => setOpen(false)}
@@ -122,7 +198,7 @@ export function Header({
 }
 
 function isActive(pathname: string, href: string): boolean {
-  if (href.split("/").length === 2) return pathname === href; // home
+  if (href.split("/").length === 2) return pathname === href;
   return pathname === href || pathname.startsWith(href + "/");
 }
 

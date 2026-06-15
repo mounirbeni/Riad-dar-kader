@@ -218,6 +218,28 @@ export const dictionaries = {
       rights: "Tous droits réservés.",
       directBooking: "Réservation directe acceptée.",
     },
+    auth: {
+      login: "Se connecter",
+      register: "Créer un compte",
+      logout: "Déconnexion",
+      loginTitle: "Connexion",
+      registerTitle: "Créer un compte",
+      email: "Email",
+      password: "Mot de passe",
+      firstName: "Prénom",
+      loginSubmit: "Se connecter",
+      registerSubmit: "Créer mon compte",
+      noAccount: "Pas encore de compte ?",
+      hasAccount: "Déjà un compte ?",
+      errors: {
+        invalid_credentials: "Email ou mot de passe incorrect.",
+        email_taken: "Cet email est déjà utilisé.",
+        invalid_input: "Veuillez remplir tous les champs.",
+      },
+      confirmCtaTitle: "Retrouvez vos séjours facilement",
+      confirmCtaText:
+        "Créez un compte pour suivre vos demandes et pré-remplir vos coordonnées la prochaine fois.",
+    },
   },
 
   en: {
@@ -431,6 +453,28 @@ export const dictionaries = {
       contact: "Contact",
       rights: "All rights reserved.",
       directBooking: "Direct booking accepted.",
+    },
+    auth: {
+      login: "Log in",
+      register: "Create account",
+      logout: "Log out",
+      loginTitle: "Log in",
+      registerTitle: "Create account",
+      email: "Email",
+      password: "Password",
+      firstName: "First name",
+      loginSubmit: "Log in",
+      registerSubmit: "Create my account",
+      noAccount: "No account yet?",
+      hasAccount: "Already have an account?",
+      errors: {
+        invalid_credentials: "Incorrect email or password.",
+        email_taken: "This email is already in use.",
+        invalid_input: "Please fill in all fields.",
+      },
+      confirmCtaTitle: "Find your bookings easily",
+      confirmCtaText:
+        "Create an account to track your requests and pre-fill your details next time.",
     },
   },
 } as const;

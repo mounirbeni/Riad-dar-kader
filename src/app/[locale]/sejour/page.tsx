@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { prisma } from "@/lib/prisma";
+import { getGuestSession } from "@/lib/guest-auth";
 import { BookingFlow, type ClientExtra } from "@/components/booking/BookingFlow";
 
 // Rendered on-demand (reads active extras from the database).
@@ -32,10 +33,13 @@ export default async function StayPage({
   const locale = (isLocale(raw) ? raw : "fr") as Locale;
   const dict = getDictionary(locale);
 
-  const extrasRaw = await prisma.extra.findMany({
-    where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const [extrasRaw, guestSession] = await Promise.all([
+    prisma.extra.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+    }),
+    getGuestSession(),
+  ]);
 
   const extras: ClientExtra[] = extrasRaw.map((e) => ({
     id: e.id,
@@ -54,7 +58,7 @@ export default async function StayPage({
         <p className="mt-3 text-muted">{dict.stay.subtitle}</p>
       </div>
 
-      <BookingFlow locale={locale} dict={dict} extras={extras} />
+      <BookingFlow locale={locale} dict={dict} extras={extras} isLoggedIn={!!guestSession} />
     </div>
   );
 }
