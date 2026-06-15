@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 import type { Locale } from "@/i18n/config";
 import { localePath, type NavKey } from "@/i18n/nav";
 import type { Dictionary } from "@/i18n/dictionaries";
-import type { GuestSessionPayload } from "@/lib/guest-auth";
-import { logoutAction } from "@/app/actions/guest-auth";
 
 const NAV_ORDER: NavKey[] = [
   "home",
@@ -21,11 +19,9 @@ const NAV_ORDER: NavKey[] = [
 export function Header({
   locale,
   dict,
-  user,
 }: {
   locale: Locale;
   dict: Dictionary;
-  user: GuestSessionPayload | null;
 }) {
   const pathname = usePathname();
 
@@ -76,39 +72,6 @@ export function Header({
           >
             {otherLocale}
           </Link>
-
-          {/* Auth buttons — desktop */}
-          {user ? (
-            <div className="hidden items-center gap-2 lg:flex">
-              <span className="text-sm text-ink/70">
-                {user.name || user.email.split("@")[0]}
-              </span>
-              <form action={logoutAction}>
-                <input type="hidden" name="returnTo" value={`/${locale}`} />
-                <button
-                  type="submit"
-                  className="rounded-full border border-sand-300 px-3 py-1 text-xs font-medium text-muted transition hover:border-terracotta hover:text-terracotta"
-                >
-                  {dict.auth.logout}
-                </button>
-              </form>
-            </div>
-          ) : (
-            <div className="hidden items-center gap-2 lg:flex">
-              <Link
-                href={`/${locale}/connexion`}
-                className="rounded-full border border-sand-300 px-3 py-1 text-xs font-medium text-muted transition hover:border-terracotta hover:text-terracotta"
-              >
-                {dict.auth.login}
-              </Link>
-              <Link
-                href={`/${locale}/inscription`}
-                className="rounded-full border border-terracotta/50 bg-terracotta/5 px-3 py-1 text-xs font-medium text-terracotta transition hover:bg-terracotta/10"
-              >
-                {dict.auth.register}
-              </Link>
-            </div>
-          )}
 
           <Link
             href={`/${locale}/compte`}
