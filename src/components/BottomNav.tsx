@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import type { Locale } from "@/i18n/config";
-import { localePath, type NavKey } from "@/i18n/nav";
+import { localePath } from "@/i18n/nav";
 
 type BottomNavItem = {
-  key: NavKey;
+  key: string;
+  href: (locale: Locale) => string;
   labelFr: string;
   labelEn: string;
   icon: (active: boolean) => ReactNode;
@@ -17,6 +18,7 @@ type BottomNavItem = {
 const ITEMS: BottomNavItem[] = [
   {
     key: "home",
+    href: (locale) => localePath(locale, "home"),
     labelFr: "Accueil",
     labelEn: "Home",
     icon: (active) => (
@@ -36,29 +38,8 @@ const ITEMS: BottomNavItem[] = [
     ),
   },
   {
-    key: "stay",
-    labelFr: "Réserver",
-    labelEn: "Book",
-    icon: (active) => (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-      </svg>
-    ),
-  },
-  {
     key: "experiences",
+    href: (locale) => localePath(locale, "experiences"),
     labelFr: "Expériences",
     labelEn: "Experiences",
     icon: (active) => (
@@ -78,6 +59,7 @@ const ITEMS: BottomNavItem[] = [
   },
   {
     key: "contact",
+    href: (locale) => localePath(locale, "contact"),
     labelFr: "Contact",
     labelEn: "Contact",
     icon: (active) => (
@@ -95,6 +77,27 @@ const ITEMS: BottomNavItem[] = [
       </svg>
     ),
   },
+  {
+    key: "profile",
+    href: (locale) => `/${locale}/compte`,
+    labelFr: "Profil",
+    labelEn: "Profile",
+    icon: (active) => (
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={active ? 2.2 : 1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    ),
+  },
 ];
 
 export function BottomNav({ locale }: { locale: Locale }) {
@@ -106,12 +109,11 @@ export function BottomNav({ locale }: { locale: Locale }) {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="grid grid-cols-4">
-        {ITEMS.map(({ key, labelFr, labelEn, icon }) => {
-          const href = localePath(locale, key);
+        {ITEMS.map(({ key, href: hrefFn, labelFr, labelEn, icon }) => {
+          const href = hrefFn(locale);
           const active =
             pathname === href ||
-            (key !== "home" && pathname.startsWith(href + "/")) ||
-            (key !== "home" && pathname === href);
+            (key !== "home" && pathname.startsWith(href + "/"));
           return (
             <Link
               key={key}
