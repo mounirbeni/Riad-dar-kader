@@ -218,21 +218,13 @@ export function Header({
                   {locale === "fr" ? "Réserver maintenant" : "Book now"}
                 </Link>
                 {user ? (
-                  <div className="flex items-center justify-between rounded-xl border border-sand-200 bg-white px-3 py-2.5">
-                    <span className="text-sm font-medium text-ink">
-                      {user.name || user.email.split("@")[0]}
-                    </span>
-                    <form action={logoutAction}>
-                      <input type="hidden" name="returnTo" value={`/${locale}`} />
-                      <button
-                        type="submit"
-                        onClick={() => setOpen(false)}
-                        className="text-sm text-muted hover:text-terracotta"
-                      >
-                        {dict.auth.logout}
-                      </button>
-                    </form>
-                  </div>
+                  <Link
+                    href={`/${locale}/compte`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center rounded-xl border border-sand-200 bg-white px-3 py-2.5 text-sm font-medium text-ink hover:border-terracotta/30 hover:text-terracotta transition-colors"
+                  >
+                    {user.name || user.email.split("@")[0]}
+                  </Link>
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
                     <Link
