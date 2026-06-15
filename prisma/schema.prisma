@@ -165,6 +165,21 @@ model ContactMessage {
   @@index([createdAt])
 }
 
+model ScheduleEntry {
+  id          String   @id @default(cuid())
+  date        DateTime @db.Date
+  time        String   // "09:00"
+  title       String
+  description String?
+  location    String?
+  assignee    String?
+  category    String   @default("general") // arrival | departure | housekeeping | service | meal | general
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+}
+
 model HousekeepingTask {
   id        String   @id @default(cuid())
   roomName  String

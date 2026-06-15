@@ -21,6 +21,7 @@ import {
   IconEdit,
   IconMessageCircle,
   IconGrid,
+  IconClipboardList,
 } from "@/components/Icons";
 
 type NavItem = { href: string; label: string; icon: ReactNode; badge?: number; exact?: boolean };
@@ -38,6 +39,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/admin/bookings", label: "Réservations", icon: <IconInbox size={16} /> },
       { href: "/admin/calendar", label: "Calendrier", icon: <IconCalendar size={16} /> },
+      { href: "/admin/planning", label: "Planning", icon: <IconClipboardList size={16} /> },
       { href: "/admin/availability", label: "Disponibilité", icon: <IconGrid size={16} /> },
     ],
   },
