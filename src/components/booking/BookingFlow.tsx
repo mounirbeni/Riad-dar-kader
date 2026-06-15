@@ -247,6 +247,33 @@ export function BookingFlow({
             >
               {t.confirmWhatsapp}
             </a>
+
+            {/* Guest account prompt */}
+            <div className="mt-5 rounded-2xl border border-terracotta/20 bg-terracotta/5 p-4 text-center">
+              <p className="text-sm font-medium text-ink">
+                {fr ? "Suivez votre réservation en ligne" : "Track your booking online"}
+              </p>
+              <p className="mt-0.5 text-xs text-muted">
+                {fr
+                  ? "Créez un compte gratuit pour consulter votre réservation et son statut à tout moment."
+                  : "Create a free account to view your booking and status at any time."}
+              </p>
+              <div className="mt-3 flex gap-2 justify-center flex-wrap">
+                <a
+                  href={`/${locale}/compte/inscription`}
+                  className="rounded-xl bg-terracotta px-4 py-2 text-sm font-semibold text-white hover:bg-terracotta/90 transition-colors"
+                >
+                  {fr ? "Créer mon compte" : "Create account"}
+                </a>
+                <a
+                  href={`/${locale}/compte/connexion`}
+                  className="rounded-xl border border-sand-200 bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-sand transition-colors"
+                >
+                  {fr ? "Se connecter" : "Sign in"}
+                </a>
+              </div>
+            </div>
+
             <button
               type="button"
               onClick={() => window.location.reload()}

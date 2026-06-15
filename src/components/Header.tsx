@@ -169,8 +169,24 @@ export function Header({
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04 + NAV_ORDER.length * 0.045, duration: 0.22, ease: EASE }}
+              >
+                <Link
+                  href={`/${locale}/compte`}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 py-2.5 text-sm text-ink/80 hover:text-terracotta border-t border-sand-200 mt-1 pt-3"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  </svg>
+                  Mon espace voyageur
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  delay: 0.04 + NAV_ORDER.length * 0.045,
+                  delay: 0.04 + (NAV_ORDER.length + 1) * 0.045,
                   duration: 0.22,
                   ease: EASE,
                 }}
