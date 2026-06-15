@@ -87,18 +87,12 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      {/* ── Planning grid (14-day) ── */}
+      {/* ── Planning grid (full year) ── */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-serif text-xl text-ink">Planning · 14 jours</h2>
-          <Link
-            href="/admin/calendar"
-            className="inline-flex items-center gap-1 text-sm text-terracotta transition hover:gap-2"
-          >
-            Vue complète <IconArrowRight size={13} />
-          </Link>
+          <h2 className="font-serif text-xl text-ink">Planning · Année complète</h2>
         </div>
-        <OccupancyGrid days={14} />
+        <OccupancyGrid days={365} />
       </section>
 
       {/* ── Today's arrivals + pending ── */}
