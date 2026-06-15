@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { registerAction } from "@/app/actions/guest-auth";
 import { getDictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
+import { ConsentCheckbox } from "@/components/guest/ConsentCheckbox";
 
 export function RegisterForm({
   locale,
@@ -17,6 +18,7 @@ export function RegisterForm({
   const t = dict.auth;
 
   const [state, action, pending] = useActionState(registerAction, { error: null });
+  const [consent, setConsent] = useState(false);
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-16">
@@ -71,10 +73,12 @@ export function RegisterForm({
                 />
               </div>
 
+              <ConsentCheckbox locale={locale} checked={consent} onChange={setConsent} />
+
               <button
                 type="submit"
-                disabled={pending}
-                className="btn-primary w-full py-3 disabled:opacity-60"
+                disabled={pending || !consent}
+                className="btn-primary w-full py-3 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {pending ? (
                   <span className="flex items-center justify-center gap-2">

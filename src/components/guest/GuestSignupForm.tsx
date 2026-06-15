@@ -1,11 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { guestSignupAction } from "@/app/actions/guest";
 import { dictionaries } from "@/i18n/dictionaries";
+import { ConsentCheckbox } from "@/components/guest/ConsentCheckbox";
 
 export function GuestSignupForm({ locale }: { locale: string }) {
   const [state, formAction, pending] = useActionState(guestSignupAction, { ok: false });
+  const [consent, setConsent] = useState(false);
   const t = dictionaries[locale === "en" ? "en" : "fr"].account;
 
   return (
@@ -83,10 +85,11 @@ export function GuestSignupForm({ locale }: { locale: string }) {
       {state?.error && (
         <p className="text-sm text-red-600">{state.error}</p>
       )}
+      <ConsentCheckbox locale={locale} checked={consent} onChange={setConsent} />
       <button
         type="submit"
-        disabled={pending}
-        className="w-full rounded-xl bg-terracotta px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-terracotta/90 disabled:opacity-60 transition-colors"
+        disabled={pending || !consent}
+        className="w-full rounded-xl bg-terracotta px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-terracotta/90 disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
       >
         {pending ? t.creatingAccount : t.createMyAccount}
       </button>

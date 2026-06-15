@@ -12,6 +12,7 @@ import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
 import { nightsBetween, parseDateOnly, formatDateHuman } from "@/lib/dates";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
 import { Placeholder } from "@/components/Placeholder";
+import { ConsentCheckbox } from "@/components/guest/ConsentCheckbox";
 import {
   IconCheck,
   IconUser,
@@ -992,6 +993,7 @@ function BookingAuthGate({
 }) {
   const fr = locale === "fr";
   const [tab, setTab] = useState<"login" | "signup">("login");
+  const [consent, setConsent] = useState(false);
   const [loginState, loginAction, loginPending] = useActionState(bookingLoginAction, { ok: false } as BookingAuthResult);
   const [signupState, signupAction, signupPending] = useActionState(bookingSignupAction, { ok: false } as BookingAuthResult);
 
@@ -1074,7 +1076,8 @@ function BookingAuthGate({
               </div>
             </div>
             {!signupState.ok && signupState.error && <p className="text-sm text-terracotta">{signupState.error}</p>}
-            <button type="submit" disabled={signupPending} className="btn-primary w-full disabled:opacity-60">
+            <ConsentCheckbox locale={locale} checked={consent} onChange={setConsent} />
+            <button type="submit" disabled={signupPending || !consent} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60">
               {signupPending ? (fr ? "Création…" : "Creating…") : (fr ? "Créer mon compte" : "Create account")}
             </button>
           </form>
