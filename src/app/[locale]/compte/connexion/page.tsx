@@ -29,7 +29,12 @@ export default async function GuestLoginPage({
         <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-7">
           <GuestLoginForm locale={locale} />
 
-          <div className="mt-5 pt-5 border-t border-sand-200 text-center">
+          <div className="mt-5 pt-5 border-t border-sand-200 space-y-3 text-center">
+            <p className="text-sm text-muted">
+              <Link href={`/${locale}/compte/mot-de-passe-oublie`} className="font-medium text-terracotta hover:underline">
+                Mot de passe oublié ?
+              </Link>
+            </p>
             <p className="text-sm text-muted">
               Pas encore de compte ?{" "}
               <Link href={`/${locale}/compte/inscription`} className="font-medium text-terracotta hover:underline">

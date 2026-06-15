@@ -155,13 +155,15 @@ model AdminUser {
 }
 
 model GuestUser {
-  id           String    @id @default(cuid())
-  email        String    @unique
-  passwordHash String
-  name         String
-  phone        String?   @unique
-  country      String?
-  createdAt    DateTime  @default(now())
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  name             String
+  phone            String?   @unique
+  country          String?
+  resetToken       String?   // hashed reset token
+  resetTokenExpiry DateTime? // token expiry (1 hour from request)
+  createdAt        DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
   bookings     Booking[]

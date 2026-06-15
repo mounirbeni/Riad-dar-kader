@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authenticateGuest, createGuestSession, destroyGuestSession } from "@/lib/guest-auth";
+import { randomBytes, createHash } from "crypto";
+import { sendEmail } from "@/lib/email/send";
+import { passwordResetEmail } from "@/lib/email/templates";
 
 type ActionState = { ok: boolean; error?: string };
 
@@ -97,4 +100,73 @@ export async function bookingSignupAction(_prev: BookingAuthResult, formData: Fo
 export async function guestLogoutAction(locale: string = "fr"): Promise<void> {
   await destroyGuestSession();
   redirect(`/${locale}/compte/connexion`);
+}
+
+export async function requestPasswordResetAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const locale = String(formData.get("locale") || "fr") as "fr" | "en";
+  if (!email) return { ok: false, error: "Veuillez saisir votre adresse e-mail." };
+
+  const user = await prisma.guestUser.findUnique({ where: { email } });
+  // Always return success to avoid email enumeration
+  if (!user) return { ok: true, message: "Si un compte existe, un lien de réinitialisation a été envoyé." };
+
+  const token = randomBytes(32).toString("hex");
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+  await prisma.guestUser.update({
+    where: { id: user.id },
+    data: { resetToken: tokenHash, resetTokenExpiry: expiry },
+  });
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://riaddarkader.com";
+  const resetUrl = `${baseUrl}/${locale}/compte/reinitialiser?token=${token}&email=${encodeURIComponent(email)}`;
+
+  await sendEmail({
+    to: email,
+    email: passwordResetEmail({ name: user.name, resetUrl }, locale),
+  });
+
+  return { ok: true, message: locale === "fr"
+    ? "Un lien de réinitialisation a été envoyé à votre adresse e-mail."
+    : "A reset link has been sent to your email address." };
+}
+
+export async function resetPasswordAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const token = String(formData.get("token") || "").trim();
+  const password = String(formData.get("password") || "");
+  const locale = String(formData.get("locale") || "fr") as "fr" | "en";
+
+  if (!email || !token || !password) return { ok: false, error: "Données manquantes." };
+  if (password.length < 8) return {
+    ok: false,
+    error: locale === "fr" ? "Le mot de passe doit contenir au moins 8 caractères." : "Password must be at least 8 characters.",
+  };
+
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const user = await prisma.guestUser.findFirst({
+    where: {
+      email,
+      resetToken: tokenHash,
+      resetTokenExpiry: { gt: new Date() },
+    },
+  });
+
+  if (!user) return {
+    ok: false,
+    error: locale === "fr"
+      ? "Lien invalide ou expiré. Veuillez refaire une demande."
+      : "Invalid or expired link. Please request a new one.",
+  };
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await prisma.guestUser.update({
+    where: { id: user.id },
+    data: { passwordHash, resetToken: null, resetTokenExpiry: null },
+  });
+
+  await createGuestSession({ sub: user.id, email: user.email, name: user.name });
+  return { ok: true, message: locale === "fr" ? "Mot de passe mis à jour." : "Password updated." };
 }
