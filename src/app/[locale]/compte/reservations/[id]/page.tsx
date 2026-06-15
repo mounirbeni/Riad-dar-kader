@@ -32,7 +32,7 @@ export default async function GuestBookingDetailPage({
   if (!session) redirect(`/${locale}/compte/connexion`);
 
   const booking = await prisma.booking.findFirst({
-    where: { id, guestEmail: session.email },
+    where: { id, OR: [{ guestEmail: session.email }, { guestUserId: session.sub }] },
     include: {
       rooms: { include: { room: { select: { name: true } } } },
       extras: { select: { nameSnapshot: true, quantity: true, priceSnapshot: true } },

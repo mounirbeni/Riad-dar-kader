@@ -35,7 +35,7 @@ export default async function GuestDashboardPage({
   const [user, bookings] = await Promise.all([
     prisma.guestUser.findUnique({ where: { id: session.sub } }),
     prisma.booking.findMany({
-      where: { guestEmail: session.email },
+      where: { OR: [{ guestEmail: session.email }, { guestUserId: session.sub }] },
       include: {
         rooms: { include: { room: { select: { name: true } } } },
         extras: { select: { nameSnapshot: true, quantity: true } },
