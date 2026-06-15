@@ -36,15 +36,36 @@ export type CellKind =
       actualEnd: boolean;
     };
 
-export async function OccupancyGrid({ days = 14, offsetDays = 0 }: { days?: number; offsetDays?: number }) {
+export async function OccupancyGrid({
+  days = 14,
+  offsetDays = 0,
+  year,
+}: {
+  days?: number;
+  offsetDays?: number;
+  year?: number;
+}) {
   const base = todayUTC();
-  const windowStart = new Date(base);
-  windowStart.setUTCDate(windowStart.getUTCDate() + offsetDays);
-  const windowEnd = new Date(windowStart);
-  windowEnd.setUTCDate(windowEnd.getUTCDate() + days);
+
+  let windowStart: Date;
+  let windowEnd: Date;
+
+  if (year) {
+    // Full-year mode: Jan 1 → Dec 31 (inclusive) of the requested year
+    windowStart = new Date(Date.UTC(year, 0, 1));
+    windowEnd   = new Date(Date.UTC(year + 1, 0, 1));
+  } else {
+    windowStart = new Date(base);
+    windowStart.setUTCDate(windowStart.getUTCDate() + offsetDays);
+    windowEnd = new Date(windowStart);
+    windowEnd.setUTCDate(windowEnd.getUTCDate() + days);
+  }
+
+  // Total days in the window
+  const totalDays = Math.round((windowEnd.getTime() - windowStart.getTime()) / 86400000);
 
   const dates: Date[] = [];
-  for (let i = 0; i < days; i++) {
+  for (let i = 0; i < totalDays; i++) {
     const d = new Date(windowStart);
     d.setUTCDate(d.getUTCDate() + i);
     dates.push(d);

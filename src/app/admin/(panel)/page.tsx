@@ -87,12 +87,15 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      {/* ── Planning grid (full year) ── */}
+      {/* ── Planning grid (full current year) ── */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-serif text-xl text-ink">Planning · Année complète</h2>
+          <h2 className="font-serif text-xl text-ink">Planning {now.getUTCFullYear()}</h2>
+          <Link href="/admin/calendar" className="inline-flex items-center gap-1 text-sm text-terracotta transition hover:gap-2">
+            Gérer <IconArrowRight size={13} />
+          </Link>
         </div>
-        <OccupancyGrid days={365} />
+        <OccupancyGrid year={now.getUTCFullYear()} />
       </section>
 
       {/* ── Today's arrivals + pending ── */}
