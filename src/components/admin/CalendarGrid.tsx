@@ -234,8 +234,7 @@ function MonthJumpBar({
   function scrollTo(idx: number) {
     const el = scrollRef.current;
     if (!el) return;
-    // Scroll so the target column is visible, with a small left margin
-    el.scrollLeft = ROOM_COL_W + idx * CELL_W - 12;
+    el.scrollLeft = idx * CELL_W;
   }
 
   // Which month is currently in view?
@@ -249,7 +248,7 @@ function MonthJumpBar({
     if (!el) return;
     function onScroll() {
       if (!el) return;
-      const visibleColIdx = Math.floor((el.scrollLeft - ROOM_COL_W + 12) / CELL_W);
+      const visibleColIdx = Math.floor(el.scrollLeft / CELL_W);
       const clampedIdx = Math.max(0, Math.min(visibleColIdx, dateStrs.length - 1));
       setActiveMonth(parseDate(dateStrs[clampedIdx]).getUTCMonth());
     }
@@ -294,11 +293,11 @@ export function CalendarGrid({ rooms, dateStrs, grid, bookings, todayStr }: Prop
   const scrollRef = useRef<HTMLDivElement>(null);
   const popupBooking = popup ? bookings[popup.bookingId] : null;
 
-  // Scroll to today on first render
+  // Scroll to today on first render (show ~2 days before today for context)
   useEffect(() => {
     const todayIdx = dateStrs.indexOf(todayStr);
     if (todayIdx < 0 || !scrollRef.current) return;
-    scrollRef.current.scrollLeft = Math.max(0, ROOM_COL_W + todayIdx * CELL_W - 80);
+    scrollRef.current.scrollLeft = Math.max(0, (todayIdx - 2) * CELL_W);
   }, [dateStrs, todayStr]);
 
   function handleCellClick(e: React.MouseEvent, cell: CellKind) {
