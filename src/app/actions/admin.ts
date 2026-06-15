@@ -125,6 +125,19 @@ export async function updateBookingStatusAction(
       to: booking.guestEmail,
       email: bookingConfirmed(toEmailData(booking)),
     });
+    // Auto-send welcome chat message on first confirmation
+    const alreadyWelcomed = await prisma.bookingMessage.count({ where: { bookingId, sender: "admin" } });
+    if (alreadyWelcomed === 0) {
+      const checkInLabel = booking.checkIn.toLocaleDateString("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" });
+      await prisma.bookingMessage.create({
+        data: {
+          bookingId,
+          sender: "admin",
+          senderName: "Riad Dar Kader",
+          content: `Bonjour ${booking.guestName.split(" ")[0]},\n\nVotre réservation ${booking.reference} est confirmée — nous avons hâte de vous accueillir le ${checkInLabel} !\n\nN'hésitez pas à nous écrire ici pour toute question avant votre arrivée.\n\nÀ très bientôt,\nL'équipe Riad Dar Kader`,
+        },
+      });
+    }
   } else if (status === "cancelled") {
     await sendEmail({
       to: booking.guestEmail,
@@ -133,6 +146,7 @@ export async function updateBookingStatusAction(
   }
 
   revalidatePath("/admin/bookings");
+  revalidatePath(`/admin/bookings/${bookingId}`);
   revalidatePath("/admin");
   return { ok: true, message: "Réservation mise à jour." };
 }

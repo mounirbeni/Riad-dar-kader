@@ -74,6 +74,7 @@ model Booking {
   rooms     BookingRoom[]
   extras    BookingExtra[]
   guestUser GuestUser?    @relation(fields: [guestUserId], references: [id], onDelete: SetNull)
+  messages  BookingMessage[]
 
   @@index([status])
   @@index([checkIn, checkOut])
@@ -196,6 +197,21 @@ model ScheduleEntry {
   updatedAt   DateTime @updatedAt
 
   @@index([date])
+}
+
+model BookingMessage {
+  id         String   @id @default(cuid())
+  bookingId  String
+  sender     String   // "admin" | "guest"
+  senderName String
+  content    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([createdAt])
 }
 
 model HousekeepingTask {

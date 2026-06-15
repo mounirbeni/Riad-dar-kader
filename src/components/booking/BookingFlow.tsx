@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { searchAvailability, createBooking } from "@/app/actions/booking";
+import { bookingLoginAction, bookingSignupAction, type BookingAuthResult } from "@/app/actions/guest";
 import type { AvailabilityResult } from "@/lib/availability";
 import { formatEUR } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
@@ -18,6 +19,7 @@ import {
   IconCamera,
   IconArrowLeft,
   IconArrowRight,
+  IconLogIn,
 } from "@/components/Icons";
 
 export type ClientExtra = {
@@ -26,6 +28,13 @@ export type ClientExtra = {
   description: string;
   price: number;
   priceType: "per_booking" | "per_guest" | "per_night";
+};
+
+export type GuestProfile = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
 };
 
 type Confirmation = {
@@ -59,10 +68,12 @@ export function BookingFlow({
   locale,
   dict,
   extras,
+  guestProfile,
 }: {
   locale: Locale;
   dict: Dictionary;
   extras: ClientExtra[];
+  guestProfile?: GuestProfile | null;
 }) {
   const t = dict.stay;
   const fr = locale === "fr";
@@ -79,9 +90,11 @@ export function BookingFlow({
   const [selectedRoomIds, setSelectedRoomIds] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
 
-  const [guestName, setGuestName] = useState("");
-  const [guestEmail, setGuestEmail] = useState("");
-  const [guestPhone, setGuestPhone] = useState("");
+  const [authedUser, setAuthedUser] = useState<GuestProfile | null>(guestProfile ?? null);
+
+  const [guestName, setGuestName] = useState(guestProfile?.name ?? "");
+  const [guestEmail, setGuestEmail] = useState(guestProfile?.email ?? "");
+  const [guestPhone, setGuestPhone] = useState(guestProfile?.phone ?? "");
   const [guestCountry, setGuestCountry] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
   const [website, setWebsite] = useState("");
@@ -169,6 +182,7 @@ export function BookingFlow({
     const res = await createBooking({
       checkIn, checkOut, guests, roomIds: selectedRoomIds,
       guestName, guestEmail, guestPhone, guestCountry, specialRequests, website,
+      guestUserId: authedUser?.id ?? null,
       extras: Object.entries(selectedExtras).map(([extraId, quantity]) => ({ extraId, quantity })),
     });
     setSubmitting(false);
@@ -711,14 +725,39 @@ export function BookingFlow({
               </div>
             )}
 
-            {/* ── STEP 4 — Guest details ── */}
-            {step === 4 && (
+            {/* ── STEP 4 — Auth gate (if not logged in) ── */}
+            {step === 4 && !authedUser && (
+              <BookingAuthGate
+                locale={locale}
+                onSuccess={(user) => {
+                  setAuthedUser(user);
+                  setGuestName(user.name);
+                  setGuestEmail(user.email);
+                  setGuestPhone(user.phone ?? "");
+                  goTo(5);
+                }}
+                onBack={() => goTo(3)}
+              />
+            )}
+
+            {/* ── STEP 4→5 — Guest details (when logged in) ── */}
+            {((step === 4 && authedUser) || step === 5) && (
               <div>
                 <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
-                  <h2 className="font-serif text-xl text-ink">{t.detailsTitle}</h2>
-                  <p className="text-sm text-muted">
-                    {fr ? "Dernière étape — vos coordonnées" : "Last step — your contact details"}
-                  </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <h2 className="font-serif text-xl text-ink">{t.detailsTitle}</h2>
+                      <p className="text-sm text-muted">
+                        {fr ? "Dernière étape — vos coordonnées" : "Last step — your contact details"}
+                      </p>
+                    </div>
+                    {authedUser && (
+                      <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 shrink-0">
+                        <IconCheck size={12} className="text-emerald-600" />
+                        <span className="text-xs font-medium text-emerald-700">{authedUser.name}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <form onSubmit={onSubmit} className="p-5 sm:p-7 space-y-4">
@@ -759,7 +798,7 @@ export function BookingFlow({
                   )}
 
                   <div className="flex gap-3 pt-1">
-                    <button type="button" onClick={() => goTo(3)} className="btn-outline flex items-center gap-1.5">
+                    <button type="button" onClick={() => goTo(authedUser ? 3 : 4)} className="btn-outline flex items-center gap-1.5">
                       <IconArrowLeft size={14} />
                       {t.back}
                     </button>
@@ -916,6 +955,118 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex justify-between gap-3">
       <dt className="text-muted">{label}</dt>
       <dd className="text-right font-medium text-ink">{value}</dd>
+    </div>
+  );
+}
+
+function BookingAuthGate({
+  locale,
+  onSuccess,
+  onBack,
+}: {
+  locale: Locale;
+  onSuccess: (user: GuestProfile) => void;
+  onBack: () => void;
+}) {
+  const fr = locale === "fr";
+  const [tab, setTab] = useState<"login" | "signup">("login");
+  const [loginState, loginAction, loginPending] = useActionState(bookingLoginAction, { ok: false } as BookingAuthResult);
+  const [signupState, signupAction, signupPending] = useActionState(bookingSignupAction, { ok: false } as BookingAuthResult);
+
+  // On successful auth, call onSuccess
+  if (loginState.ok) { onSuccess(loginState.user); return null; }
+  if (signupState.ok) { onSuccess(signupState.user); return null; }
+
+  const activeState = tab === "login" ? loginState : signupState;
+
+  return (
+    <div>
+      <div className="border-b border-sand-100 bg-sand/40 px-6 py-4">
+        <div className="flex items-center gap-2">
+          <IconLogIn size={18} className="text-terracotta" />
+          <h2 className="font-serif text-xl text-ink">
+            {fr ? "Votre espace voyageur" : "Your traveller account"}
+          </h2>
+        </div>
+        <p className="mt-1 text-sm text-muted">
+          {fr ? "Connectez-vous ou créez un compte pour finaliser votre réservation." : "Sign in or create an account to complete your booking."}
+        </p>
+      </div>
+
+      <div className="p-5 sm:p-7">
+        {/* Tabs */}
+        <div className="flex rounded-xl border border-sand-200 bg-sand/40 p-1 mb-5">
+          <button
+            type="button"
+            onClick={() => setTab("login")}
+            className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all ${tab === "login" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"}`}
+          >
+            {fr ? "Se connecter" : "Sign in"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("signup")}
+            className={`flex-1 rounded-lg py-2 text-sm font-medium transition-all ${tab === "signup" ? "bg-white shadow-sm text-ink" : "text-muted hover:text-ink"}`}
+          >
+            {fr ? "Créer un compte" : "Create account"}
+          </button>
+        </div>
+
+        {/* Login form */}
+        {tab === "login" && (
+          <form action={loginAction} className="space-y-4">
+            <div>
+              <label className="label">Email</label>
+              <input name="email" type="email" required autoComplete="email" className="input" placeholder="vous@exemple.com" />
+            </div>
+            <div>
+              <label className="label">{fr ? "Mot de passe" : "Password"}</label>
+              <input name="password" type="password" required autoComplete="current-password" className="input" placeholder="••••••••" />
+            </div>
+            {!loginState.ok && loginState.error && <p className="text-sm text-terracotta">{loginState.error}</p>}
+            <button type="submit" disabled={loginPending} className="btn-primary w-full disabled:opacity-60">
+              {loginPending ? (fr ? "Connexion…" : "Signing in…") : (fr ? "Se connecter" : "Sign in")}
+            </button>
+          </form>
+        )}
+
+        {/* Signup form */}
+        {tab === "signup" && (
+          <form action={signupAction} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="label">{fr ? "Nom complet" : "Full name"} *</label>
+                <input name="name" type="text" required autoComplete="name" className="input" />
+              </div>
+              <div>
+                <label className="label">Email *</label>
+                <input name="email" type="email" required autoComplete="email" className="input" placeholder="vous@exemple.com" />
+              </div>
+              <div>
+                <label className="label">{fr ? "Téléphone WhatsApp" : "WhatsApp phone"}</label>
+                <input name="phone" type="tel" autoComplete="tel" className="input" placeholder="+33 6…" />
+              </div>
+              <div>
+                <label className="label">{fr ? "Mot de passe" : "Password"} * <span className="font-normal text-muted text-[11px]">(8 min)</span></label>
+                <input name="password" type="password" required minLength={8} autoComplete="new-password" className="input" />
+              </div>
+            </div>
+            {!signupState.ok && signupState.error && <p className="text-sm text-terracotta">{signupState.error}</p>}
+            <button type="submit" disabled={signupPending} className="btn-primary w-full disabled:opacity-60">
+              {signupPending ? (fr ? "Création…" : "Creating…") : (fr ? "Créer mon compte" : "Create account")}
+            </button>
+          </form>
+        )}
+
+        {!activeState.ok && activeState.error && null}
+
+        <div className="mt-4 flex gap-3">
+          <button type="button" onClick={onBack} className="btn-outline flex items-center gap-1.5">
+            <IconArrowLeft size={14} />
+            {fr ? "Retour" : "Back"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

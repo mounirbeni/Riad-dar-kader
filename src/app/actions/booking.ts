@@ -170,6 +170,7 @@ export async function createBooking(
       status: "pending",
       optionLabel,
       estimatedTotal,
+      guestUserId: (data as { guestUserId?: string | null }).guestUserId || null,
       rooms: {
         create: selectedRooms.map((r) => ({ roomId: r.id })),
       },

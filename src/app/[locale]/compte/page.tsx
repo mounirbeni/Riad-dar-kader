@@ -4,6 +4,7 @@ import { getGuestSession } from "@/lib/guest-auth";
 import { prisma } from "@/lib/prisma";
 import { guestLogoutAction } from "@/app/actions/guest";
 import { formatEUR } from "@/lib/money";
+import { IconArrowRight } from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,7 @@ export default async function GuestDashboardPage({
       include: {
         rooms: { include: { room: { select: { name: true } } } },
         extras: { select: { nameSnapshot: true, quantity: true } },
+        messages: { select: { id: true, isRead: true, sender: true }, orderBy: { createdAt: "desc" } },
       },
       orderBy: { createdAt: "desc" },
     }),
@@ -107,16 +109,21 @@ export default async function GuestDashboardPage({
               const nights = nightCount(b.checkIn, b.checkOut);
               const roomNames = b.rooms.map(r => r.room.name).join(", ");
               const st = STATUS_LABELS[b.status] ?? { label: b.status, cls: "bg-sand text-muted" };
+              const unreadMessages = b.messages.filter(m => m.sender === "admin" && !m.isRead).length;
               return (
-                <div
+                <Link
                   key={b.id}
-                  className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5"
+                  href={`/${locale}/compte/reservations/${b.id}`}
+                  className="block rounded-2xl bg-white border border-sand-200 shadow-sm p-5 hover:border-terracotta/30 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3 flex-wrap">
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-mono text-xs font-semibold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-lg">{b.reference}</span>
                         <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${st.cls}`}>{st.label}</span>
+                        {unreadMessages > 0 && (
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-terracotta text-[10px] font-bold text-white">{unreadMessages}</span>
+                        )}
                       </div>
                       <p className="mt-2 font-medium text-ink">{roomNames || "Chambre"}</p>
                       <p className="text-sm text-muted mt-0.5">
@@ -150,7 +157,15 @@ export default async function GuestDashboardPage({
                       <p className="text-xs text-muted italic">"{b.specialRequests}"</p>
                     </div>
                   )}
-                </div>
+
+                  <div className="mt-3 pt-3 border-t border-sand-200 flex items-center justify-between">
+                    <span className="text-xs text-muted">{b.messages.length} message{b.messages.length !== 1 ? "s" : ""}</span>
+                    <span className="flex items-center gap-1 text-xs font-medium text-terracotta">
+                      Voir le détail
+                      <IconArrowRight size={12} />
+                    </span>
+                  </div>
+                </Link>
               );
             })}
           </div>

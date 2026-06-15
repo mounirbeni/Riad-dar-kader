@@ -3,6 +3,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { prisma } from "@/lib/prisma";
 import { BookingFlow, type ClientExtra } from "@/components/booking/BookingFlow";
+import { getGuestSession } from "@/lib/guest-auth";
 
 // Rendered on-demand (reads active extras from the database).
 export const dynamic = "force-dynamic";
@@ -32,10 +33,16 @@ export default async function StayPage({
   const locale = (isLocale(raw) ? raw : "fr") as Locale;
   const dict = getDictionary(locale);
 
-  const extrasRaw = await prisma.extra.findMany({
-    where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const [extrasRaw, guestSession] = await Promise.all([
+    prisma.extra.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+    getGuestSession(),
+  ]);
+
+  let guestProfile: { id: string; name: string; email: string; phone: string | null } | null = null;
+  if (guestSession) {
+    const guestUser = await prisma.guestUser.findUnique({ where: { id: guestSession.sub } });
+    if (guestUser) guestProfile = { id: guestUser.id, name: guestUser.name, email: guestUser.email, phone: guestUser.phone };
+  }
 
   const extras: ClientExtra[] = extrasRaw.map((e) => ({
     id: e.id,
@@ -54,7 +61,7 @@ export default async function StayPage({
         <p className="mt-3 text-muted">{dict.stay.subtitle}</p>
       </div>
 
-      <BookingFlow locale={locale} dict={dict} extras={extras} />
+      <BookingFlow locale={locale} dict={dict} extras={extras} guestProfile={guestProfile} />
     </div>
   );
 }

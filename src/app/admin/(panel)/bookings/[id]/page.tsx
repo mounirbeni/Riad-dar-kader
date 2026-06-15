@@ -6,6 +6,8 @@ import { formatDateHuman, nightsBetween } from "@/lib/dates";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { BookingActions } from "@/components/admin/BookingActions";
 import { ownerWhatsAppLink } from "@/lib/whatsapp";
+import { AdminBookingChat } from "@/components/admin/AdminBookingChat";
+import { markAdminMessagesReadAction } from "@/app/actions/chat";
 import {
   IconArrowLeft,
   IconCalendar,
@@ -29,9 +31,13 @@ export default async function BookingDetailPage({
     include: {
       rooms: { include: { room: true } },
       extras: { include: { extra: true } },
+      messages: { orderBy: { createdAt: "asc" } },
     },
   });
   if (!booking) notFound();
+
+  // Mark guest messages as read when admin opens the booking
+  await markAdminMessagesReadAction(id);
 
   const nights = nightsBetween(booking.checkIn, booking.checkOut);
   const waUrl = ownerWhatsAppLink({
@@ -195,12 +201,17 @@ export default async function BookingDetailPage({
           </div>
         </div>
 
-        {/* Right — actions */}
+        {/* Right — actions + chat */}
         <div className="space-y-5">
           <BookingActions
             bookingId={booking.id}
             status={booking.status}
             adminNotes={booking.adminNotes}
+          />
+          <AdminBookingChat
+            bookingId={booking.id}
+            messages={booking.messages}
+            guestName={booking.guestName}
           />
         </div>
       </div>
