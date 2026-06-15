@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { PlanningBoard } from "@/components/admin/PlanningBoard";
+import { QuickMessages } from "@/components/admin/QuickMessages";
 
 export const dynamic = "force-dynamic";
 
@@ -104,11 +105,23 @@ export default async function PlanningPage({
     })),
   ].sort((a, b) => a.time.localeCompare(b.time));
 
+  const arrivalProps = arrivals.map((b) => ({
+    guestName: b.guestName,
+    rooms: b.rooms.map((r) => r.room.name).join(", "),
+    ref: b.reference,
+    guests: b.guests,
+  }));
+  const departureProps = departures.map((b) => ({
+    guestName: b.guestName,
+    rooms: b.rooms.map((r) => r.room.name).join(", "),
+    ref: b.reference,
+  }));
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="font-serif text-2xl text-ink">Planning</h1>
-        <p className="mt-1 text-sm text-muted">Planification journalière · partage WhatsApp</p>
+        <p className="mt-1 text-sm text-muted">Planification journalière · messages WhatsApp</p>
       </div>
 
       <PlanningBoard
@@ -120,6 +133,12 @@ export default async function PlanningPage({
         addAction={addEntryAction}
         updateAction={updateEntryAction}
         deleteAction={deleteEntryAction}
+      />
+
+      <QuickMessages
+        dateStr={dateStr}
+        arrivals={arrivalProps}
+        departures={departureProps}
       />
     </div>
   );
