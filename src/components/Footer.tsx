@@ -63,11 +63,21 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-5 text-xs text-sand/60 sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs text-sand/60 sm:flex-row">
           <span>
             © {new Date().getFullYear()} Riad Dar Kader. {dict.footer.rights}
           </span>
-          <span>Marrakech · Maroc</span>
+          <div className="flex items-center gap-4">
+            <Link href={`/${locale}/legal`} className="hover:text-white transition-colors">
+              {dict.footer.privacy}
+            </Link>
+            <span>·</span>
+            <Link href={`/${locale}/legal#terms`} className="hover:text-white transition-colors">
+              {dict.footer.terms}
+            </Link>
+            <span>·</span>
+            <span>Marrakech · Maroc</span>
+          </div>
         </div>
       </div>
     </footer>
