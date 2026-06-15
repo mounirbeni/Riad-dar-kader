@@ -148,7 +148,28 @@ export async function updateBookingStatusAction(
   revalidatePath("/admin/bookings");
   revalidatePath(`/admin/bookings/${bookingId}`);
   revalidatePath("/admin");
+  revalidatePath("/admin/calendar");
   return { ok: true, message: "Réservation mise à jour." };
+}
+
+export async function checkInGuestAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireSession();
+  const bookingId = String(formData.get("bookingId") || "");
+  if (!bookingId) return { ok: false, error: "ID manquant." };
+  await prisma.booking.update({ where: { id: bookingId }, data: { checkedIn: true, status: "confirmed" } });
+  revalidatePath("/admin/calendar");
+  revalidatePath(`/admin/bookings/${bookingId}`);
+  return { ok: true, message: "Client enregistré." };
+}
+
+export async function checkOutGuestAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireSession();
+  const bookingId = String(formData.get("bookingId") || "");
+  if (!bookingId) return { ok: false, error: "ID manquant." };
+  await prisma.booking.update({ where: { id: bookingId }, data: { checkedIn: false, status: "completed" } });
+  revalidatePath("/admin/calendar");
+  revalidatePath(`/admin/bookings/${bookingId}`);
+  return { ok: true, message: "Check-out enregistré." };
 }
 
 export async function sendPreArrivalAction(

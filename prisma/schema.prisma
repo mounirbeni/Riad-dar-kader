@@ -64,6 +64,7 @@ model Booking {
   guestCountry    String?
   specialRequests String?
   status          BookingStatus @default(pending)
+  checkedIn       Boolean       @default(false) // guest has physically arrived
   optionLabel     String? // e.g. "Family Stay", "Full Riad Request"
   estimatedTotal  Int           @default(0) // MAD
   adminNotes      String?
