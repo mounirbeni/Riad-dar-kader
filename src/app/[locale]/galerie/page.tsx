@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { PhotoSlot } from "@/components/PhotoSlot";
+import { Reveal } from "@/components/Reveal";
+import { GalleryGrid } from "@/components/GalleryGrid";
 
 export async function generateMetadata({
   params,
@@ -60,28 +61,19 @@ export default async function GalleryPage({
 
   return (
     <div className="container-page py-16">
-      <div className="max-w-2xl">
-        <h1 className="font-serif text-4xl text-ink sm:text-5xl">
-          {dict.gallery.title}
-        </h1>
-        <p className="mt-4 text-muted">{dict.gallery.subtitle}</p>
-        <span className="mt-4 inline-block rounded-full bg-brass/10 px-3 py-1 text-xs font-medium text-brass">
-          {dict.gallery.placeholderNote}
-        </span>
-      </div>
+      <Reveal>
+        <div className="max-w-2xl">
+          <h1 className="font-serif text-4xl text-ink sm:text-5xl">
+            {dict.gallery.title}
+          </h1>
+          <p className="mt-4 text-muted">{dict.gallery.subtitle}</p>
+          <span className="mt-4 inline-block rounded-full bg-brass/10 px-3 py-1 text-xs font-medium text-brass">
+            {dict.gallery.placeholderNote}
+          </span>
+        </div>
+      </Reveal>
 
-      <div className="mt-10 columns-2 gap-4 sm:columns-3 lg:columns-4 [&>*]:mb-4">
-        {captions.map((caption, i) => (
-          <PhotoSlot
-            key={i}
-            label={caption}
-            code={`G${i + 1}`}
-            ratio={i % 3 === 0 ? "3:4" : "1:1"}
-            variant={i}
-            className={i % 3 === 0 ? "aspect-[3/4]" : "aspect-square"}
-          />
-        ))}
-      </div>
+      <GalleryGrid captions={captions} />
     </div>
   );
 }
