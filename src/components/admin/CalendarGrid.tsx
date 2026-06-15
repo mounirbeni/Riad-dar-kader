@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { BookingCell, CellKind } from "./OccupancyGrid";
 import { checkInGuestAction, checkOutGuestAction } from "@/app/actions/admin";
+import { formatEUR } from "@/lib/money";
 import {
   IconUsers,
   IconMoon,
@@ -168,7 +169,7 @@ function BookingPopup({
             </div>
             <div className="text-xs text-muted/80 leading-relaxed truncate">{booking.rooms.join(", ")}</div>
             <div className="pt-2 border-t border-sand-100 flex items-center justify-between">
-              <span className="text-xs font-bold text-terracotta">{booking.estimatedTotal.toLocaleString("fr-FR")} MAD</span>
+              <span className="text-xs font-bold text-terracotta">{formatEUR(booking.estimatedTotal)}</span>
               {booking.checkedIn && (
                 <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">Au riad</span>
               )}

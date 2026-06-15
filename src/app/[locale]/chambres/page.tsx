@@ -6,7 +6,7 @@ import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { IconUser, IconArrowRight, IconEye } from "@/components/Icons";
 
 // Reads rooms from the database — render on demand.
@@ -81,7 +81,7 @@ export default async function RoomsPage({
                   />
                 )}
                 <span className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-terracotta backdrop-blur-sm">
-                  {dict.common.from} {formatMAD(room.basePrice, locale)}
+                  {dict.common.from} {formatEUR(room.basePrice, locale)}
                 </span>
               </Link>
               <div className="flex flex-1 flex-col p-5">

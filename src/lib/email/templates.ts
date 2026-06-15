@@ -1,5 +1,5 @@
 import { formatDateHuman } from "@/lib/dates";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { RIAD } from "@/lib/constants";
 
 export type EmailBookingData = {
@@ -70,7 +70,7 @@ function detailsTable(data: EmailBookingData): string {
         .join(", "),
     ]);
   }
-  rows.push(["Total estimé", formatMAD(data.estimatedTotal)]);
+  rows.push(["Total estimé", formatEUR(data.estimatedTotal)]);
 
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:8px 0 4px;">
     ${rows
@@ -102,7 +102,7 @@ export function guestRequestReceived(data: EmailBookingData): RenderedEmail {
   const text = `Bonjour ${data.guestName},\n\nMerci pour votre demande de séjour (${data.reference}).\n\nArrivée : ${formatDateHuman(
     data.checkIn,
     "fr"
-  )}\nDépart : ${formatDateHuman(data.checkOut, "fr")}\nVoyageurs : ${data.guests}\nTotal estimé : ${formatMAD(
+  )}\nDépart : ${formatDateHuman(data.checkOut, "fr")}\nVoyageurs : ${data.guests}\nTotal estimé : ${formatEUR(
     data.estimatedTotal
   )}\n\nLa confirmation finale vous sera envoyée par le riad.\n\nL'équipe du ${RIAD.name}`;
   return { subject, html, text };
@@ -125,7 +125,7 @@ export function ownerNewBooking(data: EmailBookingData): RenderedEmail {
   const text = `Nouvelle demande ${data.reference}\n${data.guestName} — ${data.guestEmail} — ${data.guestPhone}\n${formatDateHuman(
     data.checkIn,
     "fr"
-  )} → ${formatDateHuman(data.checkOut, "fr")} · ${data.guests} voyageurs\nTotal estimé : ${formatMAD(
+  )} → ${formatDateHuman(data.checkOut, "fr")} · ${data.guests} voyageurs\nTotal estimé : ${formatEUR(
     data.estimatedTotal
   )}`;
   return { subject, html, text };

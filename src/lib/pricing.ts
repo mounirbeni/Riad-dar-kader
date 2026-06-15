@@ -1,4 +1,4 @@
-// Flexible pricing helpers. All amounts are whole MAD.
+// Flexible pricing helpers. All amounts are whole EUR (euros).
 // Final price stays "estimated" until the owner confirms.
 
 import type { ExtraPriceType } from "@prisma/client";

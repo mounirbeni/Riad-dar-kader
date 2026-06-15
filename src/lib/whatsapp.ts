@@ -1,6 +1,6 @@
 import { whatsappNumber } from "@/lib/constants";
 import { formatDateHuman } from "@/lib/dates";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 
 type WhatsAppBooking = {
   reference: string;
@@ -52,7 +52,7 @@ export function ownerWhatsAppMessage(booking: WhatsAppBooking): string {
     }
   }
 
-  lines.push("", `💰 Total estimé : ${formatMAD(booking.estimatedTotal)}`);
+  lines.push("", `💰 Total estimé : ${formatEUR(booking.estimatedTotal)}`);
   return lines.join("\n");
 }
 

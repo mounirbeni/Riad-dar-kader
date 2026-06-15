@@ -34,8 +34,8 @@ export type StayOption = {
   roomIds: string[];
   roomNames: string[];
   maxGuests: number;
-  estimatedTotal: number; // MAD for the whole stay (rooms only, before extras)
-  pricePerNight: number; // MAD per night for this option
+  estimatedTotal: number; // EUR for the whole stay (rooms only, before extras)
+  pricePerNight: number; // EUR per night for this option
 };
 
 export type AvailabilityResult = {

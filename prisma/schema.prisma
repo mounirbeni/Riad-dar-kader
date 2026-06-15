@@ -35,7 +35,7 @@ model Room {
   description   String // primary (French)
   descriptionEn String? // optional English description
   capacity      Int      @default(2)
-  basePrice     Int // stored in MAD (whole dirhams) per night
+  basePrice     Int // stored in EUR (whole euros) per night
   sizeM2        Int? // room size in square metres
   bedType       String? // key: double | twin | double_sofa | family
   view          String? // key: patio | terrace | medina
@@ -66,7 +66,7 @@ model Booking {
   status          BookingStatus @default(pending)
   checkedIn       Boolean       @default(false) // guest has physically arrived
   optionLabel     String? // e.g. "Family Stay", "Full Riad Request"
-  estimatedTotal  Int           @default(0) // MAD
+  estimatedTotal  Int           @default(0) // EUR
   adminNotes      String?
   guestUserId     String?
   createdAt       DateTime      @default(now())
@@ -100,7 +100,7 @@ model Extra {
   nameFr      String
   description String
   descriptionFr String
-  price       Int // MAD
+  price       Int // EUR
   priceType   ExtraPriceType @default(per_booking)
   isActive    Boolean        @default(true)
   sortOrder   Int            @default(0)
@@ -117,7 +117,7 @@ model BookingExtra {
   bookingId     String
   extraId       String
   quantity      Int     @default(1)
-  priceSnapshot Int // MAD captured at request time
+  priceSnapshot Int // EUR captured at request time
   nameSnapshot  String
   booking       Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   extra         Extra   @relation(fields: [extraId], references: [id], onDelete: Cascade)

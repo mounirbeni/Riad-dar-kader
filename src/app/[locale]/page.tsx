@@ -9,7 +9,7 @@ import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { HeroText } from "@/components/HeroText";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { RIAD, siteUrl } from "@/lib/constants";
@@ -208,7 +208,7 @@ export default async function HomePage({
                       {room.capacity} {dict.common.guests}
                     </span>
                     <span className="font-medium text-terracotta">
-                      {dict.common.from} {formatMAD(room.basePrice, locale)}
+                      {dict.common.from} {formatEUR(room.basePrice, locale)}
                     </span>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default async function HomePage({
                     {locale === "fr" ? extra.nameFr : extra.name}
                   </h3>
                   <p className="mt-2 text-sm font-medium text-brass">
-                    {formatMAD(extra.price, locale)}{" "}
+                    {formatEUR(extra.price, locale)}{" "}
                     <span className="text-xs font-normal text-muted">
                       {priceTypeLabel(extra.priceType, locale)}
                     </span>

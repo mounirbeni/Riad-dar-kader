@@ -8,7 +8,7 @@ import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { siteUrl } from "@/lib/constants";
 import {
@@ -243,7 +243,7 @@ export default async function RoomDetailPage({
           <div className="card p-6">
             <p className="text-sm text-muted">{dict.common.from}</p>
             <p className="font-serif text-3xl text-terracotta">
-              {formatMAD(room.basePrice, locale)}
+              {formatEUR(room.basePrice, locale)}
               <span className="ml-1 text-sm font-normal text-muted">{t.perNight}</span>
             </p>
             <Link href={localePath(locale, "stay")} className="btn-primary mt-5 w-full">
@@ -294,7 +294,7 @@ export default async function RoomDetailPage({
                   <div className="flex items-center justify-between p-4">
                     <span className="font-serif text-lg text-ink">{r.name}</span>
                     <span className="text-sm font-medium text-terracotta">
-                      {formatMAD(r.basePrice, locale)}
+                      {formatEUR(r.basePrice, locale)}
                     </span>
                   </div>
                 </Link>

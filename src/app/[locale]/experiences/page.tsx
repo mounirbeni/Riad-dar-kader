@@ -5,7 +5,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { PhotoSlot } from "@/components/PhotoSlot";
-import { formatMAD } from "@/lib/money";
+import { formatEUR } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 
 // Rendered on-demand (reads extras from the database).
@@ -71,7 +71,7 @@ export default async function ExperiencesPage({
               <div className="mt-4 flex items-center justify-between">
                 <span className="font-medium text-terracotta">
                   {extra.price > 0
-                    ? formatMAD(extra.price, locale)
+                    ? formatEUR(extra.price, locale)
                     : locale === "fr"
                       ? "Sur demande"
                       : "On request"}
