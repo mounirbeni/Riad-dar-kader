@@ -40,7 +40,7 @@ export function RegisterForm({
               <div>
                 <label className="label">{t.firstName}</label>
                 <input
-                  name="firstName"
+                  name="name"
                   type="text"
                   required
                   autoComplete="given-name"

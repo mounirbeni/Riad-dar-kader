@@ -16,11 +16,11 @@ function secret(): Uint8Array {
 export type GuestSessionPayload = {
   sub: string;
   email: string;
-  firstName: string;
+  name: string;
 };
 
 export async function createGuestSession(payload: GuestSessionPayload): Promise<void> {
-  const token = await new SignJWT({ email: payload.email, firstName: payload.firstName })
+  const token = await new SignJWT({ email: payload.email, name: payload.name })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(payload.sub)
     .setIssuedAt()
@@ -52,7 +52,7 @@ export async function getGuestSession(): Promise<GuestSessionPayload | null> {
     return {
       sub: payload.sub,
       email: String(payload.email ?? ""),
-      firstName: String(payload.firstName ?? ""),
+      name: String(payload.name ?? ""),
     };
   } catch {
     return null;
@@ -62,9 +62,9 @@ export async function getGuestSession(): Promise<GuestSessionPayload | null> {
 export async function registerGuest(
   email: string,
   password: string,
-  firstName: string
+  name: string
 ): Promise<{ ok: true } | { error: "email_taken" | "invalid_input" }> {
-  if (!email || !password || !firstName) return { error: "invalid_input" };
+  if (!email || !password || !name) return { error: "invalid_input" };
   try {
     const existing = await prisma.guestUser.findUnique({
       where: { email: email.toLowerCase() },
@@ -73,9 +73,9 @@ export async function registerGuest(
 
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await prisma.guestUser.create({
-      data: { email: email.toLowerCase(), passwordHash, firstName },
+      data: { email: email.toLowerCase(), passwordHash, name },
     });
-    await createGuestSession({ sub: user.id, email: user.email, firstName: user.firstName ?? "" });
+    await createGuestSession({ sub: user.id, email: user.email, name: user.name ?? "" });
     return { ok: true };
   } catch {
     return { error: "invalid_input" };
@@ -95,6 +95,6 @@ export async function loginGuest(
   }
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) return { error: "invalid_credentials" };
-  await createGuestSession({ sub: user.id, email: user.email, firstName: user.firstName ?? "" });
+  await createGuestSession({ sub: user.id, email: user.email, name: user.name ?? "" });
   return { ok: true };
 }

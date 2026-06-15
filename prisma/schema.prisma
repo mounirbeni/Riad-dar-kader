@@ -67,11 +67,13 @@ model Booking {
   optionLabel     String? // e.g. "Family Stay", "Full Riad Request"
   estimatedTotal  Int           @default(0) // MAD
   adminNotes      String?
+  checkedIn       Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  rooms  BookingRoom[]
-  extras BookingExtra[]
+  rooms    BookingRoom[]
+  extras   BookingExtra[]
+  messages BookingMessage[]
 
   @@index([status])
   @@index([checkIn, checkOut])
@@ -120,6 +122,18 @@ model BookingExtra {
   @@index([bookingId])
 }
 
+model BookingMessage {
+  id        String   @id @default(cuid())
+  bookingId String
+  sender    String   // "guest" | "admin"
+  content   String
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
 model BlockedDate {
   id        String   @id @default(cuid())
   roomId    String? // null = whole riad blocked for that date
@@ -153,7 +167,9 @@ model GuestUser {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String
-  firstName    String?
+  name         String?
+  phone        String?
+  country      String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

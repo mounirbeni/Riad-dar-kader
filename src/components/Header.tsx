@@ -77,7 +77,7 @@ export function Header({
           {user ? (
             <div className="hidden items-center gap-2 lg:flex">
               <span className="text-sm text-ink/70">
-                {user.firstName || user.email.split("@")[0]}
+                {user.name || user.email.split("@")[0]}
               </span>
               <form action={logoutAction}>
                 <input type="hidden" name="returnTo" value={`/${locale}`} />
@@ -150,7 +150,7 @@ export function Header({
               {user ? (
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-ink">
-                    {user.firstName || user.email.split("@")[0]}
+                    {user.name || user.email.split("@")[0]}
                   </span>
                   <form action={logoutAction}>
                     <input type="hidden" name="returnTo" value={`/${locale}`} />

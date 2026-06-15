@@ -24,10 +24,10 @@ export async function registerAction(
 ): Promise<GuestAuthState> {
   const email = (formData.get("email") as string) ?? "";
   const password = (formData.get("password") as string) ?? "";
-  const firstName = (formData.get("firstName") as string) ?? "";
+  const name = (formData.get("name") as string) ?? "";
   const returnTo = (formData.get("returnTo") as string) || "/";
 
-  const result = await registerGuest(email, password, firstName);
+  const result = await registerGuest(email, password, name);
   if ("error" in result) return { error: result.error };
   redirect(returnTo);
 }
