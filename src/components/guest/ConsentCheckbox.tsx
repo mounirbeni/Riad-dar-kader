@@ -28,7 +28,7 @@ export function ConsentCheckbox({
       <span className="text-xs leading-relaxed text-muted">
         {fr ? "En créant un compte, j'accepte la " : "By creating an account, I agree to the "}
         <Link
-          href={`/${locale}/legal#privacy`}
+          href={`/${locale}/legal/privacy`}
           target="_blank"
           className="font-medium text-terracotta hover:underline"
         >
@@ -36,7 +36,7 @@ export function ConsentCheckbox({
         </Link>
         {fr ? " et les " : " and the "}
         <Link
-          href={`/${locale}/legal#terms`}
+          href={`/${locale}/legal/terms`}
           target="_blank"
           className="font-medium text-terracotta hover:underline"
         >

@@ -7,12 +7,12 @@ import { contactEmail } from "@/lib/constants";
 
 const LINKS: NavKey[] = ["home", "riad", "rooms", "stay", "experiences", "gallery", "contact", "faq"];
 
-const LEGAL_LINKS: { key: "privacy" | "terms" | "bookingTerms" | "cancellation" | "cookies"; anchor: string }[] = [
-  { key: "privacy", anchor: "#privacy" },
-  { key: "terms", anchor: "#terms" },
-  { key: "bookingTerms", anchor: "#booking" },
-  { key: "cancellation", anchor: "#cancellation" },
-  { key: "cookies", anchor: "#cookies" },
+const LEGAL_LINKS: { key: "privacy" | "terms" | "bookingTerms" | "cancellation" | "cookies"; slug: string }[] = [
+  { key: "privacy", slug: "privacy" },
+  { key: "terms", slug: "terms" },
+  { key: "bookingTerms", slug: "booking" },
+  { key: "cancellation", slug: "cancellation" },
+  { key: "cookies", slug: "cookies" },
 ];
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
@@ -74,10 +74,10 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             {dict.footer.legalTitle}
           </h4>
           <ul className="mt-4 space-y-2 text-sm">
-            {LEGAL_LINKS.map(({ key, anchor }) => (
+            {LEGAL_LINKS.map(({ key, slug }) => (
               <li key={key}>
                 <Link
-                  href={`/${locale}/legal${anchor}`}
+                  href={`/${locale}/legal/${slug}`}
                   className="text-sand/80 transition hover:text-white"
                 >
                   {dict.footer[key]}
