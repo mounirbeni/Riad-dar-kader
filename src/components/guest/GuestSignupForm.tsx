@@ -2,16 +2,18 @@
 
 import { useActionState } from "react";
 import { guestSignupAction } from "@/app/actions/guest";
+import { dictionaries } from "@/i18n/dictionaries";
 
 export function GuestSignupForm({ locale }: { locale: string }) {
   const [state, formAction, pending] = useActionState(guestSignupAction, { ok: false });
+  const t = dictionaries[locale === "en" ? "en" : "fr"].account;
 
   return (
     <form action={formAction} className="space-y-4">
       <input type="hidden" name="locale" value={locale} />
       <div>
         <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="name">
-          Nom complet <span className="text-terracotta">*</span>
+          {t.fullName} <span className="text-terracotta">*</span>
         </label>
         <input
           id="name"
@@ -20,7 +22,7 @@ export function GuestSignupForm({ locale }: { locale: string }) {
           required
           autoComplete="name"
           className="w-full rounded-xl border border-sand-200 px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta/50 focus:outline-none focus:ring-2 focus:ring-terracotta/20"
-          placeholder="Votre nom"
+          placeholder={t.yourName}
         />
       </div>
       <div>
@@ -34,12 +36,12 @@ export function GuestSignupForm({ locale }: { locale: string }) {
           required
           autoComplete="email"
           className="w-full rounded-xl border border-sand-200 px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta/50 focus:outline-none focus:ring-2 focus:ring-terracotta/20"
-          placeholder="vous@exemple.com"
+          placeholder={t.emailPlaceholder}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="phone">
-          Téléphone WhatsApp
+          {t.phone}
         </label>
         <input
           id="phone"
@@ -52,7 +54,7 @@ export function GuestSignupForm({ locale }: { locale: string }) {
       </div>
       <div>
         <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="country">
-          Pays
+          {t.country}
         </label>
         <input
           id="country"
@@ -65,7 +67,7 @@ export function GuestSignupForm({ locale }: { locale: string }) {
       </div>
       <div>
         <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="password">
-          Mot de passe <span className="text-terracotta">*</span>
+          {t.password} <span className="text-terracotta">*</span>
         </label>
         <input
           id="password"
@@ -75,7 +77,7 @@ export function GuestSignupForm({ locale }: { locale: string }) {
           minLength={8}
           autoComplete="new-password"
           className="w-full rounded-xl border border-sand-200 px-3.5 py-2.5 text-sm text-ink placeholder:text-muted focus:border-terracotta/50 focus:outline-none focus:ring-2 focus:ring-terracotta/20"
-          placeholder="8 caractères minimum"
+          placeholder={t.passwordMin}
         />
       </div>
       {state?.error && (
@@ -86,7 +88,7 @@ export function GuestSignupForm({ locale }: { locale: string }) {
         disabled={pending}
         className="w-full rounded-xl bg-terracotta px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-terracotta/90 disabled:opacity-60 transition-colors"
       >
-        {pending ? "Création du compte…" : "Créer mon compte"}
+        {pending ? t.creatingAccount : t.createMyAccount}
       </button>
     </form>
   );

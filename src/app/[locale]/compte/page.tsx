@@ -5,18 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { guestLogoutAction } from "@/app/actions/guest";
 import { formatEUR } from "@/lib/money";
 import { IconArrowRight } from "@/components/Icons";
+import { getDictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/config";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABELS: Record<string, { label: string; cls: string }> = {
-  pending:   { label: "En attente de confirmation", cls: "bg-amber-100 text-amber-700" },
-  confirmed: { label: "Confirmée", cls: "bg-emerald-100 text-emerald-700" },
-  cancelled: { label: "Annulée", cls: "bg-red-100 text-red-600" },
-  completed: { label: "Séjour terminé", cls: "bg-sand text-muted" },
-};
-
-function formatDate(d: Date) {
-  return new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+function formatDate(d: Date, locale: string) {
+  return new Date(d).toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 function nightCount(checkIn: Date, checkOut: Date) {
@@ -31,6 +26,16 @@ export default async function GuestDashboardPage({
   const { locale } = await params;
   const session = await getGuestSession();
   if (!session) redirect(`/${locale}/compte/connexion`);
+
+  const dict = getDictionary(locale as Locale);
+  const t = dict.account;
+
+  const STATUS_LABELS: Record<string, { label: string; cls: string }> = {
+    pending:   { label: t.statusPending,   cls: "bg-amber-100 text-amber-700" },
+    confirmed: { label: t.statusConfirmed, cls: "bg-emerald-100 text-emerald-700" },
+    cancelled: { label: t.statusCancelled, cls: "bg-red-100 text-red-600" },
+    completed: { label: t.statusCompleted, cls: "bg-sand text-muted" },
+  };
 
   const [user, bookings] = await Promise.all([
     prisma.guestUser.findUnique({ where: { id: session.sub } }),
@@ -49,12 +54,15 @@ export default async function GuestDashboardPage({
 
   const logoutWithLocale = guestLogoutAction.bind(null, locale);
 
+  const confirmedCount = bookings.filter(b => b.status === "confirmed" || b.status === "completed").length;
+  const pendingCount = bookings.filter(b => b.status === "pending").length;
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-serif text-2xl text-ink">Bonjour, {user.name.split(" ")[0]}</h1>
+          <h1 className="font-serif text-2xl text-ink">{t.hello}, {user.name.split(" ")[0]}</h1>
           <p className="mt-1 text-sm text-muted">{user.email}</p>
         </div>
         <form action={logoutWithLocale}>
@@ -62,7 +70,7 @@ export default async function GuestDashboardPage({
             type="submit"
             className="rounded-xl border border-sand-200 bg-white px-4 py-2 text-sm text-muted hover:text-ink transition-colors"
           >
-            Se déconnecter
+            {t.signOut}
           </button>
         </form>
       </div>
@@ -71,21 +79,21 @@ export default async function GuestDashboardPage({
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5 text-center">
           <p className="text-2xl font-bold text-ink">{bookings.length}</p>
-          <p className="text-xs text-muted mt-1">Réservation{bookings.length !== 1 ? "s" : ""}</p>
+          <p className="text-xs text-muted mt-1">{bookings.length !== 1 ? t.bookingCountPlural : t.bookingCount}</p>
         </div>
         <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5 text-center">
-          <p className="text-2xl font-bold text-emerald-600">{bookings.filter(b => b.status === "confirmed" || b.status === "completed").length}</p>
-          <p className="text-xs text-muted mt-1">Confirmée{bookings.filter(b => b.status === "confirmed" || b.status === "completed").length !== 1 ? "s" : ""}</p>
+          <p className="text-2xl font-bold text-emerald-600">{confirmedCount}</p>
+          <p className="text-xs text-muted mt-1">{confirmedCount !== 1 ? t.confirmedCountPlural : t.confirmedCount}</p>
         </div>
         <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5 text-center">
-          <p className="text-2xl font-bold text-amber-600">{bookings.filter(b => b.status === "pending").length}</p>
-          <p className="text-xs text-muted mt-1">En attente</p>
+          <p className="text-2xl font-bold text-amber-600">{pendingCount}</p>
+          <p className="text-xs text-muted mt-1">{t.pendingCount}</p>
         </div>
       </div>
 
       {/* Bookings */}
       <div>
-        <h2 className="font-serif text-lg text-ink mb-4">Mes réservations</h2>
+        <h2 className="font-serif text-lg text-ink mb-4">{t.myBookings}</h2>
 
         {bookings.length === 0 ? (
           <div className="rounded-2xl bg-white border border-sand-200 p-12 text-center">
@@ -94,13 +102,13 @@ export default async function GuestDashboardPage({
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
               </svg>
             </div>
-            <p className="font-medium text-ink mb-1">Aucune réservation</p>
-            <p className="text-sm text-muted mb-4">Planifiez votre séjour à Marrakech au Riad Dar Kader.</p>
+            <p className="font-medium text-ink mb-1">{t.noBookings}</p>
+            <p className="text-sm text-muted mb-4">{t.noBookingsText}</p>
             <Link
               href={`/${locale}/sejour`}
               className="inline-flex rounded-xl bg-terracotta px-5 py-2.5 text-sm font-semibold text-white hover:bg-terracotta/90 transition-colors"
             >
-              Réserver un séjour
+              {t.bookStay}
             </Link>
           </div>
         ) : (
@@ -127,12 +135,12 @@ export default async function GuestDashboardPage({
                       </div>
                       <p className="mt-2 font-medium text-ink">{roomNames || "Chambre"}</p>
                       <p className="text-sm text-muted mt-0.5">
-                        {formatDate(b.checkIn)} → {formatDate(b.checkOut)} · {nights} nuit{nights !== 1 ? "s" : ""} · {b.guests} voyageur{b.guests !== 1 ? "s" : ""}
+                        {formatDate(b.checkIn, locale)} → {formatDate(b.checkOut, locale)} · {nights} {nights !== 1 ? t.nights : t.night} · {b.guests} {b.guests !== 1 ? t.travellers : t.traveller}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-lg font-bold text-ink">{formatEUR(b.estimatedTotal)}</p>
-                      <p className="text-xs text-muted">total estimé</p>
+                      <p className="text-xs text-muted">{t.estimatedTotal.toLowerCase()}</p>
                     </div>
                   </div>
 
@@ -147,7 +155,7 @@ export default async function GuestDashboardPage({
                   {b.status === "pending" && (
                     <div className="mt-3 pt-3 border-t border-sand-200">
                       <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
-                        Votre demande est en cours de traitement. Vous recevrez une confirmation par email sous 24h.
+                        {t.pendingNote}
                       </p>
                     </div>
                   )}
@@ -161,7 +169,7 @@ export default async function GuestDashboardPage({
                   <div className="mt-3 pt-3 border-t border-sand-200 flex items-center justify-between">
                     <span className="text-xs text-muted">{b.messages.length} message{b.messages.length !== 1 ? "s" : ""}</span>
                     <span className="flex items-center gap-1 text-xs font-medium text-terracotta">
-                      Voir le détail
+                      {locale === "en" ? "View details" : "Voir le détail"}
                       <IconArrowRight size={12} />
                     </span>
                   </div>
@@ -174,25 +182,25 @@ export default async function GuestDashboardPage({
 
       {/* Profile */}
       <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-5">
-        <h2 className="font-medium text-ink mb-4">Mon profil</h2>
+        <h2 className="font-medium text-ink mb-4">{t.myProfile}</h2>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-xs text-muted mb-0.5">Nom</p>
+            <p className="text-xs text-muted mb-0.5">{t.profileName}</p>
             <p className="text-ink">{user.name}</p>
           </div>
           <div>
-            <p className="text-xs text-muted mb-0.5">Email</p>
+            <p className="text-xs text-muted mb-0.5">{t.profileEmail}</p>
             <p className="text-ink">{user.email}</p>
           </div>
           {user.phone && (
             <div>
-              <p className="text-xs text-muted mb-0.5">Téléphone</p>
+              <p className="text-xs text-muted mb-0.5">{t.profilePhone}</p>
               <p className="text-ink">{user.phone}</p>
             </div>
           )}
           {user.country && (
             <div>
-              <p className="text-xs text-muted mb-0.5">Pays</p>
+              <p className="text-xs text-muted mb-0.5">{t.profileCountry}</p>
               <p className="text-ink">{user.country}</p>
             </div>
           )}
@@ -201,7 +209,7 @@ export default async function GuestDashboardPage({
 
       <div className="text-center">
         <Link href={`/${locale}/sejour`} className="inline-flex rounded-xl bg-terracotta px-6 py-3 text-sm font-semibold text-white hover:bg-terracotta/90 transition-colors shadow-sm">
-          Faire une nouvelle réservation
+          {t.newBooking}
         </Link>
       </div>
     </div>

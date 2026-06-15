@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getGuestSession } from "@/lib/guest-auth";
 import { GuestSignupForm } from "@/components/guest/GuestSignupForm";
+import { getDictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/config";
 
 export default async function GuestSignupPage({
   params,
@@ -11,6 +13,8 @@ export default async function GuestSignupPage({
   const { locale } = await params;
   const session = await getGuestSession();
   if (session) redirect(`/${locale}/compte`);
+  const dict = getDictionary(locale as Locale);
+  const t = dict.account;
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-16">
@@ -22,8 +26,8 @@ export default async function GuestSignupPage({
               <circle cx="12" cy="7" r="4" />
             </svg>
           </div>
-          <h1 className="font-serif text-2xl text-ink">Créer mon compte</h1>
-          <p className="mt-1.5 text-sm text-muted">Suivez vos réservations et accédez à votre espace voyageur</p>
+          <h1 className="font-serif text-2xl text-ink">{t.signupTitle}</h1>
+          <p className="mt-1.5 text-sm text-muted">{t.signupSubtitle}</p>
         </div>
 
         <div className="rounded-2xl bg-white border border-sand-200 shadow-sm p-7">
@@ -31,16 +35,16 @@ export default async function GuestSignupPage({
 
           <div className="mt-5 pt-5 border-t border-sand-200 text-center">
             <p className="text-sm text-muted">
-              Déjà un compte ?{" "}
+              {t.alreadyAccount}{" "}
               <Link href={`/${locale}/compte/connexion`} className="font-medium text-terracotta hover:underline">
-                Se connecter
+                {t.signIn}
               </Link>
             </p>
           </div>
         </div>
 
         <p className="mt-4 text-center text-xs text-muted">
-          Si vous avez déjà réservé avec cet email, vos réservations seront automatiquement liées à votre compte.
+          {t.bookingLinkNote}
         </p>
       </div>
     </div>
