@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { IconShare, IconCopy, IconSun, IconLogIn, IconLogOut, IconUtensilsCrossed, IconBrush, IconMoon, IconCar, IconEdit, IconMessageCircle } from "@/components/Icons";
-import type { ReactNode } from "react";
-
 type Arrival = { guestName: string; rooms: string; ref: string; guests: number };
 type Departure = { guestName: string; rooms: string; ref: string };
 
@@ -33,14 +31,6 @@ function buildTemplates(dateStr: string, arrivals: Arrival[], departures: Depart
     { id: "libre",     label: "Message libre",    icon: <IconEdit size={14} />,            category: "Personnalisé", text: `*${riad}*\n\n` },
   ];
 }
-
-type Template = ReturnType<typeof buildTemplates>[number];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  "Équipe":        "bg-amber-50 border-amber-200 text-amber-700",
-  "Client":        "bg-emerald-50 border-emerald-200 text-emerald-700",
-  "Personnalisé":  "bg-sand border-sand-200 text-muted",
-};
 
 export function QuickMessages({ dateStr, arrivals, departures }: Props) {
   const templates = buildTemplates(dateStr, arrivals, departures);
