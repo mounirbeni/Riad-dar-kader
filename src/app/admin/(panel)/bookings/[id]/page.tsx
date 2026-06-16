@@ -15,6 +15,8 @@ import {
   IconBed,
   IconCheck,
   IconMail,
+  IconBell,
+  IconClipboardList,
 } from "@/components/Icons";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +33,8 @@ export default async function BookingDetailPage({
       rooms: { include: { room: true } },
       extras: { include: { extra: true } },
       messages: { orderBy: { createdAt: "asc" } },
+      statusHistory: { orderBy: { createdAt: "desc" } },
+      emailLogs: { orderBy: { createdAt: "desc" } },
     },
   });
   if (!booking) notFound();
@@ -195,6 +199,72 @@ export default async function BookingDetailPage({
               </div>
             </div>
           </div>
+
+          {/* Status history */}
+          {booking.statusHistory.length > 0 && (
+            <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+              <div className="border-b border-sand-100 bg-sand/30 px-5 py-3.5">
+                <h2 className="flex items-center gap-2 font-serif text-lg text-ink">
+                  <IconClipboardList size={16} className="text-terracotta" />
+                  Historique des statuts
+                </h2>
+              </div>
+              <ul className="divide-y divide-sand-100">
+                {booking.statusHistory.map((h) => (
+                  <li key={h.id} className="flex items-center justify-between gap-4 px-5 py-3 text-sm">
+                    <div className="flex items-center gap-2 text-muted">
+                      {h.fromStatus && (
+                        <>
+                          <StatusPill status={h.fromStatus} />
+                          <span>→</span>
+                        </>
+                      )}
+                      <StatusPill status={h.toStatus} />
+                    </div>
+                    <span className="text-xs text-muted">
+                      {new Date(h.createdAt).toLocaleString("fr-FR", {
+                        day: "numeric", month: "short", year: "numeric",
+                        hour: "2-digit", minute: "2-digit", timeZone: "UTC",
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Email log */}
+          {booking.emailLogs.length > 0 && (
+            <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-sm">
+              <div className="border-b border-sand-100 bg-sand/30 px-5 py-3.5">
+                <h2 className="flex items-center gap-2 font-serif text-lg text-ink">
+                  <IconBell size={16} className="text-terracotta" />
+                  Emails envoyés
+                </h2>
+              </div>
+              <ul className="divide-y divide-sand-100">
+                {booking.emailLogs.map((log) => (
+                  <li key={log.id} className="flex items-start justify-between gap-4 px-5 py-3 text-sm">
+                    <div>
+                      <p className="font-medium text-ink">{log.subject}</p>
+                      <p className="text-xs text-muted">{log.to}</p>
+                    </div>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${log.status === "sent" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                        {log.status === "sent" ? "Envoyé" : "Échec"}
+                      </span>
+                      <span className="text-xs text-muted">
+                        {new Date(log.createdAt).toLocaleString("fr-FR", {
+                          day: "numeric", month: "short", year: "numeric",
+                          hour: "2-digit", minute: "2-digit", timeZone: "UTC",
+                        })}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Right — actions + chat */}
@@ -233,5 +303,25 @@ function DetailField({ label, value, copyable }: { label: string; value: string;
       <dt className="text-[11px] font-semibold uppercase tracking-wide text-muted">{label}</dt>
       <dd className={`mt-1 text-sm font-medium text-ink ${copyable ? "font-mono" : ""}`}>{value}</dd>
     </div>
+  );
+}
+
+function StatusPill({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    pending: "bg-yellow-100 text-yellow-700",
+    confirmed: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-700",
+    completed: "bg-blue-100 text-blue-700",
+  };
+  const label: Record<string, string> = {
+    pending: "En attente",
+    confirmed: "Confirmé",
+    cancelled: "Annulé",
+    completed: "Terminé",
+  };
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${map[status] ?? "bg-sand-100 text-ink"}`}>
+      {label[status] ?? status}
+    </span>
   );
 }

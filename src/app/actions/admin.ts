@@ -113,17 +113,30 @@ export async function updateBookingStatusAction(
   if (!parsed.success) return { ok: false, error: "Données invalides." };
 
   const { bookingId, status, adminNotes } = parsed.data;
+
+  // Fetch current status before update to record history.
+  const before = await prisma.booking.findUnique({ where: { id: bookingId }, select: { status: true } });
+
   const booking = await prisma.booking.update({
     where: { id: bookingId },
     data: { status, adminNotes: adminNotes || null },
     include: { extras: true },
   });
 
+  // Record status change in history.
+  if (before && before.status !== status) {
+    await prisma.bookingStatusHistory.create({
+      data: { bookingId, fromStatus: before.status, toStatus: status },
+    });
+  }
+
   // Guest-facing email on confirm / cancel.
   if (status === "confirmed") {
     await sendEmail({
       to: booking.guestEmail,
       email: bookingConfirmed(toEmailData(booking)),
+      bookingId,
+      template: "bookingConfirmed",
     });
     // Auto-send welcome chat message on first confirmation
     const alreadyWelcomed = await prisma.bookingMessage.count({ where: { bookingId, sender: "admin" } });
@@ -142,6 +155,8 @@ export async function updateBookingStatusAction(
     await sendEmail({
       to: booking.guestEmail,
       email: bookingCancelled(toEmailData(booking)),
+      bookingId,
+      template: "bookingCancelled",
     });
   }
 

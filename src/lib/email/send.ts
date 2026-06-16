@@ -3,11 +3,14 @@
 // (e.g. local dev), emails are logged to the console so the flow still works.
 
 import type { RenderedEmail } from "./templates";
+import { prisma } from "@/lib/prisma";
 
 type SendArgs = {
   to: string;
   email: RenderedEmail;
   replyTo?: string;
+  bookingId?: string;
+  template?: string;
 };
 
 const FROM = () =>
@@ -74,19 +77,46 @@ async function sendWithBrevo({ to, email, replyTo }: SendArgs): Promise<boolean>
 /**
  * Send an email. Never throws — booking flow should not fail because of email.
  * Returns true if dispatched (or logged in dev), false on provider error.
+ * Optionally logs to the EmailLog table when bookingId + template are provided.
  */
 export async function sendEmail(args: SendArgs): Promise<boolean> {
   const provider = (process.env.EMAIL_PROVIDER || "").toLowerCase();
+  let success = false;
+  let errorMsg: string | undefined;
+
   try {
-    if (provider === "resend") return await sendWithResend(args);
-    if (provider === "brevo") return await sendWithBrevo(args);
-    // Fallback: log to console (useful in development / preview).
-    console.info(
-      `\n[email:dev] To: ${args.to}\nSubject: ${args.email.subject}\n${args.email.text}\n`
-    );
-    return true;
+    if (provider === "resend") {
+      success = await sendWithResend(args);
+    } else if (provider === "brevo") {
+      success = await sendWithBrevo(args);
+    } else {
+      console.info(
+        `\n[email:dev] To: ${args.to}\nSubject: ${args.email.subject}\n${args.email.text}\n`
+      );
+      success = true;
+    }
   } catch (err) {
     console.error("[email] send failed", err);
-    return false;
+    errorMsg = String(err);
   }
+
+  // Persist to EmailLog when a bookingId is supplied (best-effort, non-fatal).
+  if (args.bookingId || args.template) {
+    try {
+      await prisma.emailLog.create({
+        data: {
+          bookingId: args.bookingId ?? null,
+          to: args.to,
+          subject: args.email.subject,
+          template: args.template ?? "unknown",
+          status: success ? "sent" : "failed",
+          error: errorMsg ?? null,
+        },
+      });
+    } catch {
+      // Log table write failure is non-fatal.
+    }
+  }
+
+  return success;
 }

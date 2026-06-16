@@ -171,6 +171,21 @@ export async function checkAvailability(
   }
 
   const nights = nightsBetween(checkIn, checkOut);
+
+  // Enforce minimum stay from admin settings.
+  const minNightsSetting = await prisma.siteSetting.findUnique({
+    where: { key: SETTING_KEYS.MIN_NIGHTS },
+  });
+  const minNights = parseInt(minNightsSetting?.value ?? "1", 10);
+  if (Number.isFinite(minNights) && minNights > 1 && nights < minNights) {
+    return emptyResult("min_nights", {
+      checkIn: input.checkIn,
+      checkOut: input.checkOut,
+      guests,
+      nights,
+    });
+  }
+
   const nightsInRange = eachNight(checkIn, checkOut);
 
   // 1. Active rooms.

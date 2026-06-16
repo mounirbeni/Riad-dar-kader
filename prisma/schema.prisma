@@ -72,10 +72,12 @@ model Booking {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  rooms     BookingRoom[]
-  extras    BookingExtra[]
-  guestUser GuestUser?    @relation(fields: [guestUserId], references: [id], onDelete: SetNull)
-  messages  BookingMessage[]
+  rooms         BookingRoom[]
+  extras        BookingExtra[]
+  guestUser     GuestUser?           @relation(fields: [guestUserId], references: [id], onDelete: SetNull)
+  messages      BookingMessage[]
+  statusHistory BookingStatusHistory[]
+  emailLogs     EmailLog[]
 
   @@index([status])
   @@index([checkIn, checkOut])
@@ -212,6 +214,36 @@ model BookingMessage {
   createdAt  DateTime @default(now())
 
   booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([createdAt])
+}
+
+model BookingStatusHistory {
+  id         String        @id @default(cuid())
+  bookingId  String
+  fromStatus BookingStatus?
+  toStatus   BookingStatus
+  note       String?
+  createdAt  DateTime      @default(now())
+
+  booking    Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([createdAt])
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  bookingId String?
+  to        String
+  subject   String
+  template  String   @default("unknown")
+  status    String   @default("sent")  // sent | failed
+  error     String?
+  createdAt DateTime @default(now())
+
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   @@index([bookingId])
   @@index([createdAt])

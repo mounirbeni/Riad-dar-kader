@@ -5,7 +5,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { contactEmail } from "@/lib/constants";
 
-const LINKS: NavKey[] = ["home", "riad", "rooms", "stay", "experiences", "gallery", "contact"];
+const LINKS: NavKey[] = ["home", "riad", "rooms", "stay", "experiences", "gallery", "contact", "faq"];
 
 const LEGAL_LINKS: { key: "privacy" | "terms" | "bookingTerms" | "cancellation" | "cookies"; anchor: string }[] = [
   { key: "privacy", anchor: "#privacy" },

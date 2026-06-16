@@ -10,6 +10,7 @@ export const navPaths = {
   experiences: "experiences",
   gallery: "galerie",
   contact: "contact",
+  faq: "aide",
 } as const;
 
 export type NavKey = keyof typeof navPaths;

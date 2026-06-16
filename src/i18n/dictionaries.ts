@@ -13,6 +13,7 @@ export const dictionaries = {
       experiences: "Expériences",
       gallery: "Galerie",
       contact: "Contact",
+      faq: "FAQ / Aide",
       book: "Réserver maintenant",
     },
     common: {
@@ -296,6 +297,7 @@ export const dictionaries = {
         no_rooms: "Aucune chambre n'est disponible pour le moment.",
         no_option: "Aucune option ne correspond à votre demande.",
         invalid_guests: "Veuillez indiquer le nombre de voyageurs.",
+        min_nights: "La durée minimale de séjour n'est pas atteinte. Merci d'ajuster vos dates.",
         generic: "Une erreur est survenue. Merci de réessayer.",
       },
     },
@@ -426,6 +428,7 @@ export const dictionaries = {
       experiences: "Experiences",
       gallery: "Gallery",
       contact: "Contact",
+      faq: "FAQ / Help",
       book: "Book now",
     },
     common: {
@@ -707,6 +710,7 @@ export const dictionaries = {
         no_rooms: "No rooms are available at the moment.",
         no_option: "No option matches your request.",
         invalid_guests: "Please enter the number of guests.",
+        min_nights: "The minimum stay requirement is not met. Please adjust your dates.",
         generic: "Something went wrong. Please try again.",
       },
     },
