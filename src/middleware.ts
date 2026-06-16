@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
     if (!valid) {
       const locale = compteMatch[1];
       const res = NextResponse.redirect(
-        new URL(`/${locale}/connexion?next=${encodeURIComponent(pathname)}`, request.url)
+        new URL(`/${locale}/connexion?returnTo=${encodeURIComponent(pathname)}`, request.url)
       );
       if (token) res.cookies.delete("rdk_guest_session");
       return res;
