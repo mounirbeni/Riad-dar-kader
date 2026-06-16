@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Conditions générales d'utilisation — Riad Dar Kader" : "Terms & Conditions — Riad Dar Kader",
+    title: fr ? "Conditions générales d'utilisation — Mbn Riad" : "Terms & Conditions — Mbn Riad",
     robots: { index: false },
   };
 }
@@ -17,18 +17,18 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
   const fr = locale === "fr";
 
   const intro = fr
-    ? "Les présentes conditions générales définissent les règles d'utilisation du site du Riad Dar Kader et les relations entre le riad et ses visiteurs. En naviguant sur ce site, en créant un compte ou en effectuant une demande de réservation, vous reconnaissez avoir lu et accepté ces conditions."
-    : "These terms and conditions set out the rules for using the Riad Dar Kader website and the relationship between the riad and its visitors. By browsing this site, creating an account or submitting a booking request, you acknowledge that you have read and accepted these terms.";
+    ? "Les présentes conditions générales définissent les règles d'utilisation du site du Mbn Riad et les relations entre le riad et ses visiteurs. En naviguant sur ce site, en créant un compte ou en effectuant une demande de réservation, vous reconnaissez avoir lu et accepté ces conditions."
+    : "These terms and conditions set out the rules for using the Mbn Riad website and the relationship between the riad and its visitors. By browsing this site, creating an account or submitting a booking request, you acknowledge that you have read and accepted these terms.";
 
   const sections: LegalSection[] = fr
     ? [
         { heading: "Objet et acceptation", blocks: [
-          { type: "p", text: "Ce site a pour objet de présenter le Riad Dar Kader, ses chambres et ses expériences, et de permettre aux voyageurs d'adresser des demandes de réservation en direct. L'utilisation du site implique l'acceptation pleine et entière des présentes conditions. Si vous n'acceptez pas ces conditions, nous vous invitons à ne pas utiliser le site." },
+          { type: "p", text: "Ce site a pour objet de présenter le Mbn Riad, ses chambres et ses expériences, et de permettre aux voyageurs d'adresser des demandes de réservation en direct. L'utilisation du site implique l'acceptation pleine et entière des présentes conditions. Si vous n'acceptez pas ces conditions, nous vous invitons à ne pas utiliser le site." },
         ] },
         { heading: "Éditeur et hébergement", blocks: [
           { type: "list", items: [
-            "Éditeur : Riad Dar Kader, Médina, près du Musée Mouassine, Marrakech, Maroc.",
-            "Contact : contact@riaddarkader.com.",
+            "Éditeur : Mbn Riad, Médina, près du Musée Mouassine, Marrakech, Maroc.",
+            "Contact : contact@mbnriad.com.",
             "Hébergement : Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA.",
           ] },
         ] },
@@ -42,7 +42,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
           { type: "p", text: "Les tarifs affichés sont indiqués en euros (€) à titre indicatif et peuvent évoluer à tout moment. Le prix définitif et ferme est celui communiqué par le riad dans la confirmation de réservation. Sauf indication contraire, les tarifs s'entendent par chambre et par nuit et incluent la taxe de séjour applicable." },
         ] },
         { heading: "Propriété intellectuelle", blocks: [
-          { type: "p", text: "L'ensemble des éléments du site (textes, photographies, illustrations, logo, charte graphique et code) est protégé par le droit de la propriété intellectuelle et demeure la propriété exclusive du Riad Dar Kader ou de ses partenaires. Toute reproduction, représentation ou exploitation, totale ou partielle, sans autorisation écrite préalable, est interdite." },
+          { type: "p", text: "L'ensemble des éléments du site (textes, photographies, illustrations, logo, charte graphique et code) est protégé par le droit de la propriété intellectuelle et demeure la propriété exclusive du Mbn Riad ou de ses partenaires. Toute reproduction, représentation ou exploitation, totale ou partielle, sans autorisation écrite préalable, est interdite." },
         ] },
         { heading: "Responsabilité", blocks: [
           { type: "p", text: "Les informations publiées sur le site sont fournies à titre indicatif et sont régulièrement mises à jour. Le riad ne saurait être tenu responsable :" },
@@ -63,12 +63,12 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
       ]
     : [
         { heading: "Purpose and acceptance", blocks: [
-          { type: "p", text: "The purpose of this site is to present Riad Dar Kader, its rooms and experiences, and to allow travellers to submit booking requests directly. Using the site implies full acceptance of these terms. If you do not accept them, we ask that you do not use the site." },
+          { type: "p", text: "The purpose of this site is to present Mbn Riad, its rooms and experiences, and to allow travellers to submit booking requests directly. Using the site implies full acceptance of these terms. If you do not accept them, we ask that you do not use the site." },
         ] },
         { heading: "Operator and hosting", blocks: [
           { type: "list", items: [
-            "Operator: Riad Dar Kader, Medina, near Musée Mouassine, Marrakech, Morocco.",
-            "Contact: contact@riaddarkader.com.",
+            "Operator: Mbn Riad, Medina, near Musée Mouassine, Marrakech, Morocco.",
+            "Contact: contact@mbnriad.com.",
             "Hosting: Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA.",
           ] },
         ] },
@@ -82,7 +82,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
           { type: "p", text: "Displayed prices are shown in euros (€) for guidance and may change at any time. The final, firm price is the one communicated by the riad in the booking confirmation. Unless stated otherwise, prices are per room per night and include applicable tourist tax." },
         ] },
         { heading: "Intellectual property", blocks: [
-          { type: "p", text: "All elements of the site (text, photographs, illustrations, logo, design and code) are protected by intellectual property law and remain the exclusive property of Riad Dar Kader or its partners. Any reproduction, representation or use, in whole or in part, without prior written permission, is prohibited." },
+          { type: "p", text: "All elements of the site (text, photographs, illustrations, logo, design and code) are protected by intellectual property law and remain the exclusive property of Mbn Riad or its partners. Any reproduction, representation or use, in whole or in part, without prior written permission, is prohibited." },
         ] },
         { heading: "Liability", blocks: [
           { type: "p", text: "Information published on the site is provided for guidance and is updated regularly. The riad cannot be held responsible for:" },

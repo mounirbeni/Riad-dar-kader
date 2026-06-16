@@ -14,8 +14,8 @@ export async function generateMetadata({
   return {
     title: fr ? "Galerie" : "Gallery",
     description: fr
-      ? "Les visuels du Riad Dar Kader à Marrakech. Photos réelles à venir."
-      : "Visuals of Riad Dar Kader in Marrakech. Real photos coming soon.",
+      ? "Les visuels du Mbn Riad à Marrakech. Photos réelles à venir."
+      : "Visuals of Mbn Riad in Marrakech. Real photos coming soon.",
     alternates: { languages: { fr: "/fr/galerie", en: "/en/galerie" } },
   };
 }

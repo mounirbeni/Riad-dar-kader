@@ -30,7 +30,7 @@ export default async function AdminLoginPage() {
               />
             </svg>
           </div>
-          <h1 className="font-serif text-3xl text-white">Dar Kader</h1>
+          <h1 className="font-serif text-3xl text-white">Mbn Riad</h1>
           <p className="mt-1 text-sm text-white/50">Espace propriétaire</p>
         </div>
 

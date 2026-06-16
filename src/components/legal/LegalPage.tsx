@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 
-export const CONTACT_EMAIL = "contact@riaddarkader.com";
+export const CONTACT_EMAIL = "contact@mbnriad.com";
 
 export type PolicySlug =
   | "privacy"

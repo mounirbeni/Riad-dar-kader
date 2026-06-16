@@ -22,7 +22,7 @@ const CONTENT_FIELDS = [
   {
     section: "Informations générales",
     fields: [
-      { key: "riad_name", label: "Nom du Riad", type: "text", placeholder: "Dar Kader" },
+      { key: "riad_name", label: "Nom du Riad", type: "text", placeholder: "Mbn Riad" },
       { key: "riad_tagline", label: "Accroche principale", type: "text", placeholder: "Séjour de luxe au cœur de Marrakech" },
       { key: "riad_email", label: "Email de contact", type: "email", placeholder: "contact@darkader.ma" },
       { key: "riad_phone", label: "Téléphone WhatsApp", type: "text", placeholder: "+212 6XX XXX XXX" },
@@ -40,7 +40,7 @@ const CONTENT_FIELDS = [
   {
     section: "SEO",
     fields: [
-      { key: "meta_title", label: "Titre méta (SEO)", type: "text", placeholder: "Dar Kader — Riad de luxe à Marrakech" },
+      { key: "meta_title", label: "Titre méta (SEO)", type: "text", placeholder: "Mbn Riad — Riad de luxe à Marrakech" },
       { key: "meta_description", label: "Description méta (SEO)", type: "textarea", placeholder: "Séjournez dans notre riad authentique..." },
     ],
   },

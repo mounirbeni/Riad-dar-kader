@@ -1,4 +1,4 @@
-// Riad Dar Kader — service worker
+// Mbn Riad — service worker
 // Strategy: cache-first for static assets only.
 // Navigation requests (HTML) bypass the SW entirely so redirect chains
 // are never stored in the cache and cannot create redirect loops.

@@ -42,7 +42,7 @@ export function ConsentCheckbox({
         >
           {fr ? "conditions générales" : "terms & conditions"}
         </Link>
-        {fr ? " du Riad Dar Kader." : " of Riad Dar Kader."}
+        {fr ? " du Mbn Riad." : " of Mbn Riad."}
       </span>
     </label>
   );

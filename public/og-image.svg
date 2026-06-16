@@ -11,7 +11,7 @@
   <rect width="1200" height="630" fill="url(#g)"/>
   <rect width="1200" height="630" fill="url(#zellige)"/>
   <path d="M520 470 V300 C520 230 555 195 600 195 C645 195 680 230 680 300 V470 Z" fill="#F5F0E8" opacity="0.1"/>
-  <text x="600" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="76" fill="#F5F0E8" font-weight="700">Riad Dar Kader</text>
+  <text x="600" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="76" fill="#F5F0E8" font-weight="700">Mbn Riad</text>
   <text x="600" y="360" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="30" fill="#CBAC5E" letter-spacing="3">MÉDINA DE MARRAKECH</text>
   <text x="600" y="430" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#F5F0E8" opacity="0.8">Riad traditionnel · Réservation directe</text>
 </svg>

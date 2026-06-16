@@ -445,7 +445,7 @@ export function PlanningBoard({ dateStr, prevStr, nextStr, entries, autoEvents, 
   );
 
   function buildWhatsAppText() {
-    const dateLine = `🏡 *Riad Dar Kader — Planning du ${formatDateFR(dateStr)}*`;
+    const dateLine = `🏡 *Mbn Riad — Planning du ${formatDateFR(dateStr)}*`;
     if (timeline.length === 0) return dateLine + "\n\n_(Aucune activité programmée)_";
     const lines = timeline.map((item) => {
       if (item.kind === "auto") {

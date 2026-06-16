@@ -16,8 +16,8 @@ export async function generateMetadata({
   return {
     title: "Contact",
     description: fr
-      ? "Contactez le Riad Dar Kader à Marrakech par WhatsApp ou email."
-      : "Contact Riad Dar Kader in Marrakech by WhatsApp or email.",
+      ? "Contactez le Mbn Riad à Marrakech par WhatsApp ou email."
+      : "Contact Mbn Riad in Marrakech by WhatsApp or email.",
     alternates: { languages: { fr: "/fr/contact", en: "/en/contact" } },
   };
 }

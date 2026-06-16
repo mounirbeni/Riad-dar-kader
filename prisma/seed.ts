@@ -4,7 +4,7 @@ import { runSeed } from "@/lib/seed-core";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Seeding Riad Dar Kader…");
+  console.log("🌱 Seeding Mbn Riad…");
   const summary = await runSeed(prisma);
   console.log(`👤 Admin: ${summary.admin}`);
   console.log(`🛏️  ${summary.rooms} rooms`);

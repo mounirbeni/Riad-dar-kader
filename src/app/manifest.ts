@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Riad Dar Kader",
-    short_name: "Dar Kader",
+    name: "Mbn Riad",
+    short_name: "Mbn Riad",
     description:
       "Riad traditionnel à Marrakech — Réservation directe, sans frais de plateforme.",
     start_url: "/fr",

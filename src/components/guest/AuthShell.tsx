@@ -51,7 +51,7 @@ export function AuthShell({
               <span className="font-serif text-[17px] text-white">R</span>
             </div>
             <span className="text-sm font-medium text-white/80 transition group-hover:text-white">
-              Riad Dar Kader
+              Mbn Riad
             </span>
           </Link>
         </div>
@@ -78,7 +78,7 @@ export function AuthShell({
             {fr ? "Médina de Marrakech · Maroc" : "Medina, Marrakech · Morocco"}
           </p>
           <h2 className="font-serif text-[2.6rem] xl:text-5xl leading-[1.1] text-white">
-            Riad<br />Dar Kader
+            Mbn<br />Riad
           </h2>
           <p className="mt-4 max-w-[240px] text-sm leading-relaxed text-white/60">
             {fr
@@ -103,7 +103,7 @@ export function AuthShell({
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-terracotta/10">
               <span className="font-serif text-base text-terracotta">R</span>
             </div>
-            <span className="text-sm font-medium text-ink">Riad Dar Kader</span>
+            <span className="text-sm font-medium text-ink">Mbn Riad</span>
           </Link>
         </div>
 

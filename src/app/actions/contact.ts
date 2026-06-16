@@ -26,7 +26,7 @@ export async function sendContactMessage(raw: unknown): Promise<ContactResult> {
   const ownerEmail =
     process.env.OWNER_NOTIFICATION_EMAIL ||
     process.env.ADMIN_EMAIL ||
-    "owner@riaddarkader.com";
+    "owner@mbnriad.com";
 
   // Persist to DB for admin inbox
   await prisma.contactMessage.create({

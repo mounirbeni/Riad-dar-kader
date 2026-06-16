@@ -14,7 +14,7 @@ type SendArgs = {
 };
 
 const FROM = () =>
-  process.env.EMAIL_FROM || "Riad Dar Kader <reservations@riaddarkader.com>";
+  process.env.EMAIL_FROM || "Mbn Riad <reservations@mbnriad.com>";
 
 async function sendWithResend({ to, email, replyTo }: SendArgs): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -44,7 +44,7 @@ async function sendWithResend({ to, email, replyTo }: SendArgs): Promise<boolean
 function parseFrom(from: string): { name: string; email: string } {
   const match = /^(.*?)<(.+?)>$/.exec(from);
   if (match) return { name: match[1].trim(), email: match[2].trim() };
-  return { name: "Riad Dar Kader", email: from.trim() };
+  return { name: "Mbn Riad", email: from.trim() };
 }
 
 async function sendWithBrevo({ to, email, replyTo }: SendArgs): Promise<boolean> {

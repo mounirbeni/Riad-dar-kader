@@ -43,7 +43,7 @@ export function DemoBanner() {
 
           <div>
             <h2 className="font-serif text-2xl text-ink leading-snug">
-              Riad Dar Kader
+              Mbn Riad
             </h2>
             <p className="mt-2 text-sm text-muted leading-relaxed">
               Ce site est une démo réalisée par{" "}

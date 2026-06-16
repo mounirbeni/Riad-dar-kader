@@ -14,10 +14,10 @@ export async function generateMetadata({
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "FAQ & Aide — Riad Dar Kader" : "FAQ & Help — Riad Dar Kader",
+    title: fr ? "FAQ & Aide — Mbn Riad" : "FAQ & Help — Mbn Riad",
     description: fr
-      ? "Questions fréquentes sur votre séjour au Riad Dar Kader à Marrakech : arrivée, petit-déjeuner, annulation et plus."
-      : "Frequently asked questions about your stay at Riad Dar Kader in Marrakech: check-in, breakfast, cancellation and more.",
+      ? "Questions fréquentes sur votre séjour au Mbn Riad à Marrakech : arrivée, petit-déjeuner, annulation et plus."
+      : "Frequently asked questions about your stay at Mbn Riad in Marrakech: check-in, breakfast, cancellation and more.",
     alternates: { languages: { fr: "/fr/aide", en: "/en/aide" } },
   };
 }
@@ -47,7 +47,7 @@ const faqFr: FaqItem[] = [
   },
   {
     q: "Acceptez-vous les enfants ?",
-    a: "Oui, les enfants sont les bienvenus au Riad Dar Kader ! Merci de préciser l'âge et le nombre d'enfants dans votre demande afin que nous puissions préparer l'espace au mieux.",
+    a: "Oui, les enfants sont les bienvenus au Mbn Riad ! Merci de préciser l'âge et le nombre d'enfants dans votre demande afin que nous puissions préparer l'espace au mieux.",
   },
   {
     q: "Y a-t-il un parking à proximité ?",
@@ -90,7 +90,7 @@ const faqEn: FaqItem[] = [
   },
   {
     q: "Do you welcome children?",
-    a: "Yes, children are very welcome at Riad Dar Kader! Please mention the age and number of children in your request so we can prepare the space accordingly.",
+    a: "Yes, children are very welcome at Mbn Riad! Please mention the age and number of children in your request so we can prepare the space accordingly.",
   },
   {
     q: "Is there parking nearby?",

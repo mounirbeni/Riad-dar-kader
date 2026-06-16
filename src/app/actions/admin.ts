@@ -146,8 +146,8 @@ export async function updateBookingStatusAction(
         data: {
           bookingId,
           sender: "admin",
-          senderName: "Riad Dar Kader",
-          content: `Bonjour ${booking.guestName.split(" ")[0]},\n\nVotre réservation ${booking.reference} est confirmée — nous avons hâte de vous accueillir le ${checkInLabel} !\n\nN'hésitez pas à nous écrire ici pour toute question avant votre arrivée.\n\nÀ très bientôt,\nL'équipe Riad Dar Kader`,
+          senderName: "Mbn Riad",
+          content: `Bonjour ${booking.guestName.split(" ")[0]},\n\nVotre réservation ${booking.reference} est confirmée — nous avons hâte de vous accueillir le ${checkInLabel} !\n\nN'hésitez pas à nous écrire ici pour toute question avant votre arrivée.\n\nÀ très bientôt,\nL'équipe Mbn Riad`,
         },
       });
     }

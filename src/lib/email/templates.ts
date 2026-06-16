@@ -40,7 +40,7 @@ const COLORS = {
 const T = {
   fr: {
     location: "Médina de Marrakech",
-    footer: "Riad Dar Kader · Médina, près du Musée Mouassine, Marrakech, Maroc\nRéservation directe acceptée.",
+    footer: "Mbn Riad · Médina, près du Musée Mouassine, Marrakech, Maroc\nRéservation directe acceptée.",
     reference: "Référence",
     arrival: "Arrivée",
     departure: "Départ",
@@ -53,7 +53,7 @@ const T = {
   },
   en: {
     location: "Medina of Marrakech",
-    footer: "Riad Dar Kader · Medina, near Mouassine Museum, Marrakech, Morocco\nDirect booking accepted.",
+    footer: "Mbn Riad · Medina, near Mouassine Museum, Marrakech, Morocco\nDirect booking accepted.",
     reference: "Reference",
     arrival: "Check-in",
     departure: "Check-out",

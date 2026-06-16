@@ -26,15 +26,15 @@ export function waLink(message: string, number?: string): string {
 export function guestWhatsAppLink(locale: "fr" | "en" = "fr"): string {
   const message =
     locale === "fr"
-      ? "Bonjour Riad Dar Kader, j'aimerais avoir des informations sur un séjour."
-      : "Hello Riad Dar Kader, I'd like some information about a stay.";
+      ? "Bonjour Mbn Riad, j'aimerais avoir des informations sur un séjour."
+      : "Hello Mbn Riad, I'd like some information about a stay.";
   return waLink(message);
 }
 
 /** Owner notification message summarising a new/updated booking request. */
 export function ownerWhatsAppMessage(booking: WhatsAppBooking): string {
   const lines = [
-    `🏛️ *Riad Dar Kader — Demande ${booking.reference}*`,
+    `🏛️ *Mbn Riad — Demande ${booking.reference}*`,
     `Statut : ${booking.status}`,
     "",
     `👤 ${booking.guestName}`,
