@@ -48,7 +48,7 @@ export default async function SurveysPage() {
           <p className="mt-1 text-sm text-muted">Réponses des propriétaires de riads</p>
         </div>
         <a
-          href="/sondage?lang=fr"
+          href="/sondage"
           target="_blank"
           className="flex items-center gap-2 rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-2 text-sm font-semibold text-terracotta hover:bg-terracotta/10 transition-colors"
         >
@@ -125,10 +125,7 @@ export default async function SurveysPage() {
               <p className="text-xs font-semibold text-terracotta uppercase tracking-wide mb-0.5">Lien à partager</p>
               <p className="font-mono text-sm text-ink">riadkader.vercel.app/sondage</p>
             </div>
-            <div className="flex gap-2 shrink-0">
-              <a href="/sondage?lang=fr" target="_blank" className="rounded-xl bg-terracotta px-4 py-2 text-xs font-semibold text-white hover:bg-terracotta/90 transition-colors">FR</a>
-              <a href="/sondage?lang=en" target="_blank" className="rounded-xl border border-terracotta/30 bg-white px-4 py-2 text-xs font-semibold text-terracotta hover:bg-terracotta/5 transition-colors">EN</a>
-            </div>
+            <a href="/sondage" target="_blank" className="rounded-xl bg-terracotta px-4 py-2 text-xs font-semibold text-white hover:bg-terracotta/90 transition-colors">Ouvrir</a>
           </div>
 
           {/* Individual responses */}
