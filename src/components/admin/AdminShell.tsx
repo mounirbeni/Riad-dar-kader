@@ -81,10 +81,12 @@ function Initials({ email }: { email: string }) {
 function SidebarContent({
   email,
   pendingCount,
+  unreadMessages,
   onNav,
 }: {
   email: string;
   pendingCount?: number;
+  unreadMessages?: number;
   onNav?: () => void;
 }) {
   const pathname = usePathname();
@@ -117,6 +119,8 @@ function SidebarContent({
                 const badge =
                   item.href === "/admin/bookings" && pendingCount && pendingCount > 0
                     ? pendingCount
+                    : item.href === "/admin/messages" && unreadMessages && unreadMessages > 0
+                    ? unreadMessages
                     : undefined;
                 return (
                   <Link
@@ -175,10 +179,12 @@ export function AdminShell({
   children,
   email,
   pendingCount,
+  unreadMessages,
 }: {
   children: ReactNode;
   email: string;
   pendingCount?: number;
+  unreadMessages?: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -186,7 +192,7 @@ export function AdminShell({
     <div className="min-h-screen bg-[#F7F4EF] lg:flex">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 bg-[#1C1612] lg:flex lg:flex-col overflow-hidden">
-        <SidebarContent email={email} pendingCount={pendingCount} />
+        <SidebarContent email={email} pendingCount={pendingCount} unreadMessages={unreadMessages} />
       </aside>
 
       {/* Mobile overlay */}
@@ -196,7 +202,7 @@ export function AdminShell({
 
       {/* Mobile drawer */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-60 bg-[#1C1612] flex flex-col transition-transform duration-300 lg:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}>
-        <SidebarContent email={email} pendingCount={pendingCount} onNav={() => setOpen(false)} />
+        <SidebarContent email={email} pendingCount={pendingCount} unreadMessages={unreadMessages} onNav={() => setOpen(false)} />
       </aside>
 
       {/* Main content */}
