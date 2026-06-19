@@ -278,6 +278,7 @@ export default async function BookingDetailPage({
             bookingId={booking.id}
             messages={booking.messages}
             guestName={booking.guestName}
+            checkIn={booking.checkIn}
           />
         </div>
       </div>
