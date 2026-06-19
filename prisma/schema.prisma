@@ -249,6 +249,46 @@ model EmailLog {
   @@index([createdAt])
 }
 
+model SurveyResponse {
+  id             String   @id @default(cuid())
+  // Section 1
+  riadName       String
+  city           String
+  roomCount      String
+  yearsOpen      String
+  // Section 2
+  bookingMethods String[]
+  hasWebsite     String
+  platforms      String[]
+  directPct      String
+  occupancyRate  String
+  // Section 3
+  challenges     String[]
+  adminTimeDay   String
+  lostBookings   String
+  biggestStress  String
+  // Section 4
+  wantedFeatures String[]
+  techComfort    String
+  wantsArabic    String
+  usesSmartphone String
+  // Section 5
+  currentlyPays  String
+  currentAmount  String?
+  willingToPay   String
+  payPreference  String
+  commissionOk   String
+  // Section 6
+  wantsDemo      Boolean  @default(false)
+  contactName    String?
+  contactWa      String?
+  comments       String?
+  locale         String   @default("fr")
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 model HousekeepingTask {
   id        String   @id @default(cuid())
   roomName  String
