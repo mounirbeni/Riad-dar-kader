@@ -25,7 +25,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
         {
           heading: "Responsable du traitement",
           blocks: [
-            { type: "p", text: "Le responsable du traitement des données est le Mbn Demo Riad, situé dans la Médina, près du Musée Mouassine, Marrakech, Maroc. Pour toute question relative à vos données, vous pouvez nous contacter à contact@mbnriad.com." },
+            { type: "p", text: "Le responsable du traitement des données est le Mbn Demo Riad, situé dans la Médina, près du Musée Mouassine, Marrakech, Maroc. Pour toute question relative à vos données, vous pouvez nous contacter à contact@mbndemo.com." },
           ],
         },
         {
@@ -88,7 +88,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
               "Droit à la limitation et à l'opposition au traitement.",
               "Droit à la portabilité : recevoir vos données dans un format structuré.",
             ] },
-            { type: "p", text: "Pour exercer ces droits, écrivez à contact@mbnriad.com. Nous répondons sous 30 jours. Vous pouvez également introduire une réclamation auprès de l'autorité de protection des données compétente." },
+            { type: "p", text: "Pour exercer ces droits, écrivez à contact@mbndemo.com. Nous répondons sous 30 jours. Vous pouvez également introduire une réclamation auprès de l'autorité de protection des données compétente." },
           ],
         },
         {
@@ -108,7 +108,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
         {
           heading: "Data controller",
           blocks: [
-            { type: "p", text: "The data controller is Mbn Demo Riad, located in the Medina, near Musée Mouassine, Marrakech, Morocco. For any question regarding your data, you can contact us at contact@mbnriad.com." },
+            { type: "p", text: "The data controller is Mbn Demo Riad, located in the Medina, near Musée Mouassine, Marrakech, Morocco. For any question regarding your data, you can contact us at contact@mbndemo.com." },
           ],
         },
         {
@@ -171,7 +171,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
               "Right to restriction of and objection to processing.",
               "Right to portability: receive your data in a structured format.",
             ] },
-            { type: "p", text: "To exercise these rights, write to contact@mbnriad.com. We respond within 30 days. You may also lodge a complaint with the competent data protection authority." },
+            { type: "p", text: "To exercise these rights, write to contact@mbndemo.com. We respond within 30 days. You may also lodge a complaint with the competent data protection authority." },
           ],
         },
         {

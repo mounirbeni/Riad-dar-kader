@@ -14,7 +14,7 @@ type SendArgs = {
 };
 
 const FROM = () =>
-  process.env.EMAIL_FROM || "Mbn Demo Riad <reservations@mbnriad.com>";
+  process.env.EMAIL_FROM || "Mbn Demo Riad <reservations@mbndemo.com>";
 
 async function sendWithResend({ to, email, replyTo }: SendArgs): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;

@@ -17,7 +17,7 @@ export const whatsappNumber = () =>
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/[^0-9]/g, "") || "212600000000";
 
 export const contactEmail = () =>
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@mbnriad.com";
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@mbndemo.com";
 
 export const siteUrl = () =>
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";

@@ -144,7 +144,7 @@ export async function requestPasswordResetAction(_prev: ActionState, formData: F
     data: { resetToken: tokenHash, resetTokenExpiry: expiry },
   });
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://mbnriad.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://mbndemo.com";
   const resetUrl = `${baseUrl}/${locale}/compte/reinitialiser?token=${token}&email=${encodeURIComponent(email)}`;
 
   await sendEmail({

@@ -23,7 +23,7 @@ export default async function CancellationPage({ params }: { params: Promise<{ l
   const sections: LegalSection[] = fr
     ? [
         { heading: "Comment annuler", blocks: [
-          { type: "p", text: "Pour annuler ou modifier une réservation, contactez le riad le plus tôt possible par e-mail à contact@mbnriad.com ou via WhatsApp. La date de réception de votre demande fait foi pour le calcul des éventuels frais." },
+          { type: "p", text: "Pour annuler ou modifier une réservation, contactez le riad le plus tôt possible par e-mail à contact@mbndemo.com ou via WhatsApp. La date de réception de votre demande fait foi pour le calcul des éventuels frais." },
         ] },
         { heading: "Barème d'annulation", blocks: [
           { type: "p", text: "Sauf condition particulière indiquée dans votre confirmation, le barème standard est le suivant :" },
@@ -60,7 +60,7 @@ export default async function CancellationPage({ params }: { params: Promise<{ l
       ]
     : [
         { heading: "How to cancel", blocks: [
-          { type: "p", text: "To cancel or change a booking, contact the riad as early as possible by email at contact@mbnriad.com or via WhatsApp. The date your request is received is what counts for calculating any fees." },
+          { type: "p", text: "To cancel or change a booking, contact the riad as early as possible by email at contact@mbndemo.com or via WhatsApp. The date your request is received is what counts for calculating any fees." },
         ] },
         { heading: "Cancellation schedule", blocks: [
           { type: "p", text: "Unless a specific condition is stated in your confirmation, the standard schedule is as follows:" },

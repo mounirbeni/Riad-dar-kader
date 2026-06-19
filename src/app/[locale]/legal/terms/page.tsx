@@ -28,7 +28,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
         { heading: "Éditeur et hébergement", blocks: [
           { type: "list", items: [
             "Éditeur : Mbn Demo Riad, Médina, près du Musée Mouassine, Marrakech, Maroc.",
-            "Contact : contact@mbnriad.com.",
+            "Contact : contact@mbndemo.com.",
             "Hébergement : Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA.",
           ] },
         ] },
@@ -68,7 +68,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
         { heading: "Operator and hosting", blocks: [
           { type: "list", items: [
             "Operator: Mbn Demo Riad, Medina, near Musée Mouassine, Marrakech, Morocco.",
-            "Contact: contact@mbnriad.com.",
+            "Contact: contact@mbndemo.com.",
             "Hosting: Vercel Inc., 340 Pine Street, Suite 701, San Francisco, CA 94104, USA.",
           ] },
         ] },
