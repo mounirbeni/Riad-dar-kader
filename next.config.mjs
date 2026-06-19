@@ -25,7 +25,6 @@ const nextConfig = {
   async redirects() {
     return [
       { source: "/s", destination: "/sondage", permanent: false },
-      { source: "/survey", destination: "/sondage?lang=en", permanent: false },
     ];
   },
   async headers() {

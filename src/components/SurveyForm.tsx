@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Locale } from "@/i18n/config";
 import { submitSurveyAction, type SurveyData } from "@/app/actions/survey";
+
+type Locale = "fr" | "en";
 
 type State = Omit<SurveyData, "locale">;
 
@@ -178,8 +179,9 @@ function toggle(arr: string[], val: string, max?: number): string[] {
   return [...arr, val];
 }
 
-export function SurveyForm({ locale }: { locale: Locale }) {
-  const t = D[locale] ?? D.fr;
+export function SurveyForm() {
+  const [locale, setLocale] = useState<Locale>("fr");
+  const t = D[locale];
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -219,6 +221,24 @@ export function SurveyForm({ locale }: { locale: Locale }) {
 
   return (
     <div>
+      {/* Language toggle */}
+      <div className="flex justify-end mb-6">
+        <div className="flex rounded-xl border border-sand-200 bg-white overflow-hidden shadow-sm">
+          <button
+            onClick={() => setLocale("fr")}
+            className={`px-4 py-2 text-xs font-semibold transition-colors ${locale === "fr" ? "bg-terracotta text-white" : "text-muted hover:text-ink"}`}
+          >
+            🇫🇷 Français
+          </button>
+          <button
+            onClick={() => setLocale("en")}
+            className={`px-4 py-2 text-xs font-semibold transition-colors ${locale === "en" ? "bg-terracotta text-white" : "text-muted hover:text-ink"}`}
+          >
+            🇬🇧 English
+          </button>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="text-center mb-8">
         <span className="inline-block rounded-full bg-terracotta/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-terracotta mb-4">
