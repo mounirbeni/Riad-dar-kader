@@ -115,6 +115,32 @@ const TEMPLATES: Tpl[] = [
       `Bonjour ${name},\n\nNous approchons de votre arrivée le ${date} et avons hâte de vous accueillir !\n\nQuelques informations pratiques :\n• Check-in à partir de 15h00\n• Le riad est au cœur de la médina — appelez-nous dès votre arrivée à Marrakech, nous vous guiderons jusqu'à la porte\n• Un membre de l'équipe vous attendra\n\nBon voyage !\nL'équipe du ${RIAD}`,
   },
 
+  // ── Jour d'arrivée ───────────────────────────────────────────────
+  {
+    id: "room-ready",
+    icon: <IconSun size={13} />,
+    label: "Chambre prête",
+    category: "Jour d'arrivée",
+    build: (name) =>
+      `Bonjour ${name} !\n\nExcellente nouvelle — votre chambre est prête et vous attend.\n\nVous pouvez nous rejoindre dès maintenant. Un membre de l'équipe sera là pour vous accueillir à votre arrivée.\n\nÀ tout à l'heure !\nL'équipe du ${RIAD}`,
+  },
+  {
+    id: "directions",
+    icon: <IconMessageCircle size={13} />,
+    label: "Itinéraire médina",
+    category: "Jour d'arrivée",
+    build: (name) =>
+      `Bonjour ${name},\n\nVoici comment nous rejoindre dans la médina :\n\n1. Entrez par Bab Doukkala (entrée de la médina)\n2. Prenez la première rue à gauche après la porte\n3. Continuez tout droit sur environ 200 m\n4. Notre enseigne dorée est à droite\n\nEn taxi, indiquez au chauffeur « Bab Doukkala » puis appelez-nous au moment d'entrer dans la médina — nous viendrons vous guider !\n\nL'équipe du ${RIAD}`,
+  },
+  {
+    id: "welcome-wifi",
+    icon: <IconStar size={13} />,
+    label: "Bienvenue & Infos pratiques",
+    category: "Jour d'arrivée",
+    build: (name) =>
+      `Bienvenue au ${RIAD}, ${name} !\n\nNous sommes ravis de vous avoir parmi nous. Voici quelques informations utiles :\n\n• WiFi : réseau « ${RIAD} » — mot de passe remis à la réception\n• Petit-déjeuner marocain : 7h30 – 10h30 sur la terrasse\n• Votre équipe est disponible 24h/24 pour toute demande\n• Conservation de bagages disponible à tout moment\n\nN'hésitez pas à demander quoi que ce soit — c'est notre plaisir.\n\nBelle arrivée,\nL'équipe du ${RIAD}`,
+  },
+
   // ── Durant le séjour ─────────────────────────────────────────────
   {
     id: "during-stay",
@@ -131,6 +157,32 @@ const TEMPLATES: Tpl[] = [
     category: "Durant le séjour",
     build: (name) =>
       `Bonjour ${name},\n\nVotre petit-déjeuner marocain fait maison sera servi demain matin entre 7h30 et 10h30 sur la terrasse ou dans le patio.\n\nAvez-vous une préférence d'horaire ? Et souhaitez-vous des oeufs préparés d'une façon particulière ?\n\nBonne nuit,\nL'équipe du ${RIAD}`,
+  },
+
+  // ── Jour de départ ───────────────────────────────────────────────
+  {
+    id: "checkout-morning",
+    icon: <IconLogOut size={13} />,
+    label: "Bonjour — Jour de départ",
+    category: "Jour de départ",
+    build: (name) =>
+      `Bonjour ${name},\n\nNous espérons que vous avez bien dormi et que ce séjour vous a comblé.\n\nAujourd'hui est votre dernier matin au ${RIAD} — le check-out est prévu avant 11h00.\n\nSi vous souhaitez conserver vos bagages après votre départ pour profiter encore de Marrakech, c'est tout à fait possible.\n\nAvez-vous besoin d'un transfert pour l'aéroport ?\n\nBonne journée,\nL'équipe du ${RIAD}`,
+  },
+  {
+    id: "luggage-storage",
+    icon: <IconBell size={13} />,
+    label: "Conservation des bagages",
+    category: "Jour de départ",
+    build: (name) =>
+      `Bonjour ${name},\n\nSi votre vol n'est que plus tard dans la journée, nous gardons vos bagages en toute sécurité au riad après votre check-out.\n\nProfitez librement des souks, d'un dernier café ou d'une promenade, et récupérez vos affaires à l'heure qui vous convient.\n\nBonne fin de séjour !\nL'équipe du ${RIAD}`,
+  },
+  {
+    id: "farewell",
+    icon: <IconStar size={13} />,
+    label: "Au revoir & Merci",
+    category: "Jour de départ",
+    build: (name) =>
+      `Cher ${name},\n\nC'est avec un pincement au cœur que nous vous voyons partir aujourd'hui.\n\nCe fut un honneur de vous accueillir et nous espérons sincèrement avoir été à la hauteur de vos attentes. Marrakech sera toujours là pour vous, et le ${RIAD} aussi.\n\nSi vous avez quelques minutes, un avis en ligne nous ferait vraiment plaisir — cela aide d'autres voyageurs à nous découvrir.\n\nBon voyage, et à très bientôt !\nL'équipe du ${RIAD}`,
   },
 
   // ── Départ ───────────────────────────────────────────────────────
@@ -160,7 +212,7 @@ const TEMPLATES: Tpl[] = [
   },
 ];
 
-const CATEGORIES = ["Confirmation", "Préférences", "Services", "Pré-arrivée", "Durant le séjour", "Départ"];
+const CATEGORIES = ["Confirmation", "Préférences", "Services", "Pré-arrivée", "Jour d'arrivée", "Durant le séjour", "Jour de départ", "Départ"];
 
 function fmtTime(d: Date) {
   const date = new Date(d);
