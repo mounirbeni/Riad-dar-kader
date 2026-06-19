@@ -46,6 +46,12 @@ export default async function GuestBookingDetailPage({
   });
   if (!booking) notFound();
 
+  // Mark all unread admin messages as read now that the guest is viewing them
+  await prisma.bookingMessage.updateMany({
+    where: { bookingId: booking.id, sender: "admin", isRead: false },
+    data: { isRead: true },
+  });
+
   const nights = Math.round((new Date(booking.checkOut).getTime() - new Date(booking.checkIn).getTime()) / 86400000);
   const st = STATUS[booking.status] ?? { label: booking.status, cls: "bg-sand text-muted" };
   const roomNames = booking.rooms.map(r => r.room.name).join(", ");
