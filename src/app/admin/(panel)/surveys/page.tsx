@@ -48,7 +48,7 @@ export default async function SurveysPage() {
           <p className="mt-1 text-sm text-muted">Réponses des propriétaires de riads</p>
         </div>
         <a
-          href="/fr/sondage"
+          href="/sondage?lang=fr"
           target="_blank"
           className="flex items-center gap-2 rounded-xl border border-terracotta/30 bg-terracotta/5 px-4 py-2 text-sm font-semibold text-terracotta hover:bg-terracotta/10 transition-colors"
         >
@@ -67,7 +67,7 @@ export default async function SurveysPage() {
           <p className="font-serif text-lg text-ink">Aucune réponse encore</p>
           <p className="text-sm text-muted mt-1">Partagez le lien du sondage avec des propriétaires de riads</p>
           <div className="mt-4 rounded-xl bg-sand border border-sand-200 px-4 py-3 font-mono text-sm text-ink/60 text-left max-w-sm mx-auto">
-            riadkader.vercel.app/fr/sondage
+            riadkader.vercel.app/sondage
           </div>
         </div>
       ) : (
@@ -123,11 +123,11 @@ export default async function SurveysPage() {
           <div className="rounded-2xl bg-terracotta/5 border border-terracotta/20 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex-1">
               <p className="text-xs font-semibold text-terracotta uppercase tracking-wide mb-0.5">Lien à partager</p>
-              <p className="font-mono text-sm text-ink">riadkader.vercel.app/fr/sondage</p>
+              <p className="font-mono text-sm text-ink">riadkader.vercel.app/sondage</p>
             </div>
             <div className="flex gap-2 shrink-0">
-              <a href="/fr/sondage" target="_blank" className="rounded-xl bg-terracotta px-4 py-2 text-xs font-semibold text-white hover:bg-terracotta/90 transition-colors">FR</a>
-              <a href="/en/sondage" target="_blank" className="rounded-xl border border-terracotta/30 bg-white px-4 py-2 text-xs font-semibold text-terracotta hover:bg-terracotta/5 transition-colors">EN</a>
+              <a href="/sondage?lang=fr" target="_blank" className="rounded-xl bg-terracotta px-4 py-2 text-xs font-semibold text-white hover:bg-terracotta/90 transition-colors">FR</a>
+              <a href="/sondage?lang=en" target="_blank" className="rounded-xl border border-terracotta/30 bg-white px-4 py-2 text-xs font-semibold text-terracotta hover:bg-terracotta/5 transition-colors">EN</a>
             </div>
           </div>
 
