@@ -139,6 +139,9 @@ export async function runSeed(prisma: PrismaClient): Promise<SeedSummary> {
   const password = process.env.ADMIN_PASSWORD || "ChangeMe123!";
   const passwordHash = await bcrypt.hash(password, 12);
 
+  if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    await prisma.adminUser.deleteMany({});
+  }
   await prisma.adminUser.upsert({
     where: { email },
     update: { passwordHash },
