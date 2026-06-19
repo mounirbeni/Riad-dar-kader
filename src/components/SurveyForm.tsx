@@ -152,7 +152,7 @@ const D = {
 
 function Radio({ name, value, checked, onChange, label }: { name: string; value: string; checked: boolean; onChange: () => void; label: string }) {
   return (
-    <label className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all ${checked ? "border-terracotta bg-terracotta/5 text-ink" : "border-sand-200 bg-white text-ink/70 hover:border-terracotta/40"}`}>
+    <label onClick={onChange} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all ${checked ? "border-terracotta bg-terracotta/5 text-ink" : "border-sand-200 bg-white text-ink/70 hover:border-terracotta/40"}`}>
       <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${checked ? "border-terracotta" : "border-sand-200"}`}>
         {checked && <span className="h-2.5 w-2.5 rounded-full bg-terracotta" />}
       </span>
@@ -163,7 +163,7 @@ function Radio({ name, value, checked, onChange, label }: { name: string; value:
 
 function Checkbox({ checked, onChange, label, disabled }: { checked: boolean; onChange: () => void; label: string; disabled?: boolean }) {
   return (
-    <label className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all ${disabled && !checked ? "opacity-40 cursor-not-allowed" : ""} ${checked ? "border-terracotta bg-terracotta/5 text-ink" : "border-sand-200 bg-white text-ink/70 hover:border-terracotta/40"}`}>
+    <label onClick={disabled && !checked ? undefined : onChange} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-all ${disabled && !checked ? "opacity-40 cursor-not-allowed" : ""} ${checked ? "border-terracotta bg-terracotta/5 text-ink" : "border-sand-200 bg-white text-ink/70 hover:border-terracotta/40"}`}>
       <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border-2 transition-colors ${checked ? "border-terracotta bg-terracotta" : "border-sand-200"}`}>
         {checked && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
       </span>
