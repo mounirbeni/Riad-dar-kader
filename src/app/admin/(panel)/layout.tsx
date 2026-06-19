@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
-  title: "Administration — Mbn Riad",
+  title: "Administration — Mbn Demo Riad",
   robots: { index: false, follow: false },
 };
 

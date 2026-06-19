@@ -42,7 +42,7 @@ export async function sendAdminMessageAction(_prev: undefined, formData: FormDat
   if (!bookingExists) return undefined;
 
   await prisma.bookingMessage.create({
-    data: { bookingId, sender: "admin", senderName: "Mbn Riad", content },
+    data: { bookingId, sender: "admin", senderName: "Mbn Demo Riad", content },
   });
   revalidatePath(`/admin/bookings/${bookingId}`);
   return undefined;

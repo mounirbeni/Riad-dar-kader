@@ -1,4 +1,4 @@
-// Server-side availability engine for Mbn Riad.
+// Server-side availability engine for Mbn Demo Riad.
 //
 // The public booking flow is availability-first: guests pick dates + guest
 // count, and the engine returns simplified "stay options" rather than asking

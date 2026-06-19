@@ -24,7 +24,7 @@ type Tpl = {
   build: (firstName: string, checkInFr: string) => string;
 };
 
-const RIAD = "Riad Dar Kader";
+const RIAD = "Mbn Demo Riad";
 
 const TEMPLATES: Tpl[] = [
   // ── Confirmation ─────────────────────────────────────────────────

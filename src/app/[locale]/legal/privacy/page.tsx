@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Politique de confidentialité — Mbn Riad" : "Privacy Policy — Mbn Riad",
+    title: fr ? "Politique de confidentialité — Mbn Demo Riad" : "Privacy Policy — Mbn Demo Riad",
     robots: { index: false },
   };
 }
@@ -17,15 +17,15 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
   const fr = locale === "fr";
 
   const intro = fr
-    ? "La présente politique explique comment le Mbn Riad collecte, utilise, conserve et protège vos données personnelles lorsque vous visitez notre site, créez un compte voyageur ou effectuez une demande de réservation. Nous nous engageons à traiter vos données de manière transparente et conforme au Règlement Général sur la Protection des Données (RGPD) ainsi qu'à la loi marocaine n° 09-08 relative à la protection des personnes physiques."
-    : "This policy explains how Mbn Riad collects, uses, stores and protects your personal data when you visit our site, create a traveller account or submit a booking request. We are committed to handling your data transparently and in compliance with the General Data Protection Regulation (GDPR) and Moroccan law No. 09-08 on the protection of individuals.";
+    ? "La présente politique explique comment le Mbn Demo Riad collecte, utilise, conserve et protège vos données personnelles lorsque vous visitez notre site, créez un compte voyageur ou effectuez une demande de réservation. Nous nous engageons à traiter vos données de manière transparente et conforme au Règlement Général sur la Protection des Données (RGPD) ainsi qu'à la loi marocaine n° 09-08 relative à la protection des personnes physiques."
+    : "This policy explains how Mbn Demo Riad collects, uses, stores and protects your personal data when you visit our site, create a traveller account or submit a booking request. We are committed to handling your data transparently and in compliance with the General Data Protection Regulation (GDPR) and Moroccan law No. 09-08 on the protection of individuals.";
 
   const sections: LegalSection[] = fr
     ? [
         {
           heading: "Responsable du traitement",
           blocks: [
-            { type: "p", text: "Le responsable du traitement des données est le Mbn Riad, situé dans la Médina, près du Musée Mouassine, Marrakech, Maroc. Pour toute question relative à vos données, vous pouvez nous contacter à contact@mbnriad.com." },
+            { type: "p", text: "Le responsable du traitement des données est le Mbn Demo Riad, situé dans la Médina, près du Musée Mouassine, Marrakech, Maroc. Pour toute question relative à vos données, vous pouvez nous contacter à contact@mbnriad.com." },
           ],
         },
         {
@@ -108,7 +108,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
         {
           heading: "Data controller",
           blocks: [
-            { type: "p", text: "The data controller is Mbn Riad, located in the Medina, near Musée Mouassine, Marrakech, Morocco. For any question regarding your data, you can contact us at contact@mbnriad.com." },
+            { type: "p", text: "The data controller is Mbn Demo Riad, located in the Medina, near Musée Mouassine, Marrakech, Morocco. For any question regarding your data, you can contact us at contact@mbnriad.com." },
           ],
         },
         {

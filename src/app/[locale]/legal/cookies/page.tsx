@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Politique relative aux cookies — Mbn Riad" : "Cookie Policy — Mbn Riad",
+    title: fr ? "Politique relative aux cookies — Mbn Demo Riad" : "Cookie Policy — Mbn Demo Riad",
     robots: { index: false },
   };
 }
@@ -17,8 +17,8 @@ export default async function CookiePage({ params }: { params: Promise<{ locale:
   const fr = locale === "fr";
 
   const intro = fr
-    ? "Cette politique explique ce que sont les cookies, lesquels sont utilisés sur le site du Mbn Riad et comment vous pouvez les gérer. Notre approche est volontairement minimaliste : nous n'utilisons que les cookies strictement nécessaires au fonctionnement du site, sans publicité ni profilage."
-    : "This policy explains what cookies are, which ones are used on the Mbn Riad website and how you can manage them. Our approach is deliberately minimal: we use only the cookies strictly necessary for the site to work, with no advertising or profiling.";
+    ? "Cette politique explique ce que sont les cookies, lesquels sont utilisés sur le site du Mbn Demo Riad et comment vous pouvez les gérer. Notre approche est volontairement minimaliste : nous n'utilisons que les cookies strictement nécessaires au fonctionnement du site, sans publicité ni profilage."
+    : "This policy explains what cookies are, which ones are used on the Mbn Demo Riad website and how you can manage them. Our approach is deliberately minimal: we use only the cookies strictly necessary for the site to work, with no advertising or profiling.";
 
   const sections: LegalSection[] = fr
     ? [

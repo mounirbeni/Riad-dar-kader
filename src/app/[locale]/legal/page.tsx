@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Informations légales — Mbn Riad" : "Legal Information — Mbn Riad",
+    title: fr ? "Informations légales — Mbn Demo Riad" : "Legal Information — Mbn Demo Riad",
     robots: { index: false },
   };
 }
@@ -47,8 +47,8 @@ export default async function LegalIndexPage({ params }: { params: Promise<{ loc
       </h1>
       <p className="mt-3 text-sm leading-relaxed text-muted">
         {fr
-          ? "Retrouvez ci-dessous l'ensemble des documents légaux du Mbn Riad. Chaque document est consultable sur sa propre page."
-          : "Find below all the legal documents of Mbn Riad. Each document can be consulted on its own page."}
+          ? "Retrouvez ci-dessous l'ensemble des documents légaux du Mbn Demo Riad. Chaque document est consultable sur sa propre page."
+          : "Find below all the legal documents of Mbn Demo Riad. Each document can be consulted on its own page."}
       </p>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">

@@ -17,8 +17,8 @@ export async function generateMetadata({
   return {
     title: fr ? "Le Riad" : "The Riad",
     description: fr
-      ? "Découvrez Mbn Riad, riad traditionnel restauré au cœur de la Médina de Marrakech."
-      : "Discover Mbn Riad, a traditional riad restored in the heart of the Marrakech Medina.",
+      ? "Découvrez Mbn Demo Riad, riad traditionnel restauré au cœur de la Médina de Marrakech."
+      : "Discover Mbn Demo Riad, a traditional riad restored in the heart of the Marrakech Medina.",
     alternates: { languages: { fr: "/fr/le-riad", en: "/en/le-riad" } },
   };
 }

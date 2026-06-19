@@ -1,7 +1,7 @@
 // Riad-wide constants and configuration.
 
 export const RIAD = {
-  name: "Mbn Riad",
+  name: "Mbn Demo Riad",
   totalRooms: 7,
   city: "Marrakech",
   area: "Médina, près du Musée Mouassine",

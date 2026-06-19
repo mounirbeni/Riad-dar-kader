@@ -67,7 +67,7 @@ export default async function SurveysPage() {
           <p className="font-serif text-lg text-ink">Aucune réponse encore</p>
           <p className="text-sm text-muted mt-1">Partagez le lien du sondage avec des propriétaires de riads</p>
           <div className="mt-4 rounded-xl bg-sand border border-sand-200 px-4 py-3 font-mono text-sm text-ink/60 text-left max-w-sm mx-auto">
-            riadkader.vercel.app/sondage
+            mbndemo.vercel.app/sondage
           </div>
         </div>
       ) : (
@@ -124,7 +124,7 @@ export default async function SurveysPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <div className="flex-1">
                 <p className="text-xs font-semibold text-terracotta uppercase tracking-wide mb-0.5">Lien à partager</p>
-                <p className="font-mono text-sm text-ink">riadkader.vercel.app/s</p>
+                <p className="font-mono text-sm text-ink">mbndemo.vercel.app/s</p>
               </div>
               <a href="/sondage" target="_blank" className="rounded-xl bg-terracotta px-4 py-2 text-xs font-semibold text-white hover:bg-terracotta/90 transition-colors">Ouvrir</a>
             </div>
@@ -139,12 +139,12 @@ Je développe une plateforme de gestion conçue spécialement pour les riads —
 
 Avant le lancement, j'aimerais comprendre vos besoins réels. Pouvez-vous répondre à ce court sondage (5 min) ?
 
-👉 riadkader.vercel.app/s
+👉 mbndemo.vercel.app/s
 
 Vos retours sont très précieux. Merci ! 🙏`}
               </p>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`Bonjour 👋\n\nJe développe une plateforme de gestion conçue spécialement pour les riads — réservations, messagerie, planning et plus encore.\n\nAvant le lancement, j'aimerais comprendre vos besoins réels. Pouvez-vous répondre à ce court sondage (5 min) ?\n\n👉 riadkader.vercel.app/s\n\nVos retours sont très précieux. Merci ! 🙏`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(`Bonjour 👋\n\nJe développe une plateforme de gestion conçue spécialement pour les riads — réservations, messagerie, planning et plus encore.\n\nAvant le lancement, j'aimerais comprendre vos besoins réels. Pouvez-vous répondre à ce court sondage (5 min) ?\n\n👉 mbndemo.vercel.app/s\n\nVos retours sont très précieux. Merci ! 🙏`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-4 py-2 text-xs font-semibold text-white hover:bg-[#1ebe5d] transition-colors"

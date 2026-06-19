@@ -18,8 +18,8 @@ export async function generateMetadata({
   return {
     title: fr ? "Réserver votre séjour" : "Book your stay",
     description: fr
-      ? "Vérifiez les disponibilités du Mbn Riad et envoyez votre demande de réservation en direct."
-      : "Check availability at Mbn Riad and send your reservation request directly.",
+      ? "Vérifiez les disponibilités du Mbn Demo Riad et envoyez votre demande de réservation en direct."
+      : "Check availability at Mbn Demo Riad and send your reservation request directly.",
     alternates: { languages: { fr: "/fr/sejour", en: "/en/sejour" } },
   };
 }

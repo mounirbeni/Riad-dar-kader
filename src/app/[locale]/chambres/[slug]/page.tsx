@@ -71,7 +71,7 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      title: `${room.name} · Mbn Riad`,
+      title: `${room.name} · Mbn Demo Riad`,
       description: desc.slice(0, 160),
       url: `${siteUrl()}/${fr ? "fr" : "en"}/chambres/${slug}`,
       type: "website",

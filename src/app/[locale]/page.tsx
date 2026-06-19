@@ -49,8 +49,8 @@ export async function generateMetadata({
   return {
     title: {
       absolute: fr
-        ? "Mbn Riad — Riad traditionnel à Marrakech"
-        : "Mbn Riad — Traditional riad in Marrakech",
+        ? "Mbn Demo Riad — Riad traditionnel à Marrakech"
+        : "Mbn Demo Riad — Traditional riad in Marrakech",
     },
     description: fr
       ? "Riad marocain authentique dans la Médina de Marrakech, près du Musée Mouassine. Réservez votre séjour en direct."
@@ -60,7 +60,7 @@ export async function generateMetadata({
       languages: { fr: "/fr", en: "/en" },
     },
     openGraph: {
-      title: "Mbn Riad",
+      title: "Mbn Demo Riad",
       description: fr
         ? "Riad traditionnel au cœur de la Médina de Marrakech."
         : "A traditional riad in the heart of the Marrakech Medina.",
