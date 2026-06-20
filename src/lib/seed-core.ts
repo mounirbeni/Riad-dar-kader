@@ -135,8 +135,8 @@ export const seedSettings = [
 export type SeedSummary = { rooms: number; extras: number; admin: string };
 
 export async function runSeed(prisma: PrismaClient): Promise<SeedSummary> {
-  const email = (process.env.ADMIN_EMAIL || "owner@mbnriad.com").toLowerCase();
-  const password = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+  const email = (process.env.ADMIN_EMAIL || "owner@mbndemo.com").toLowerCase();
+  const password = process.env.ADMIN_PASSWORD || "Owner@1234";
   const passwordHash = await bcrypt.hash(password, 12);
 
   await prisma.adminUser.upsert({
