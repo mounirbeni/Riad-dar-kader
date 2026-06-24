@@ -249,6 +249,46 @@ model EmailLog {
   @@index([createdAt])
 }
 
+model SurveyResponse {
+  id             String   @id @default(cuid())
+  // Section 1
+  riadName       String
+  city           String
+  roomCount      String
+  yearsOpen      String
+  // Section 2
+  bookingMethods String[]
+  hasWebsite     String
+  platforms      String[]
+  directPct      String
+  occupancyRate  String
+  // Section 3
+  challenges     String[]
+  adminTimeDay   String
+  lostBookings   String
+  biggestStress  String
+  // Section 4
+  wantedFeatures String[]
+  techComfort    String
+  wantsArabic    String
+  usesSmartphone String
+  // Section 5
+  currentlyPays  String
+  currentAmount  String?
+  willingToPay   String
+  payPreference  String
+  commissionOk   String
+  // Section 6
+  wantsDemo      Boolean  @default(false)
+  contactName    String?
+  contactWa      String?
+  comments       String?
+  locale         String   @default("fr")
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 model HousekeepingTask {
   id        String   @id @default(cuid())
   roomName  String
@@ -263,22 +303,4 @@ model HousekeepingTask {
 
   @@index([dueDate])
   @@index([status])
-}
-
-model SurveyResponse {
-  id              String   @id @default(cuid())
-  riadName        String
-  ownerName       String
-  phone           String
-  email           String?
-  city            String   @default("Marrakech")
-  roomCount       Int
-  hasWebsite      Boolean  @default(false)
-  hasOnlineBooking Boolean @default(false)
-  currentTools    String[] // whatsapp | phone | excel | booking | airbnb | other
-  interest        String   @default("yes") // yes | maybe | no
-  notes           String?
-  createdAt       DateTime @default(now())
-
-  @@index([createdAt])
 }

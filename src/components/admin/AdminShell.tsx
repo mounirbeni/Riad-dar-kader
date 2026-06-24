@@ -22,6 +22,7 @@ import {
   IconMessageCircle,
   IconGrid,
   IconClipboardList,
+  IconPoll,
 } from "@/components/Icons";
 
 type NavItem = { href: string; label: string; icon: ReactNode; badge?: number; exact?: boolean };
@@ -63,7 +64,7 @@ const NAV_GROUPS: NavGroup[] = [
     group: "Administration",
     items: [
       { href: "/admin/reports", label: "Rapports", icon: <IconBarChart size={16} /> },
-      { href: "/admin/sondage", label: "Sondage", icon: <IconClipboardList size={16} /> },
+      { href: "/admin/surveys", label: "Sondage", icon: <IconPoll size={16} /> },
       { href: "/admin/content", label: "Contenu", icon: <IconEdit size={16} /> },
       { href: "/admin/settings", label: "Paramètres", icon: <IconSettings size={16} /> },
     ],
@@ -82,10 +83,12 @@ function Initials({ email }: { email: string }) {
 function SidebarContent({
   email,
   pendingCount,
+  unreadMessages,
   onNav,
 }: {
   email: string;
   pendingCount?: number;
+  unreadMessages?: number;
   onNav?: () => void;
 }) {
   const pathname = usePathname();
@@ -98,7 +101,7 @@ function SidebarContent({
           <polygon points="14,2 16.4,10.2 24.5,7.6 19.2,14 24.5,20.4 16.4,17.8 14,26 11.6,17.8 3.5,20.4 8.8,14 3.5,7.6 11.6,10.2" fill="#B8943F" fillOpacity="0.9" />
         </svg>
         <div>
-          <p className="font-serif text-base leading-tight text-white">Mbn Riad</p>
+          <p className="font-serif text-base leading-tight text-white">Mbn Demo Riad</p>
           <p className="text-[10px] uppercase tracking-widest text-white/40">Administration</p>
         </div>
       </div>
@@ -118,6 +121,8 @@ function SidebarContent({
                 const badge =
                   item.href === "/admin/bookings" && pendingCount && pendingCount > 0
                     ? pendingCount
+                    : item.href === "/admin/messages" && unreadMessages && unreadMessages > 0
+                    ? unreadMessages
                     : undefined;
                 return (
                   <Link
@@ -176,10 +181,12 @@ export function AdminShell({
   children,
   email,
   pendingCount,
+  unreadMessages,
 }: {
   children: ReactNode;
   email: string;
   pendingCount?: number;
+  unreadMessages?: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -187,7 +194,7 @@ export function AdminShell({
     <div className="min-h-screen bg-[#F7F4EF] lg:flex">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 bg-[#1C1612] lg:flex lg:flex-col overflow-hidden">
-        <SidebarContent email={email} pendingCount={pendingCount} />
+        <SidebarContent email={email} pendingCount={pendingCount} unreadMessages={unreadMessages} />
       </aside>
 
       {/* Mobile overlay */}
@@ -197,7 +204,7 @@ export function AdminShell({
 
       {/* Mobile drawer */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-60 bg-[#1C1612] flex flex-col transition-transform duration-300 lg:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}>
-        <SidebarContent email={email} pendingCount={pendingCount} onNav={() => setOpen(false)} />
+        <SidebarContent email={email} pendingCount={pendingCount} unreadMessages={unreadMessages} onNav={() => setOpen(false)} />
       </aside>
 
       {/* Main content */}
@@ -208,7 +215,7 @@ export function AdminShell({
             <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
               <polygon points="14,2 16.4,10.2 24.5,7.6 19.2,14 24.5,20.4 16.4,17.8 14,26 11.6,17.8 3.5,20.4 8.8,14 3.5,7.6 11.6,10.2" fill="#B8943F" fillOpacity="0.9" />
             </svg>
-            <span className="font-serif text-base text-ink">Mbn Riad</span>
+            <span className="font-serif text-base text-ink">Mbn Demo Riad</span>
           </div>
           <button onClick={() => setOpen((o) => !o)} aria-label="Menu" className="flex h-9 w-9 items-center justify-center rounded-xl border border-sand-200 bg-white text-ink">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
