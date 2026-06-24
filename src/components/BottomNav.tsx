@@ -100,7 +100,7 @@ const ITEMS: BottomNavItem[] = [
   },
 ];
 
-export function BottomNav({ locale }: { locale: Locale }) {
+export function BottomNav({ locale, unreadCount }: { locale: Locale; unreadCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -114,6 +114,7 @@ export function BottomNav({ locale }: { locale: Locale }) {
           const active =
             pathname === href ||
             (key !== "home" && pathname.startsWith(href + "/"));
+          const badge = key === "profile" && unreadCount && unreadCount > 0 ? unreadCount : undefined;
           return (
             <Link
               key={key}
@@ -132,8 +133,14 @@ export function BottomNav({ locale }: { locale: Locale }) {
               <motion.div
                 animate={{ scale: active ? 1.12 : 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                className="relative"
               >
                 {icon(active)}
+                {badge != null && (
+                  <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-terracotta px-1 text-[9px] font-bold text-white leading-none">
+                    {badge > 9 ? "9+" : badge}
+                  </span>
+                )}
               </motion.div>
               <span className="leading-tight">{locale === "fr" ? labelFr : labelEn}</span>
             </Link>

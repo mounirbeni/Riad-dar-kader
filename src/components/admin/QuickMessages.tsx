@@ -18,7 +18,7 @@ function formatDateFR(dateStr: string) {
 
 function buildTemplates(dateStr: string, arrivals: Arrival[], departures: Departure[]) {
   const date = formatDateFR(dateStr);
-  const riad = "Mbn Riad";
+  const riad = "Mbn Demo Riad";
 
   return [
     { id: "bonjour",   label: "Bonjour équipe",  icon: <IconSun size={14} />,             category: "Équipe",       text: `*Bonjour à toute l'équipe ${riad} !*\n\nNous sommes le ${date}.\n\n${departures.length > 0 ? `*Départs aujourd'hui :*\n${departures.map((d) => `• ${d.guestName} — ${d.rooms}`).join("\n")}\n\n` : ""}${arrivals.length > 0 ? `*Arrivées aujourd'hui :*\n${arrivals.map((a) => `• ${a.guestName} (${a.guests} pers.) — ${a.rooms}`).join("\n")}\n\n` : ""}Bonne journée à tous !` },

@@ -51,7 +51,7 @@ export function AuthShell({
               <span className="font-serif text-[17px] text-white">R</span>
             </div>
             <span className="text-sm font-medium text-white/80 transition group-hover:text-white">
-              Mbn Riad
+              Mbn Demo Riad
             </span>
           </Link>
         </div>
@@ -103,7 +103,7 @@ export function AuthShell({
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-terracotta/10">
               <span className="font-serif text-base text-terracotta">R</span>
             </div>
-            <span className="text-sm font-medium text-ink">Mbn Riad</span>
+            <span className="text-sm font-medium text-ink">Mbn Demo Riad</span>
           </Link>
         </div>
 

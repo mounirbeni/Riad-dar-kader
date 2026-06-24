@@ -16,8 +16,8 @@ export async function generateMetadata({
   return {
     title: "Contact",
     description: fr
-      ? "Contactez le Mbn Riad à Marrakech par WhatsApp ou email."
-      : "Contact Mbn Riad in Marrakech by WhatsApp or email.",
+      ? "Contactez le Mbn Demo Riad à Marrakech par WhatsApp ou email."
+      : "Contact Mbn Demo Riad in Marrakech by WhatsApp or email.",
     alternates: { languages: { fr: "/fr/contact", en: "/en/contact" } },
   };
 }

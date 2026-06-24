@@ -22,6 +22,11 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/s", destination: "/sondage", permanent: false },
+    ];
+  },
   async headers() {
     return [
       {

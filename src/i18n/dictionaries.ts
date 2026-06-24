@@ -32,13 +32,13 @@ export const dictionaries = {
     },
     home: {
       heroKicker: "Riad traditionnel · Médina de Marrakech",
-      heroTitle: "Mbn Riad",
+      heroTitle: "Mbn Demo Riad",
       heroSubtitle:
         "Un riad marocain authentique à deux pas du Musée Mouassine, au cœur de la Médina de Marrakech.",
       heroCta: "Réserver maintenant",
       heroSecondary: "Découvrir le riad",
       openingNote: "Ouverture prévue début octobre — réservations ouvertes.",
-      sellingTitle: "Pourquoi choisir Mbn Riad",
+      sellingTitle: "Pourquoi choisir Mbn Demo Riad",
       selling: [
         {
           title: "Atmosphère marocaine traditionnelle",
@@ -64,7 +64,7 @@ export const dictionaries = {
       whatsappTitle: "Une question avant de réserver ?",
       whatsappText:
         "Écrivez-nous directement sur WhatsApp, nous vous répondrons avec plaisir.",
-      statsTitle: "Mbn Riad en chiffres",
+      statsTitle: "Mbn Demo Riad en chiffres",
       stats: [
         { value: "7", label: "chambres & suites" },
         { value: "+400", label: "ans d'histoire" },
@@ -183,7 +183,7 @@ export const dictionaries = {
       kicker: "Notre histoire",
       storyTitle: "Un riad de la Médina, restauré avec soin",
       story:
-        "Mbn Riad est une maison traditionnelle marocaine nichée dans la Médina de Marrakech. Derrière une porte discrète se cache un patio paisible, des chambres fraîches et une terrasse ouverte sur le ciel. Nous l'avons imaginé comme un refuge calme, loin de l'agitation, tout en restant au cœur de la vieille ville.",
+        "Mbn Demo Riad est une maison traditionnelle marocaine nichée dans la Médina de Marrakech. Derrière une porte discrète se cache un patio paisible, des chambres fraîches et une terrasse ouverte sur le ciel. Nous l'avons imaginé comme un refuge calme, loin de l'agitation, tout en restant au cœur de la vieille ville.",
       styleTitle: "Style marocain traditionnel",
       styleText:
         "Zellige, tadelakt, bois sculpté et lanternes de cuivre : chaque détail rend hommage à l'artisanat marrakchi, sans surcharge.",
@@ -202,7 +202,7 @@ export const dictionaries = {
       ],
       futureTitle: "Une maison d'hôtes en devenir",
       futureText:
-        "Mbn Riad ouvre bientôt ses portes. Nous accueillerons nos premiers voyageurs dès le début octobre, avec l'envie de partager un Marrakech authentique et chaleureux.",
+        "Mbn Demo Riad ouvre bientôt ses portes. Nous accueillerons nos premiers voyageurs dès le début octobre, avec l'envie de partager un Marrakech authentique et chaleureux.",
     },
     rooms: {
       kicker: "Nos chambres",
@@ -369,7 +369,7 @@ export const dictionaries = {
       pendingCount: "En attente",
       myBookings: "Mes réservations",
       noBookings: "Aucune réservation",
-      noBookingsText: "Planifiez votre séjour à Marrakech au Mbn Riad.",
+      noBookingsText: "Planifiez votre séjour à Marrakech au Mbn Demo Riad.",
       bookStay: "Réserver un séjour",
       myProfile: "Mon profil",
       profileName: "Nom",
@@ -446,13 +446,13 @@ export const dictionaries = {
     },
     home: {
       heroKicker: "Traditional riad · Marrakech Medina",
-      heroTitle: "Mbn Riad",
+      heroTitle: "Mbn Demo Riad",
       heroSubtitle:
         "An authentic Moroccan riad steps from Musée Mouassine, in the heart of the Marrakech Medina.",
       heroCta: "Book now",
       heroSecondary: "Discover the riad",
       openingNote: "Opening early October — reservations now open.",
-      sellingTitle: "Why choose Mbn Riad",
+      sellingTitle: "Why choose Mbn Demo Riad",
       selling: [
         {
           title: "Traditional Moroccan atmosphere",
@@ -477,7 +477,7 @@ export const dictionaries = {
       extrasCta: "See experiences",
       whatsappTitle: "A question before booking?",
       whatsappText: "Message us directly on WhatsApp — we'll be glad to help.",
-      statsTitle: "Mbn Riad by the numbers",
+      statsTitle: "Mbn Demo Riad by the numbers",
       stats: [
         { value: "7", label: "rooms & suites" },
         { value: "400+", label: "years of history" },
@@ -596,7 +596,7 @@ export const dictionaries = {
       kicker: "Our story",
       storyTitle: "A Medina riad, lovingly restored",
       story:
-        "Mbn Riad is a traditional Moroccan house tucked into the Marrakech Medina. Behind a discreet door lies a peaceful patio, cool rooms and a terrace open to the sky. We imagined it as a calm retreat, away from the bustle yet still in the heart of the old city.",
+        "Mbn Demo Riad is a traditional Moroccan house tucked into the Marrakech Medina. Behind a discreet door lies a peaceful patio, cool rooms and a terrace open to the sky. We imagined it as a calm retreat, away from the bustle yet still in the heart of the old city.",
       styleTitle: "Traditional Moroccan style",
       styleText:
         "Zellige, tadelakt, carved wood and copper lanterns: every detail honours Marrakech craftsmanship, never overdone.",
@@ -615,7 +615,7 @@ export const dictionaries = {
       ],
       futureTitle: "A guesthouse in the making",
       futureText:
-        "Mbn Riad opens its doors soon. We'll welcome our first travellers from early October, eager to share a warm, authentic Marrakech.",
+        "Mbn Demo Riad opens its doors soon. We'll welcome our first travellers from early October, eager to share a warm, authentic Marrakech.",
     },
     rooms: {
       kicker: "Our rooms",
@@ -782,7 +782,7 @@ export const dictionaries = {
       pendingCount: "Pending",
       myBookings: "My bookings",
       noBookings: "No bookings",
-      noBookingsText: "Plan your stay at Mbn Riad in Marrakech.",
+      noBookingsText: "Plan your stay at Mbn Demo Riad in Marrakech.",
       bookStay: "Book a stay",
       myProfile: "My profile",
       profileName: "Name",

@@ -22,9 +22,9 @@ const CONTENT_FIELDS = [
   {
     section: "Informations générales",
     fields: [
-      { key: "riad_name", label: "Nom du Riad", type: "text", placeholder: "Mbn Riad" },
+      { key: "riad_name", label: "Nom du Riad", type: "text", placeholder: "Mbn Demo Riad" },
       { key: "riad_tagline", label: "Accroche principale", type: "text", placeholder: "Séjour de luxe au cœur de Marrakech" },
-      { key: "riad_email", label: "Email de contact", type: "email", placeholder: "contact@darkader.ma" },
+      { key: "riad_email", label: "Email de contact", type: "email", placeholder: "contact@mbndemo.com" },
       { key: "riad_phone", label: "Téléphone WhatsApp", type: "text", placeholder: "+212 6XX XXX XXX" },
       { key: "riad_address", label: "Adresse", type: "text", placeholder: "Derb Sidi Bouamar, Médina, Marrakech" },
     ],
@@ -40,15 +40,15 @@ const CONTENT_FIELDS = [
   {
     section: "SEO",
     fields: [
-      { key: "meta_title", label: "Titre méta (SEO)", type: "text", placeholder: "Mbn Riad — Riad de luxe à Marrakech" },
+      { key: "meta_title", label: "Titre méta (SEO)", type: "text", placeholder: "Mbn Demo Riad — Riad de luxe à Marrakech" },
       { key: "meta_description", label: "Description méta (SEO)", type: "textarea", placeholder: "Séjournez dans notre riad authentique..." },
     ],
   },
   {
     section: "Réseaux sociaux",
     fields: [
-      { key: "social_instagram", label: "Instagram URL", type: "url", placeholder: "https://instagram.com/darkader" },
-      { key: "social_facebook", label: "Facebook URL", type: "url", placeholder: "https://facebook.com/darkader" },
+      { key: "social_instagram", label: "Instagram URL", type: "url", placeholder: "https://instagram.com/mbndemo" },
+      { key: "social_facebook", label: "Facebook URL", type: "url", placeholder: "https://facebook.com/mbndemo" },
     ],
   },
 ];
