@@ -63,6 +63,7 @@ const NAV_GROUPS: NavGroup[] = [
     group: "Administration",
     items: [
       { href: "/admin/reports", label: "Rapports", icon: <IconBarChart size={16} /> },
+      { href: "/admin/sondage", label: "Sondage", icon: <IconClipboardList size={16} /> },
       { href: "/admin/content", label: "Contenu", icon: <IconEdit size={16} /> },
       { href: "/admin/settings", label: "Paramètres", icon: <IconSettings size={16} /> },
     ],

@@ -264,3 +264,21 @@ model HousekeepingTask {
   @@index([dueDate])
   @@index([status])
 }
+
+model SurveyResponse {
+  id              String   @id @default(cuid())
+  riadName        String
+  ownerName       String
+  phone           String
+  email           String?
+  city            String   @default("Marrakech")
+  roomCount       Int
+  hasWebsite      Boolean  @default(false)
+  hasOnlineBooking Boolean @default(false)
+  currentTools    String[] // whatsapp | phone | excel | booking | airbnb | other
+  interest        String   @default("yes") // yes | maybe | no
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  @@index([createdAt])
+}
