@@ -98,11 +98,12 @@ export default async function HomePage({
       {/* Hero — mobile/tablet: full-bleed; desktop xl+: two-column split */}
       <section className="relative overflow-hidden xl:flex xl:h-[78vh] xl:min-h-[640px] xl:max-h-[760px]">
         {/* Full-bleed background (mobile/tablet only) */}
-        <PhotoSlot
-          label={locale === "fr" ? "Patio du riad" : "Riad patio"}
-          code="H1"
-          rounded={false}
-          className="absolute inset-0 h-full w-full xl:hidden"
+        {/* Mobile: one continuous photo layer behind all hero content. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/riad/patio.webp"
+          alt={locale === "fr" ? "Patio du riad" : "Riad patio"}
+          className="absolute inset-0 h-full w-full object-cover xl:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70 xl:hidden" />
         {/* Left pane — text */}
