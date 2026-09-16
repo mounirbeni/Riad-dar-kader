@@ -12,7 +12,7 @@ export const dictionaries = {
       stay: "Réserver",
       experiences: "Expériences",
       gallery: "Galerie",
-      contact: "Contact",
+      contact: "Nous trouver",
       faq: "FAQ / Aide",
       book: "Réserver maintenant",
     },
@@ -329,7 +329,7 @@ export const dictionaries = {
     footer: {
       tagline: "Riad traditionnel au cœur de la Médina de Marrakech.",
       explore: "Explorer",
-      contact: "Contact",
+      contact: "Find us",
       rights: "Tous droits réservés.",
       directBooking: "Réservation directe acceptée.",
       legalTitle: "Légal",
