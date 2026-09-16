@@ -40,52 +40,56 @@ export function MobileNightHero({ locale, stayHref }: Props) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.12, ease: "easeOut" }}
-        className="relative -mt-7 rounded-t-[2.6rem] bg-[#18130f] px-5 pb-5 pt-5 shadow-[0_-14px_38px_rgba(0,0,0,0.34)]"
+        className="relative -mt-7 overflow-hidden rounded-t-[2.6rem] border-t border-white/20 bg-[#301b15]/75 px-5 pb-5 pt-5 shadow-[0_-18px_48px_rgba(0,0,0,0.46)] backdrop-blur-[28px]"
       >
-        <p className="flex items-center justify-center gap-4 text-[10px] font-medium uppercase tracking-[0.26em] text-[#d8b56a] before:h-px before:w-9 before:bg-[#d8b56a]/80 after:h-px after:w-9 after:bg-[#d8b56a]/80">
-          Marrakech
-        </p>
-        <h2 className="mx-auto mt-3 max-w-[335px] whitespace-pre-line text-center font-serif text-[2.25rem] leading-[0.9] tracking-[-0.035em] text-white">
-          {fr ? "Votre séjour\ncommence ici" : "Your stay\nbegins here"}
-        </h2>
-        <p className="mt-3 text-center font-serif text-base leading-relaxed text-white/70">
-          {fr
-            ? "L’authenticité marocaine, le luxe tout en douceur."
-            : "Moroccan authenticity, gentle luxury."}
-        </p>
+        <div aria-hidden className="absolute -inset-8 bg-[url('/images/riad/hero-night-arrival.webp')] bg-cover bg-center opacity-20 blur-[18px]" />
+        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,236,202,0.16),transparent_36%,rgba(112,53,34,0.32)_72%,rgba(9,7,6,0.24))]" />
+        <div className="relative z-10">
+          <p className="flex items-center justify-center gap-4 text-[10px] font-medium uppercase tracking-[0.26em] text-[#efd07f] before:h-px before:w-9 before:bg-[#efd07f]/80 after:h-px after:w-9 after:bg-[#efd07f]/80">
+            Marrakech
+          </p>
+          <h2 className="mx-auto mt-3 max-w-[335px] whitespace-pre-line text-center font-serif text-[2.25rem] leading-[0.9] tracking-[-0.035em] text-white">
+            {fr ? "Votre séjour\ncommence ici" : "Your stay\nbegins here"}
+          </h2>
+          <p className="mt-3 text-center font-serif text-base leading-relaxed text-white/80">
+            {fr
+              ? "L’authenticité marocaine, le luxe tout en douceur."
+              : "Moroccan authenticity, gentle luxury."}
+          </p>
 
-        <div className="mt-4 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.055] p-1.5">
-          <div className="grid grid-cols-2">
-            <Link href={stayHref} className="group border-r border-white/20 px-3 py-2.5 transition-colors active:bg-white/10">
-              <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/60">
-                <IconCalendar size={17} /> {fr ? "Arrivée" : "Arrival"}
-              </span>
-              <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
-                {fr ? "12 oct. 2026" : "Oct 12, 2026"} <IconChevronDown size={15} className="text-white/70" />
-              </span>
-            </Link>
-            <Link href={stayHref} className="group px-3 py-2.5 transition-colors active:bg-white/10">
-              <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/60">
-                <IconCalendar size={17} /> {fr ? "Départ" : "Departure"}
-              </span>
-              <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
-                {fr ? "15 oct. 2026" : "Oct 15, 2026"} <IconChevronDown size={15} className="text-white/70" />
-              </span>
+          <div className="relative mt-4 overflow-hidden rounded-2xl border border-white/25 bg-[#5c3529]/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,244,222,0.18),0_14px_30px_rgba(0,0,0,0.24)] backdrop-blur-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-white/35">
+            <div className="grid grid-cols-2">
+              <Link href={stayHref} className="group border-r border-white/20 px-3 py-2.5 transition-colors active:bg-white/10">
+                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                  <IconCalendar size={17} /> {fr ? "Arrivée" : "Arrival"}
+                </span>
+                <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
+                  {fr ? "12 oct. 2026" : "Oct 12, 2026"} <IconChevronDown size={15} className="text-white/75" />
+                </span>
+              </Link>
+              <Link href={stayHref} className="group px-3 py-2.5 transition-colors active:bg-white/10">
+                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                  <IconCalendar size={17} /> {fr ? "Départ" : "Departure"}
+                </span>
+                <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
+                  {fr ? "15 oct. 2026" : "Oct 15, 2026"} <IconChevronDown size={15} className="text-white/75" />
+                </span>
+              </Link>
+            </div>
+            <Link href={stayHref} className="mt-1.5 flex min-h-[50px] items-center justify-center gap-3 rounded-2xl border border-[#ffc8a9]/30 bg-[#c76346]/90 px-5 font-serif text-lg text-white shadow-[inset_0_1px_0_rgba(255,238,218,0.28),0_10px_28px_rgba(189,90,64,0.38)] transition-transform active:scale-[0.98]">
+              <span>{fr ? "Vérifier les disponibilités" : "Check availability"}</span>
+              <IconArrowRight size={19} />
             </Link>
           </div>
-          <Link href={stayHref} className="mt-1.5 flex min-h-[50px] items-center justify-center gap-3 rounded-2xl bg-[#bd5a40] px-5 font-serif text-lg text-white shadow-[0_10px_28px_rgba(189,90,64,0.28)] transition-transform active:scale-[0.98]">
-            <span>{fr ? "Vérifier les disponibilités" : "Check availability"}</span>
-            <IconArrowRight size={19} />
-          </Link>
-        </div>
 
-        <p className="mt-3 flex items-center justify-center gap-2 text-center font-serif text-sm text-white/70">
-          <IconShield size={17} className="text-[#e8d6b9]" />
-          {fr ? "Réservation directe · sans commission" : "Direct booking · no commission"}
-        </p>
-        <p className="mt-5 flex items-center justify-center gap-3 text-center text-[9px] font-medium uppercase tracking-[0.2em] leading-relaxed text-[#d8b56a]/85 before:h-px before:w-8 before:bg-[#d8b56a]/70 after:h-px after:w-8 after:bg-[#d8b56a]/70">
-          {fr ? "Plus qu’un hébergement, une expérience marocaine" : "More than a stay, a Moroccan experience"}
-        </p>
+          <p className="mt-3 flex items-center justify-center gap-2 text-center font-serif text-sm text-white/80">
+            <IconShield size={17} className="text-[#f0d8b7]" />
+            {fr ? "Réservation directe · sans commission" : "Direct booking · no commission"}
+          </p>
+          <p className="mt-5 flex items-center justify-center gap-3 text-center text-[9px] font-medium uppercase tracking-[0.2em] leading-relaxed text-[#efd07f]/90 before:h-px before:w-8 before:bg-[#efd07f]/70 after:h-px after:w-8 after:bg-[#efd07f]/70">
+            {fr ? "Plus qu’un hébergement, une expérience marocaine" : "More than a stay, a Moroccan experience"}
+          </p>
+        </div>
       </motion.div>
     </section>
   );
