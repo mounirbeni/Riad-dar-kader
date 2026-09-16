@@ -41,8 +41,8 @@ const ITEMS: BottomNavItem[] = [
   {
     key: "contact",
     href: (locale) => localePath(locale, "contact"),
-    labelFr: "Contact",
-    labelEn: "Contact",
+    labelFr: "Nous trouver",
+    labelEn: "Find us",
     icon: () => <IconMapPin size={23} />,
   },
   {
