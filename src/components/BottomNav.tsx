@@ -85,7 +85,7 @@ export function BottomNav({ locale }: { locale: Locale }) {
             >
               <div aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,233,205,0.16),transparent_40%,rgba(136,59,38,0.22))]" />
               <div className="relative grid gap-1.5">
-                <p className="px-3 pb-1 pt-1 text-[10px] font-medium uppercase tracking-[0.24em] text-[#efd07f]">MBN DEMO RIAD</p>
+                <p className="px-3 pb-1 pt-1 text-[10px] font-medium uppercase tracking-[0.24em] text-[#efd07f]">RIAD DAR KADER</p>
                 {menuItems.map((item) => (
                   <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-2xl border border-white/10 bg-white/[0.07] px-4 py-3 font-serif text-xl text-white/95 transition active:scale-[0.99] active:bg-white/15">
                     {item.label}

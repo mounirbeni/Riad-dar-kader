@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 625 154" role="img" aria-labelledby="title desc">
+<title id="title">Riad Dar Kader</title><desc id="desc">Golden Moroccan arch framing a riad entrance, beside the Riad Dar Kader wordmark.</desc>
+<defs>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6e5bb"/><stop offset=".35" stop-color="#d8b56a"/><stop offset=".67" stop-color="#91632f"/><stop offset="1" stop-color="#e8cd91"/></linearGradient>
+  <linearGradient id="clay" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a8513f"/><stop offset="1" stop-color="#51251e"/></linearGradient>
+  <linearGradient id="letters" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff6dd"/><stop offset=".45" stop-color="#e8cb8e"/><stop offset="1" stop-color="#bb8e49"/></linearGradient>
+  <filter id="emboss" x="-12%" y="-12%" width="130%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#000" flood-opacity=".4"/></filter>
+</defs>
+<!-- A compact, legible vector adaptation of the generated 3D courtyard emblem. -->
+<g filter="url(#emboss)">
+  <path d="M12 142V66C12 51 22 41 34 36C38 16 54 10 68 3C82 10 98 16 102 36C114 41 124 51 124 66V142Z" fill="url(#gold)"/>
+  <path d="M18 136V66C18 55 25 47 40 41C42 25 54 19 68 11C82 19 94 25 96 41C111 47 118 55 118 66V136Z" fill="#f6eee1"/>
+  <path d="M24 130V67C24 58 30 51 46 46C47 32 58 26 68 20C78 26 89 32 90 46C106 51 112 58 112 67V130Z" fill="url(#clay)"/>
+  <path d="M45 112V76Q45 53 68 48Q91 53 91 76V112" fill="none" stroke="#f2dcab" stroke-width="3"/>
+  <path d="M52 111V78Q52 60 68 56Q84 60 84 78V111Z" fill="#2d1a15" stroke="#cda55d" stroke-width="1.8"/>
+  <path d="M68 60V111M57 77L65 85L57 93M79 77L71 85L79 93" fill="none" stroke="#bb8c4b" stroke-width="1" opacity=".9"/>
+  <path d="M32 119L43 119M93 119H104" stroke="#e5c381" stroke-width="2"/>
+  <path d="M33 117Q39 100 37 85M103 117Q97 100 99 85M37 94L30 86M99 94L106 86" fill="none" stroke="#9ca579" stroke-width="2" stroke-linecap="round"/>
+  <path d="M46 116H90L101 129H35Z" fill="#48645a" stroke="#e7cc92" stroke-width="1.6"/>
+  <path d="M68 25V39M62 35L68 29L74 35L68 41Z" fill="#d8b56a" stroke="#e8cd91" stroke-width="1.2"/>
+  <path d="M17 143H119" stroke="#d8b56a" stroke-width="3" stroke-linecap="round"/>
+  <path d="M68 132l6 6-6 6-6-6Z" fill="#d8b56a" stroke="#5f381c" stroke-width="1"/>
+</g>
+<g font-family="Georgia,'Times New Roman',serif" fill="url(#letters)" filter="url(#emboss)">
+  <text x="148" y="80" font-size="46" letter-spacing="1.2">RIAD DAR KADER</text>
+</g>
+<path d="M150 102H184M557 102H601" stroke="#d8b56a" stroke-width="1.2"/>
+<text x="195" y="107" font-family="Georgia,'Times New Roman',serif" fill="#f6eee1" font-size="12.3" letter-spacing="3">MAISON D’HÔTES · MARRAKECH</text>
+<path d="M149 119H601" stroke="#d8b56a" stroke-opacity=".65" stroke-width=".7"/>
+<path d="M367 125l6 6-6 6-6-6Z" fill="none" stroke="#d8b56a" stroke-width="1.3"/>
+</svg>

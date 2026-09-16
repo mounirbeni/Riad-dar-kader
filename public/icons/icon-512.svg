@@ -1,17 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#8B3A2A"/>
-  <rect x="0" y="0" width="512" height="512" fill="url(#pattern)" opacity="0.12"/>
-  <defs>
-    <pattern id="pattern" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M16 0l16 16-16 16L0 16z" fill="none" stroke="#F5F0E8" stroke-width="0.7"/>
-    </pattern>
-  </defs>
-  <!-- Moroccan keyhole arch -->
-  <path d="M176 380 V262 C176 176 210 128 256 128 C302 128 336 176 336 262 V380 Z" fill="#F5F0E8" opacity="0.92"/>
-  <!-- Gold accent bar -->
-  <rect x="155" y="380" width="202" height="8" fill="#B8943F" rx="4"/>
-  <!-- Gold dots -->
-  <circle cx="214" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
-  <circle cx="256" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
-  <circle cx="298" cy="408" r="7" fill="#B8943F" opacity="0.8"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Riad Dar Kader emblem"><defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6e5bb"/><stop offset=".4" stop-color="#d8b56a"/><stop offset=".8" stop-color="#9b7038"/><stop offset="1" stop-color="#edce86"/></linearGradient><linearGradient id="clay" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a8513f"/><stop offset="1" stop-color="#51251e"/></linearGradient></defs><rect width="512" height="512" rx="108" fill="#18130f"/><path d="M94 427V235C94 184 124 154 162 138C173 81 217 61 256 35C295 61 339 81 350 138C388 154 418 184 418 235V427Z" fill="url(#gold)"/><path d="M111 410V235C111 199 140 174 181 156C191 104 226 85 256 60C286 85 321 104 331 156C372 174 401 199 401 235V410Z" fill="#f6eee1"/><path d="M128 393V235C128 210 152 191 198 177C201 127 231 107 256 83C281 107 311 127 314 177C360 191 384 210 384 235V393Z" fill="url(#clay)"/><path d="M183 379V260Q183 206 256 188Q329 206 329 260V379" fill="none" stroke="#f3ddb0" stroke-width="9"/><path d="M204 374V260Q204 225 256 210Q308 225 308 260V374Z" fill="#251712" stroke="#cda55d" stroke-width="5"/><path d="M256 218V374M216 267L245 295L216 323M296 267L267 295L296 323" fill="none" stroke="#ba8e50" stroke-width="4"/><path d="M164 379H348L370 408H142Z" fill="#48645a" stroke="#ead09b" stroke-width="5"/><path d="M256 103V159M239 136L256 119L273 136L256 157Z" fill="#d8b56a" stroke="#e8cd91" stroke-width="3"/><path d="M94 426H418" stroke="#f6e5bb" stroke-width="8"/><path d="M256 437l23 23-23 23-23-23Z" fill="url(#gold)"/></svg>
