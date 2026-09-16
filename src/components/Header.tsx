@@ -15,7 +15,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const switchPath = swapLocale(pathname, locale, otherLocale);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sand-200/70 bg-sand/85 backdrop-blur-md">
+    <header className="site-header sticky top-0 z-50 border-b border-sand-200/70 bg-sand/85 backdrop-blur-md">
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <Link href={localePath(locale, "home")} className="font-serif text-xl font-700 tracking-wide text-terracotta">
           <span className="sm:hidden">MBN</span>

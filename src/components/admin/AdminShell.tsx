@@ -183,7 +183,7 @@ export function AdminShell({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F7F4EF] lg:flex">
+    <div className="night-admin min-h-screen bg-[#18130f] lg:flex">
       {/* Desktop sidebar */}
       <aside className="hidden w-60 shrink-0 bg-[#1C1612] lg:flex lg:flex-col overflow-hidden">
         <SidebarContent email={email} pendingCount={pendingCount} />

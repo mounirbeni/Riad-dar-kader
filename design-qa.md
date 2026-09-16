@@ -1,7 +1,7 @@
 **Comparison target**
 
 - Source visual truth: user-supplied Night Arrival mobile mockup (`2EEC1452-A378-45B4-BE55-1B3B334CF743.jpeg`).
-- Intended implementation: mobile home hero at `/fr`, `src/components/MobileNightHero.tsx`
+- Intended implementation: Night Arrival visual system across public pages, booking, guest area and admin, anchored by `src/components/MobileNightHero.tsx`, `src/app/globals.css`, and `src/components/admin/AdminShell.tsx`.
 - Intended viewport: 393 × 852 CSS px, portrait, initial page state.
 
 **Evidence status**
@@ -15,8 +15,8 @@
 - [P0] Rendered mobile verification unavailable.
   Location: local development preview.
   Evidence: `npm run dev` fails during Next.js startup before an HTTP endpoint is available.
-  Impact: the selected mobile composition, tap targets, responsive wrapping, primary booking link, and desktop preservation cannot be visually confirmed in a browser.
-  Fix: restore a working local preview environment, capture `/fr` at 393 × 852, test the availability CTA, date links, menu and mobile navigation, inspect the console, then repeat the comparison against the source visual.
+  Impact: the selected mobile composition, platform-wide dark theme, tap targets, responsive wrapping, booking link, guest experience, and admin contrast cannot be visually confirmed in a browser.
+  Fix: restore a working local preview environment, capture `/fr` at 393 × 852 and desktop, then test booking, guest account, mobile navigation and core admin views before repeating the comparison.
 
 **Required fidelity surfaces**
 

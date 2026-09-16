@@ -17,7 +17,7 @@ const LEGAL_LINKS: { key: "privacy" | "terms" | "bookingTerms" | "cancellation" 
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   return (
-    <footer className="mt-24 border-t border-sand-200 bg-terracotta text-sand">
+    <footer className="site-footer mt-24 border-t border-sand-200 bg-terracotta text-sand">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <h3 className="font-serif text-2xl text-white">MBN DEMO RIAD</h3>

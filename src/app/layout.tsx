@@ -3,7 +3,7 @@ import "./globals.css";
 import { PwaRegister } from "@/components/PwaRegister";
 
 export const viewport: Viewport = {
-  themeColor: "#8B3A2A",
+  themeColor: "#18130F",
   width: "device-width",
   initialScale: 1,
   minimumScale: 1,

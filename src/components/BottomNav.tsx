@@ -56,12 +56,10 @@ const ITEMS: BottomNavItem[] = [
 
 export function BottomNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
-  const isHome = pathname === `/${locale}`;
-
   return (
     <nav
       className={`fixed bottom-0 left-0 right-0 z-40 border-t backdrop-blur-md lg:hidden ${
-        isHome ? "border-white/15 bg-[#18130f]/95 text-[#eee1cd]" : "border-sand-200/80 bg-sand/95"
+        "border-white/15 bg-[#18130f]/95 text-[#eee1cd]"
       }`}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
@@ -76,13 +74,13 @@ export function BottomNav({ locale }: { locale: Locale }) {
               key={key}
               href={href}
               className={`relative flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors duration-150 ${
-                active ? "text-[#c86a4d]" : isHome ? "text-[#eee1cd]/75" : "text-muted"
+                active ? "text-[#c86a4d]" : "text-[#eee1cd]/75"
               }`}
             >
               {active && (
                 <motion.div
                   layoutId="bottom-nav-indicator"
-                  className={`absolute rounded-full ${isHome ? "bottom-1 h-1 w-1 bg-[#c86a4d]" : "inset-x-3 top-0 h-[2px] bg-terracotta"}`}
+                  className="absolute bottom-1 h-1 w-1 rounded-full bg-[#c86a4d]"
                   transition={{ type: "spring", stiffness: 520, damping: 35 }}
                 />
               )}
