@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "MBN DEMO RIAD",
-    short_name: "MBN RIAD",
+    name: "Riad Dar Kader",
+    short_name: "Dar Kader",
     description:
       "Riad traditionnel à Marrakech — Réservation directe, sans frais de plateforme.",
     start_url: "/fr",
     scope: "/",
     display: "standalone",
-    background_color: "#f5f0e8",
+    background_color: "#18130f",
     theme_color: "#8B3A2A",
     orientation: "portrait-primary",
     categories: ["travel", "lifestyle"],
