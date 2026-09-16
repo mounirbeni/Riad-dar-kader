@@ -7,13 +7,12 @@ import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
-import { HeroText } from "@/components/HeroText";
 import { MobileNightHero } from "@/components/MobileNightHero";
 import { formatEUR } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import { RIAD, siteUrl } from "@/lib/constants";
-import { IconStar, IconMapPin, IconShield, IconWifi, IconWind, IconBath, IconCoffee, IconSun } from "@/components/Icons";
+import { IconArrowRight, IconCalendar, IconStar, IconMapPin, IconShield, IconWifi, IconWind, IconBath, IconCoffee, IconSun } from "@/components/Icons";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 
 // Icons that correspond to the 3 selling points (atmosphere, location, direct booking)
@@ -98,45 +97,34 @@ export default async function HomePage({
     <>
       <MobileNightHero locale={locale} stayHref={localePath(locale, "stay")} />
 
-      {/* Desktop hero: original two-column split retained unchanged. */}
-      <section className="relative hidden overflow-hidden xl:flex xl:h-[78vh] xl:min-h-[640px] xl:max-h-[760px]">
-        {/* Left pane — text */}
-        <div className="relative xl:flex xl:w-[52%] xl:shrink-0 xl:flex-col xl:items-start xl:justify-center xl:bg-terracotta-dark">
-          {/* Zellige overlay on desktop */}
-          <div className="absolute inset-0 hidden bg-zellige opacity-10 xl:block" />
-          <HeroText
-            kicker={t.heroKicker}
-            title={t.heroTitle}
-            subtitle={t.heroSubtitle}
-            ctaLabel={t.heroCta}
-            ctaHref={localePath(locale, "stay")}
-            secondaryLabel={t.heroSecondary}
-            secondaryHref={localePath(locale, "riad")}
-            openingNote={t.openingNote}
-            directLabel={
-              locale === "fr"
-                ? "Réservation directe · sans frais de plateforme"
-                : "Direct booking · no platform fees"
-            }
-          />
-        </div>
+      {/* Desktop hero — unified with the mobile Night Arrival identity. */}
+      <section className="relative hidden min-h-[720px] overflow-hidden bg-[#18130f] xl:block">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/riad/hero-night-arrival.webp" alt={locale === "fr" ? "Entrée illuminée de MBN DEMO RIAD" : "Illuminated entrance of MBN DEMO RIAD"} className="absolute inset-0 h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-[#120c08]/65" />
+        <div className="container-page relative grid min-h-[720px] grid-cols-[1.05fr_0.95fr] items-center gap-20 py-24">
+          <div className="max-w-xl text-white">
+            <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.26em] text-[#d8b56a] before:h-px before:w-10 before:bg-[#d8b56a]">
+              {locale === "fr" ? "Marrakech · Médina" : "Marrakech · Medina"}
+            </p>
+            <h1 className="mt-7 whitespace-pre-line font-serif text-7xl leading-[0.88] tracking-[-0.045em] text-white">
+              {locale === "fr" ? "Votre séjour\ncommence ici" : "Your stay\nbegins here"}
+            </h1>
+            <p className="mt-7 max-w-md font-serif text-2xl leading-relaxed text-white/75">
+              {locale === "fr" ? "L’authenticité marocaine, le luxe tout en douceur." : "Moroccan authenticity, gentle luxury."}
+            </p>
+            <p className="mt-12 flex items-center gap-2 text-sm text-white/65"><IconMapPin size={17} className="text-[#d8b56a]" /> {locale === "fr" ? "À deux pas du Musée Mouassine" : "Steps from Musée Mouassine"}</p>
+          </div>
 
-        {/* Right pane — visual (xl+ only) */}
-        <div className="relative hidden xl:block xl:flex-1">
-          <PhotoSlot
-            label={locale === "fr" ? "Ambiance du riad — patio / terrasse" : "Riad ambiance — patio / terrace"}
-            code="H2"
-            ratio="Portrait"
-            variant={1}
-            rounded={false}
-            className="h-full w-full"
-          />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-terracotta-dark/25" />
-          <div className="absolute bottom-8 left-8">
-            <span className="inline-flex items-center gap-2 rounded-full bg-black/30 px-5 py-2.5 text-sm text-white backdrop-blur-sm">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brass-light" />
-              Médina de Marrakech · Maroc
-            </span>
+          <div className="rounded-[2rem] border border-white/15 bg-[#1b130e]/95 p-8 text-white shadow-2xl backdrop-blur-xl">
+            <p className="text-center text-xs font-medium uppercase tracking-[0.25em] text-[#d8b56a]">MBN DEMO RIAD</p>
+            <h2 className="mt-4 text-center font-serif text-4xl leading-none">{locale === "fr" ? "Réservez votre parenthèse" : "Reserve your escape"}</h2>
+            <div className="mt-8 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.05]">
+              <Link href={localePath(locale, "stay")} className="border-r border-white/15 p-5 transition-colors hover:bg-white/5"><span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-white/55"><IconCalendar size={17} /> {locale === "fr" ? "Arrivée" : "Arrival"}</span><span className="mt-2 block font-serif text-2xl">12 oct. 2026</span></Link>
+              <Link href={localePath(locale, "stay")} className="p-5 transition-colors hover:bg-white/5"><span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-white/55"><IconCalendar size={17} /> {locale === "fr" ? "Départ" : "Departure"}</span><span className="mt-2 block font-serif text-2xl">15 oct. 2026</span></Link>
+            </div>
+            <Link href={localePath(locale, "stay")} className="mt-4 flex min-h-[62px] items-center justify-center gap-3 rounded-2xl bg-[#bd5a40] px-6 font-serif text-xl text-white transition hover:bg-[#cc694d]"><span>{locale === "fr" ? "Vérifier les disponibilités" : "Check availability"}</span><IconArrowRight size={21} /></Link>
+            <p className="mt-5 flex items-center justify-center gap-2 font-serif text-base text-white/70"><IconShield size={19} className="text-[#e8d6b9]" /> {locale === "fr" ? "Réservation directe · sans commission" : "Direct booking · no commission"}</p>
           </div>
         </div>
       </section>

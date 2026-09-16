@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { localePath, type NavKey } from "@/i18n/nav";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { IconMenu } from "@/components/Icons";
 
 const NAV_ORDER: NavKey[] = [
   "home",
@@ -24,19 +26,21 @@ export function Header({
   dict: Dictionary;
 }) {
   const pathname = usePathname();
+  const isHome = pathname === `/${locale}`;
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const otherLocale: Locale = locale === "fr" ? "en" : "fr";
   const switchPath = swapLocale(pathname, locale, otherLocale);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sand-200/70 bg-sand/85 backdrop-blur-md">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
+    <header className={`sticky top-0 z-50 border-b border-sand-200/70 bg-sand/85 backdrop-blur-md ${isHome ? "absolute border-transparent bg-transparent text-white backdrop-blur-none" : ""}`}>
+      <div className="container-page flex h-20 items-center justify-between gap-4 xl:h-16">
         <Link
           href={localePath(locale, "home")}
-          className="font-serif text-xl font-700 tracking-wide text-terracotta"
+          className={`font-serif text-xl font-700 tracking-wide text-terracotta ${isHome ? "text-white" : ""}`}
         >
-          <span className="sm:hidden">MBN</span>
-          <span className="hidden sm:inline">MBN DEMO RIAD</span>
+          <span className="block text-[2rem] leading-[0.75] sm:text-xl">MBN</span>
+          <span className="mt-2 block text-[10px] font-sans font-medium tracking-[0.32em] sm:mt-1 sm:tracking-[0.18em]">DEMO RIAD</span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">
@@ -49,15 +53,15 @@ export function Header({
                 href={href}
                 className={`relative text-sm transition-colors ${
                   active
-                    ? "text-terracotta font-medium"
-                    : "text-ink/70 hover:text-terracotta"
+                    ? "text-[#d8b56a] font-medium"
+                    : isHome ? "text-white/75 hover:text-[#d8b56a]" : "text-ink/70 hover:text-terracotta"
                 }`}
               >
                 {dict.nav[key]}
                 {active && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute -bottom-[3px] left-0 right-0 h-px bg-terracotta"
+                    className="absolute -bottom-[3px] left-0 right-0 h-px bg-[#d8b56a]"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -66,17 +70,22 @@ export function Header({
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        {isHome && (
+          <button type="button" aria-label="Open menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)} className="flex h-11 w-11 items-center justify-center rounded-full text-white xl:hidden">
+            <IconMenu size={29} />
+          </button>
+        )}
+        <div className={`items-center gap-3 ${isHome ? "hidden xl:flex" : "flex"}`}>
           <Link
             href={switchPath}
-            className="rounded-full border border-sand-300 px-3 py-1 text-xs font-medium uppercase text-muted transition hover:border-brass hover:text-brass"
+            className={`rounded-full border px-3 py-1 text-xs font-medium uppercase transition hover:border-brass hover:text-brass ${isHome ? "border-white/30 text-white/85" : "border-sand-300 text-muted"}`}
           >
             {otherLocale}
           </Link>
 
           <Link
             href={`/${locale}/compte`}
-            className="hidden items-center justify-center h-9 w-9 rounded-full border border-sand-200 bg-white text-muted hover:text-terracotta hover:border-terracotta/30 transition-colors sm:flex"
+            className={`hidden h-9 w-9 items-center justify-center rounded-full border transition-colors sm:flex ${isHome ? "border-white/25 bg-white/10 text-white hover:text-[#d8b56a]" : "border-sand-200 bg-white text-muted hover:border-terracotta/30 hover:text-terracotta"}`}
             title="Mon espace voyageur"
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -92,6 +101,20 @@ export function Header({
           </Link>
         </div>
       </div>
+      <AnimatePresence>
+        {isHome && menuOpen && (
+          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.2 }} className="absolute inset-x-4 top-[4.75rem] rounded-2xl border border-white/15 bg-[#1b130e]/95 p-3 shadow-2xl backdrop-blur-xl xl:hidden">
+            {NAV_ORDER.map((key) => (
+              <Link key={key} href={localePath(locale, key)} onClick={() => setMenuOpen(false)} className="block rounded-xl px-4 py-3 font-serif text-lg text-white/90 transition-colors active:bg-white/10">
+                {dict.nav[key]}
+              </Link>
+            ))}
+            <Link href={localePath(locale, "stay")} onClick={() => setMenuOpen(false)} className="mt-2 flex min-h-12 items-center justify-center rounded-xl bg-[#bd5a40] px-4 text-sm font-medium text-white">
+              {dict.nav.book}
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

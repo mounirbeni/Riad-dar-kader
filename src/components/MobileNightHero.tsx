@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Locale } from "@/i18n/config";
-import { IconArrowRight, IconCalendar, IconMapPin } from "@/components/Icons";
+import { IconArrowRight, IconCalendar, IconChevronDown, IconShield } from "@/components/Icons";
 
 type Props = {
   locale: Locale;
@@ -15,7 +15,7 @@ export function MobileNightHero({ locale, stayHref }: Props) {
 
   return (
     <section className="relative overflow-hidden bg-[#18130f] text-white xl:hidden">
-      <div className="relative h-[43svh] min-h-[320px] max-h-[430px]">
+      <div className="relative h-[51svh] min-h-[390px] max-h-[500px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/riad/hero-night-arrival.webp"
@@ -27,15 +27,12 @@ export function MobileNightHero({ locale, stayHref }: Props) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="absolute inset-x-5 bottom-10"
+          className="absolute bottom-12 right-7 max-w-[104px] text-right"
         >
-          <div className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.23em] text-[#d8b56a]">
-            <span className="h-px w-7 bg-[#d8b56a]" />
-            {fr ? "Médina de Marrakech" : "Marrakech Medina"}
+          <div className="text-[10px] font-medium uppercase leading-[1.95] tracking-[0.19em] text-white/75">
+            {fr ? "Un autre rythme à Marrakech" : "Another rhythm in Marrakech"}
           </div>
-          <h1 className="max-w-[280px] font-serif text-[2.5rem] leading-[0.88] tracking-[-0.035em] text-white">
-            MBN DEMO RIAD
-          </h1>
+          <span className="ml-auto mt-3 block h-px w-8 bg-[#d8b56a]" />
         </motion.div>
       </div>
 
@@ -43,47 +40,51 @@ export function MobileNightHero({ locale, stayHref }: Props) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.12, ease: "easeOut" }}
-        className="relative -mt-7 rounded-t-[2rem] bg-[#18130f] px-5 pb-9 pt-7 shadow-[0_-12px_35px_rgba(0,0,0,0.24)]"
+        className="relative -mt-8 rounded-t-[2.6rem] bg-[#18130f] px-5 pb-7 pt-8 shadow-[0_-14px_38px_rgba(0,0,0,0.34)]"
       >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#d8b56a]">
-          {fr ? "Un refuge après la médina" : "A retreat beyond the medina"}
+        <p className="flex items-center justify-center gap-4 text-[10px] font-medium uppercase tracking-[0.26em] text-[#d8b56a] before:h-px before:w-9 before:bg-[#d8b56a]/80 after:h-px after:w-9 after:bg-[#d8b56a]/80">
+          Marrakech
         </p>
-        <h2 className="mt-2 font-serif text-[2rem] leading-none text-white">
-          {fr ? "Votre séjour commence ici." : "Your stay begins here."}
+        <h2 className="mx-auto mt-4 max-w-[335px] whitespace-pre-line text-center font-serif text-[2.55rem] leading-[0.92] tracking-[-0.035em] text-white">
+          {fr ? "Votre séjour\ncommence ici" : "Your stay\nbegins here"}
         </h2>
-        <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/65">
+        <p className="mt-4 text-center font-serif text-lg leading-relaxed text-white/70">
           {fr
-            ? "Choisissez vos dates et découvrez le calme d’un riad marocain, au cœur de Marrakech."
-            : "Choose your dates and discover the calm of a Moroccan riad in the heart of Marrakech."}
+            ? "L’authenticité marocaine, le luxe tout en douceur."
+            : "Moroccan authenticity, gentle luxury."}
         </p>
 
-        <div className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06]">
-          <Link href={stayHref} className="group border-r border-white/15 px-4 py-3.5 transition-colors active:bg-white/10">
-            <span className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/50">
-              <IconCalendar size={14} /> {fr ? "Arrivée" : "Arrival"}
-            </span>
-            <span className="mt-1 block text-sm font-medium text-white">
-              {fr ? "Choisir une date" : "Choose a date"}
-            </span>
-          </Link>
-          <Link href={stayHref} className="group px-4 py-3.5 transition-colors active:bg-white/10">
-            <span className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/50">
-              <IconCalendar size={14} /> {fr ? "Départ" : "Departure"}
-            </span>
-            <span className="mt-1 block text-sm font-medium text-white">
-              {fr ? "Choisir une date" : "Choose a date"}
-            </span>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.055] p-2">
+          <div className="grid grid-cols-2">
+            <Link href={stayHref} className="group border-r border-white/20 px-3 py-3 transition-colors active:bg-white/10">
+              <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/60">
+                <IconCalendar size={17} /> {fr ? "Arrivée" : "Arrival"}
+              </span>
+              <span className="mt-1 flex items-center justify-between font-serif text-xl text-white">
+                {fr ? "12 oct. 2026" : "Oct 12, 2026"} <IconChevronDown size={15} className="text-white/70" />
+              </span>
+            </Link>
+            <Link href={stayHref} className="group px-3 py-3 transition-colors active:bg-white/10">
+              <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/60">
+                <IconCalendar size={17} /> {fr ? "Départ" : "Departure"}
+              </span>
+              <span className="mt-1 flex items-center justify-between font-serif text-xl text-white">
+                {fr ? "15 oct. 2026" : "Oct 15, 2026"} <IconChevronDown size={15} className="text-white/70" />
+              </span>
+            </Link>
+          </div>
+          <Link href={stayHref} className="mt-2 flex min-h-[58px] items-center justify-center gap-3 rounded-2xl bg-[#bd5a40] px-5 font-serif text-[1.2rem] text-white shadow-[0_10px_28px_rgba(189,90,64,0.28)] transition-transform active:scale-[0.98]">
+            <span>{fr ? "Vérifier les disponibilités" : "Check availability"}</span>
+            <IconArrowRight size={19} />
           </Link>
         </div>
 
-        <Link href={stayHref} className="mt-3 flex min-h-14 items-center justify-between rounded-2xl bg-[#b74f35] px-5 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(183,79,53,0.28)] transition-transform active:scale-[0.98]">
-          <span>{fr ? "Vérifier les disponibilités" : "Check availability"}</span>
-          <IconArrowRight size={19} />
-        </Link>
-
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-white/50">
-          <IconMapPin size={14} className="text-[#d8b56a]" />
-          {fr ? "Réservation directe · sans frais de plateforme" : "Direct booking · no platform fees"}
+        <p className="mt-4 flex items-center justify-center gap-2 text-center font-serif text-base text-white/70">
+          <IconShield size={19} className="text-[#e8d6b9]" />
+          {fr ? "Réservation directe · sans commission" : "Direct booking · no commission"}
+        </p>
+        <p className="mt-8 flex items-center justify-center gap-3 text-center text-[10px] font-medium uppercase tracking-[0.2em] leading-relaxed text-[#d8b56a]/85 before:h-px before:w-8 before:bg-[#d8b56a]/70 after:h-px after:w-8 after:bg-[#d8b56a]/70">
+          {fr ? "Plus qu’un hébergement, une expérience marocaine" : "More than a stay, a Moroccan experience"}
         </p>
       </motion.div>
     </section>
