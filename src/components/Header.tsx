@@ -35,7 +35,8 @@ export function Header({
           href={localePath(locale, "home")}
           className="font-serif text-xl font-700 tracking-wide text-terracotta"
         >
-          Mbn Riad
+          <span className="sm:hidden">MBN</span>
+          <span className="hidden sm:inline">MBN DEMO RIAD</span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">

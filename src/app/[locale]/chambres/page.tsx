@@ -22,8 +22,8 @@ export async function generateMetadata({
   return {
     title: fr ? "Chambres & suites" : "Rooms & suites",
     description: fr
-      ? "Découvrez les sept chambres et suites du Mbn Riad à Marrakech, chacune habillée d'artisanat marocain."
-      : "Discover the seven rooms and suites of Mbn Riad in Marrakech, each dressed in Moroccan craftsmanship.",
+      ? "Découvrez les sept chambres et suites du MBN DEMO RIAD à Marrakech, chacune habillée d'artisanat marocain."
+      : "Discover the seven rooms and suites of MBN DEMO RIAD in Marrakech, each dressed in Moroccan craftsmanship.",
     alternates: { languages: { fr: "/fr/chambres", en: "/en/chambres" } },
   };
 }

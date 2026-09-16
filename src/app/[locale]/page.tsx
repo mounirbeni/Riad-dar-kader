@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { HeroText } from "@/components/HeroText";
+import { MobileNightHero } from "@/components/MobileNightHero";
 import { formatEUR } from "@/lib/money";
 import { priceTypeLabel } from "@/lib/pricing";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
@@ -48,8 +49,8 @@ export async function generateMetadata({
   return {
     title: {
       absolute: fr
-        ? "Mbn Riad — Riad traditionnel à Marrakech"
-        : "Mbn Riad — Traditional riad in Marrakech",
+        ? "MBN DEMO RIAD — Riad traditionnel à Marrakech"
+        : "MBN DEMO RIAD — Traditional riad in Marrakech",
     },
     description: fr
       ? "Riad marocain authentique dans la Médina de Marrakech, près du Musée Mouassine. Réservez votre séjour en direct."
@@ -59,7 +60,7 @@ export async function generateMetadata({
       languages: { fr: "/fr", en: "/en" },
     },
     openGraph: {
-      title: "Mbn Riad",
+      title: "MBN DEMO RIAD",
       description: fr
         ? "Riad traditionnel au cœur de la Médina de Marrakech."
         : "A traditional riad in the heart of the Marrakech Medina.",
@@ -95,17 +96,10 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Hero — mobile/tablet: full-bleed; desktop xl+: two-column split */}
-      <section className="relative overflow-hidden xl:flex xl:h-[78vh] xl:min-h-[640px] xl:max-h-[760px]">
-        {/* Full-bleed background (mobile/tablet only) */}
-        {/* Mobile: one continuous photo layer behind all hero content. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/riad/patio.webp"
-          alt={locale === "fr" ? "Patio du riad" : "Riad patio"}
-          className="absolute inset-0 h-full w-full object-cover xl:hidden"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70 xl:hidden" />
+      <MobileNightHero locale={locale} stayHref={localePath(locale, "stay")} />
+
+      {/* Desktop hero: original two-column split retained unchanged. */}
+      <section className="relative hidden overflow-hidden xl:flex xl:h-[78vh] xl:min-h-[640px] xl:max-h-[760px]">
         {/* Left pane — text */}
         <div className="relative xl:flex xl:w-[52%] xl:shrink-0 xl:flex-col xl:items-start xl:justify-center xl:bg-terracotta-dark">
           {/* Zellige overlay on desktop */}

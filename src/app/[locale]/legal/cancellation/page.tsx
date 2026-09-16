@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Annulation & remboursement — Mbn Riad" : "Cancellation & Refund Policy — Mbn Riad",
+    title: fr ? "Annulation & remboursement — MBN DEMO RIAD" : "Cancellation & Refund Policy — MBN DEMO RIAD",
     robots: { index: false },
   };
 }

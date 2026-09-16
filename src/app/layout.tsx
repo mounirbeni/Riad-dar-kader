@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   title: {
-    default: "Mbn Riad — Riad traditionnel à Marrakech",
-    template: "%s · Mbn Riad",
+    default: "MBN DEMO RIAD — Riad traditionnel à Marrakech",
+    template: "%s · MBN DEMO RIAD",
   },
   description:
     "Riad traditionnel marocain au cœur de la Médina de Marrakech, près du Musée Mouassine. Réservation directe.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Mbn Riad",
+    title: "MBN DEMO RIAD",
   },
   formatDetection: {
     telephone: false,
