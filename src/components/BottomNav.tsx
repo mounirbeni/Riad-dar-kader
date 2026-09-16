@@ -38,6 +38,29 @@ const ITEMS: BottomNavItem[] = [
     ),
   },
   {
+    key: "rooms",
+    href: (locale) => localePath(locale, "rooms"),
+    labelFr: "Chambres",
+    labelEn: "Rooms",
+    icon: (active) => (
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={active ? 2.2 : 1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M3 19v-7a3 3 0 013-3h12a3 3 0 013 3v7" />
+        <path d="M3 16h18" />
+        <path d="M5 19v2M19 19v2" />
+        <path d="M6 9V6a2 2 0 012-2h3a2 2 0 012 2v3" />
+      </svg>
+    ),
+  },
+  {
     key: "experiences",
     href: (locale) => localePath(locale, "experiences"),
     labelFr: "Expériences",
@@ -108,7 +131,7 @@ export function BottomNav({ locale }: { locale: Locale }) {
       className="fixed bottom-0 left-0 right-0 z-40 border-t border-sand-200/80 bg-sand/95 backdrop-blur-md lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-5">
         {ITEMS.map(({ key, href: hrefFn, labelFr, labelEn, icon }) => {
           const href = hrefFn(locale);
           const active =
