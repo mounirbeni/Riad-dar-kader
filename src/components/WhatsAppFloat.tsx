@@ -1,17 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
 import type { Locale } from "@/i18n/config";
 
 export function WhatsAppFloat({ locale }: { locale: Locale }) {
+  const pathname = usePathname();
+  const isHome = pathname === `/${locale}`;
   return (
     <motion.a
       href={guestWhatsAppLink(locale)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
-      className="fixed bottom-20 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-soft lg:bottom-5 lg:right-5"
+      className={`fixed bottom-20 right-4 z-50 h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-soft lg:bottom-5 lg:right-5 ${isHome ? "hidden xl:flex" : "flex"}`}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 380, damping: 22, delay: 1.2 }}

@@ -90,6 +90,12 @@
 }
 .night-platform .site-header a:hover { color: #d8b56a; }
 .night-platform .site-header a.font-serif { color: #f6eee1; }
+@media (max-width: 1279px) {
+  .night-platform .site-header.home-mobile-header {
+    border-color: transparent;
+    background: transparent;
+  }
+}
 .night-platform .site-footer {
   border-color: rgba(232, 214, 185, 0.12);
   background: #120d09;
