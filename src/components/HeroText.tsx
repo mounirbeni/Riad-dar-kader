@@ -40,7 +40,7 @@ export function HeroText({
       variants={container}
       initial="hidden"
       animate="show"
-      className="container-page relative flex min-h-[82vh] flex-col items-start justify-center py-20 text-white xl:min-h-0 xl:max-w-none xl:mx-0 xl:px-14 xl:py-0"
+      className="container-page relative flex min-h-[64svh] flex-col items-start justify-center py-14 text-white sm:min-h-[60vh] sm:py-16 xl:min-h-0 xl:max-w-none xl:mx-0 xl:px-14 xl:py-0"
     >
       <motion.div variants={item} className="flex items-center gap-3">
         <span className="h-px w-8 bg-brass-light" />

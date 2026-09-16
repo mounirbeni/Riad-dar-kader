@@ -96,7 +96,7 @@ export default async function HomePage({
   return (
     <>
       {/* Hero — mobile/tablet: full-bleed; desktop xl+: two-column split */}
-      <section className="relative overflow-hidden xl:flex xl:min-h-screen">
+      <section className="relative overflow-hidden xl:flex xl:h-[78vh] xl:min-h-[640px] xl:max-h-[760px]">
         {/* Full-bleed background (mobile/tablet only) */}
         <PhotoSlot
           label={locale === "fr" ? "Patio du riad" : "Riad patio"}
