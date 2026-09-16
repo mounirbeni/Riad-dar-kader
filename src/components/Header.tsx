@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -21,10 +22,8 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   return (
     <header className={`site-header sticky top-0 z-50 border-b border-sand-200/70 bg-sand/85 backdrop-blur-md ${isHome ? "home-mobile-header absolute inset-x-0 top-0 border-transparent bg-transparent text-white backdrop-blur-none xl:sticky xl:border-sand-200/70 xl:bg-sand/85 xl:text-inherit xl:backdrop-blur-md" : ""}`}>
       <div className="container-page flex h-16 items-center justify-between gap-4">
-        <Link href={localePath(locale, "home")} className={`font-serif text-xl font-700 tracking-wide text-terracotta ${isHome ? "text-white xl:text-terracotta" : ""}`}>
-          <span className="hidden sm:inline">MBN DEMO RIAD</span>
-          <span className="block text-[2rem] leading-[0.72] sm:hidden">MBN</span>
-          <span className="mt-2 block text-[9px] font-sans font-medium tracking-[0.32em] sm:hidden">DEMO RIAD</span>
+        <Link href={localePath(locale, "home")} aria-label="Riad Dar Kader — accueil" className="flex h-14 w-[152px] shrink-0 items-center sm:w-[172px] xl:w-[185px]">
+          <Image src="/brand/riad-dar-kader-logo.svg" alt="Riad Dar Kader" width={625} height={154} priority className="h-auto w-full object-contain" />
         </Link>
         <nav className="hidden items-center gap-7 lg:flex">
           {NAV_ORDER.map((key) => {
