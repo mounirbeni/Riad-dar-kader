@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { localePath, type NavKey } from "@/i18n/nav";
@@ -20,7 +21,9 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
     <footer className="site-footer mt-24 border-t border-sand-200 bg-terracotta text-sand">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <h3 className="font-serif text-2xl text-white">MBN DEMO RIAD</h3>
+          <Link href={localePath(locale, "home")} className="inline-flex items-center" aria-label="Riad Dar Kader — accueil">
+            <Image src="/brand/riad-dar-kader-logo.svg" alt="Riad Dar Kader" width={625} height={154} className="h-auto w-[230px] max-w-full sm:w-[270px]" />
+          </Link>
           <p className="mt-3 max-w-sm text-sm text-sand/80">{dict.footer.tagline}</p>
           <p className="mt-4 text-xs uppercase tracking-widest text-brass-light">
             {dict.footer.directBooking}
@@ -91,7 +94,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs text-sand/60 sm:flex-row">
           <span>
-            © {new Date().getFullYear()} MBN DEMO RIAD. {dict.footer.rights}
+            © {new Date().getFullYear()} Riad Dar Kader. {dict.footer.rights}
           </span>
           <span>Marrakech · Maroc</span>
         </div>
