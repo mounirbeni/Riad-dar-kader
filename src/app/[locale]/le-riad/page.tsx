@@ -3,7 +3,6 @@ import Link from "next/link";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
-import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { IconWalk } from "@/components/Icons";
 
@@ -37,11 +36,13 @@ export default async function RiadPage({
     <>
       {/* Hero */}
       <section className="relative">
-        <Placeholder variant={2} rounded={false} className="h-[42vh] w-full" />
+        <PhotoSlot
+          label={locale === "fr" ? "Ambiance du riad" : "Riad ambiance"}
+          code="LR1"
+          rounded={false}
+          className="h-[42vh] w-full"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
-        <span className="absolute right-3 top-3 z-10 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-terracotta">
-          LR1 · Photo — {locale === "fr" ? "Ambiance du riad" : "Riad ambiance"}
-        </span>
         <div className="container-page absolute inset-0 flex flex-col justify-end pb-10 text-white">
           <p className="kicker text-brass-light">{t.kicker}</p>
           <h1 className="mt-2 font-serif text-5xl sm:text-6xl">{t.title}</h1>

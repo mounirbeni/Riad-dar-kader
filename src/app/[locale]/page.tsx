@@ -5,7 +5,6 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
-import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Reveal, RevealGroup, RevealItem } from "@/components/Reveal";
 import { HeroText } from "@/components/HeroText";
@@ -99,17 +98,13 @@ export default async function HomePage({
       {/* Hero — mobile/tablet: full-bleed; desktop xl+: two-column split */}
       <section className="relative overflow-hidden xl:flex xl:min-h-screen">
         {/* Full-bleed background (mobile/tablet only) */}
-        <Placeholder
-          variant={0}
+        <PhotoSlot
+          label={locale === "fr" ? "Patio du riad" : "Riad patio"}
+          code="H1"
           rounded={false}
           className="absolute inset-0 h-full w-full xl:hidden"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-terracotta-dark/75 via-terracotta/55 to-ink/70 xl:hidden" />
-        {/* Photo-slot marker for the hero background (mobile/tablet) */}
-        <span className="absolute right-3 top-3 z-10 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-terracotta xl:hidden">
-          H1 · Photo — {locale === "fr" ? "Façade / Patio" : "Façade / Patio"}
-        </span>
-
         {/* Left pane — text */}
         <div className="relative xl:flex xl:w-[52%] xl:shrink-0 xl:flex-col xl:items-start xl:justify-center xl:bg-terracotta-dark">
           {/* Zellige overlay on desktop */}
@@ -271,8 +266,10 @@ export default async function HomePage({
             {extras.map((extra, i) => (
               <RevealItem key={extra.id}>
                 <div className="rounded-2xl bg-sand p-6 h-full">
-                  <Placeholder
-                    variant={i + 2}
+                  <PhotoSlot
+                    label={locale === "fr" ? extra.nameFr : extra.name}
+                    code={`E${i + 1}`}
+                    rounded
                     className="mb-4 aspect-square w-14"
                   />
                   <h3 className="font-serif text-lg text-ink">
