@@ -92,8 +92,9 @@
 .night-platform .site-header a.font-serif { color: #f6eee1; }
 @media (max-width: 1279px) {
   .night-platform .site-header.home-mobile-header {
-    border-color: transparent;
-    background: transparent;
+    border-color: transparent !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
   }
 }
 .night-platform .site-footer {

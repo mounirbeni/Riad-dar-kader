@@ -13,7 +13,10 @@ const NAV_ORDER: NavKey[] = ["home", "riad", "rooms", "experiences", "gallery", 
 
 export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const pathname = usePathname();
-  const isHome = pathname === `/${locale}`;
+  // Next can preserve a trailing slash on mobile navigation. Treat it as home too,
+  // otherwise the header becomes a regular opaque bar and pushes the hero down.
+  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/$/, "") : pathname;
+  const isHome = normalizedPath === `/${locale}`;
   const [menuOpen, setMenuOpen] = useState(false);
   const otherLocale: Locale = locale === "fr" ? "en" : "fr";
   const switchPath = swapLocale(pathname, locale, otherLocale);
