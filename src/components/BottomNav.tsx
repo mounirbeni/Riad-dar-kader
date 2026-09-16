@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import type { Locale } from "@/i18n/config";
 import { localePath } from "@/i18n/nav";
+import { IconBed } from "@/components/Icons";
 
 type BottomNavItem = {
   key: string;
@@ -42,23 +43,7 @@ const ITEMS: BottomNavItem[] = [
     href: (locale) => localePath(locale, "rooms"),
     labelFr: "Chambres",
     labelEn: "Rooms",
-    icon: (active) => (
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 19v-7a3 3 0 013-3h12a3 3 0 013 3v7" />
-        <path d="M3 16h18" />
-        <path d="M5 19v2M19 19v2" />
-        <path d="M6 9V6a2 2 0 012-2h3a2 2 0 012 2v3" />
-      </svg>
-    ),
+    icon: () => <IconBed size={22} />,
   },
   {
     key: "experiences",
