@@ -58,12 +58,13 @@ export function BottomNav({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-40 border-t backdrop-blur-md lg:hidden ${
-        "border-white/15 bg-[#18130f]/95 text-[#eee1cd]"
+      className={`fixed bottom-0 left-0 right-0 z-40 overflow-hidden border-t backdrop-blur-[28px] saturate-150 lg:hidden ${
+        "border-white/20 bg-[#2a1714]/75 text-[#f6eee1] shadow-[0_-12px_32px_rgba(0,0,0,0.3)]"
       }`}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="grid grid-cols-5">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/35" />
+      <div className="relative grid grid-cols-5">
         {ITEMS.map(({ key, href: hrefFn, labelFr, labelEn, icon }) => {
           const href = hrefFn(locale);
           const active =
