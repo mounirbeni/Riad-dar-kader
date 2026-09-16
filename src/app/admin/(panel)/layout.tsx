@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
-  title: "Administration — Mbn Demo Riad",
+  title: "Administration — MBN DEMO RIAD",
   robots: { index: false, follow: false },
 };
 
@@ -17,16 +17,10 @@ export default async function PanelLayout({
   const session = await getSession();
   if (!session) redirect("/admin/login");
 
-  const [pendingCount, unreadMessages] = await Promise.all([
-    prisma.booking.count({ where: { status: "pending" } }),
-    Promise.all([
-      prisma.bookingMessage.count({ where: { sender: "guest", isRead: false } }),
-      prisma.contactMessage.count({ where: { status: "new" } }),
-    ]).then(([a, b]) => a + b),
-  ]);
+  const pendingCount = await prisma.booking.count({ where: { status: "pending" } });
 
   return (
-    <AdminShell email={session.email} pendingCount={pendingCount} unreadMessages={unreadMessages}>
+    <AdminShell email={session.email} pendingCount={pendingCount}>
       {children}
     </AdminShell>
   );

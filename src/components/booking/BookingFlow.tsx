@@ -11,13 +11,12 @@ import { formatEUR } from "@/lib/money";
 import { extraLineTotal, priceTypeLabel } from "@/lib/pricing";
 import { nightsBetween, parseDateOnly, formatDateHuman } from "@/lib/dates";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
-import { Placeholder } from "@/components/Placeholder";
+import { PhotoSlot } from "@/components/PhotoSlot";
 import { ConsentCheckbox } from "@/components/guest/ConsentCheckbox";
 import {
   IconCheck,
   IconUser,
   IconMoon,
-  IconCamera,
   IconArrowLeft,
   IconArrowRight,
   IconLogIn,
@@ -531,18 +530,12 @@ export function BookingFlow({
                                         className="h-full w-full object-cover"
                                       />
                                     ) : (
-                                      <Placeholder
-                                        variant={idx + 1}
+                                      <PhotoSlot
+                                        label={room.name}
+                                        code={`${room.slug}-1`}
                                         rounded={false}
                                         className="h-full min-h-[9rem] w-full"
                                       />
-                                    )}
-                                    {/* Placeholder marker so the owner knows to add a photo */}
-                                    {!photo && (
-                                      <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-md bg-black/45 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-white backdrop-blur-sm">
-                                        <IconCamera size={11} />
-                                        {fr ? "Photo à venir" : "Photo soon"}
-                                      </span>
                                     )}
                                     {/* Selected overlay */}
                                     <AnimatePresence>

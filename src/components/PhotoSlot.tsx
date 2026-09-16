@@ -1,10 +1,6 @@
-// A clearly-marked "photo needed" placeholder. Renders the Moroccan
-// Placeholder visual behind a dashed overlay that names the photo, its
-// recommended aspect ratio and an optional slot code — so the owner can
-// see exactly where (and how many) real photos are required.
-
-import { Placeholder } from "@/components/Placeholder";
-import { IconCamera } from "@/components/Icons";
+// Project photography is selected by semantic slot so a page never falls back
+// to a decorative placeholder while the booking system is waiting for uploaded
+// owner photos.
 
 type PhotoSlotProps = {
   /** What the photo should show, e.g. "Patio central". */
@@ -20,37 +16,74 @@ type PhotoSlotProps = {
 
 export function PhotoSlot({
   label,
-  ratio,
   code,
   variant = 0,
   rounded = true,
   className = "",
 }: PhotoSlotProps) {
+  const src = imageForSlot(code, variant);
+
   return (
     <div
       className={`relative overflow-hidden ${rounded ? "rounded-2xl" : ""} ${className}`}
       role="img"
-      aria-label={`Emplacement photo : ${label}`}
+      aria-label={label}
     >
-      <Placeholder variant={variant} rounded={false} className="absolute inset-0 h-full w-full" />
-      <div className="absolute inset-0 bg-ink/35" />
-      {/* dashed frame */}
-      <div className="absolute inset-2 rounded-xl border-2 border-dashed border-white/60" />
-      {code && (
-        <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-bold tracking-wide text-terracotta">
-          {code}
-        </span>
-      )}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-3 text-center text-white">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-          <IconCamera size={20} />
-        </span>
-        <span className="max-w-[90%] text-sm font-medium leading-tight">{label}</span>
-        <span className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/80">
-          <span className="rounded-full bg-black/30 px-2 py-0.5">Photo à fournir</span>
-          {ratio && <span className="rounded-full bg-black/30 px-2 py-0.5">{ratio}</span>}
-        </span>
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={label} className="h-full w-full object-cover" />
     </div>
   );
+}
+
+function imageForSlot(code: string | undefined, variant: number): string {
+  if (code?.startsWith("mouassine")) return "/images/riad/mouassine.webp";
+  if (code?.startsWith("saadienne")) return "/images/riad/saadienne.webp";
+  if (code?.startsWith("bahia")) return "/images/riad/bahia.webp";
+  if (code?.startsWith("koutoubia")) return "/images/riad/koutoubia.webp";
+  if (code?.startsWith("medina")) return "/images/riad/medina-suite.webp";
+  if (code?.startsWith("patio")) return "/images/riad/patio-suite.webp";
+  if (code?.startsWith("terrasse")) return "/images/riad/terrasse-suite.webp";
+
+  const byCode: Record<string, string> = {
+    H1: "/images/riad/patio.webp",
+    H2: "/images/riad/patio.webp",
+    LR1: "/images/riad/patio.webp",
+    LR2: "/images/riad/patio.webp",
+    LR3: "/images/riad/medina-lane.webp",
+    G1: "/images/riad/patio.webp",
+    G2: "/images/riad/terrasse-suite.webp",
+    G3: "/images/riad/mouassine.webp",
+    G4: "/images/riad/saadienne.webp",
+    G5: "/images/riad/bahia.webp",
+    G6: "/images/riad/patio-suite.webp",
+    G7: "/images/riad/gallery-tea.webp",
+    G8: "/images/riad/medina-lane.webp",
+    G9: "/images/riad/gallery-terrace.webp",
+    G10: "/images/riad/gallery-staircase.webp",
+    G11: "/images/riad/gallery-lanterns.webp",
+    G12: "/images/riad/breakfast.webp",
+    E1: "/images/riad/airport-transfer.webp",
+    E2: "/images/riad/breakfast.webp",
+    E3: "/images/riad/dinner.webp",
+    E4: "/images/riad/medina-tour.webp",
+    E5: "/images/riad/hammam.webp",
+    E6: "/images/riad/romantic-decoration.webp",
+    E7: "/images/riad/birthday-setup.webp",
+    E8: "/images/riad/cooking-class.webp",
+    E9: "/images/riad/mouassine.webp",
+    E10: "/images/riad/terrasse-suite.webp",
+  };
+  if (code && byCode[code]) return byCode[code];
+
+  const gallery = [
+    "/images/riad/patio.webp",
+    "/images/riad/terrasse-suite.webp",
+    "/images/riad/mouassine.webp",
+    "/images/riad/medina-lane.webp",
+    "/images/riad/breakfast.webp",
+    "/images/riad/dinner.webp",
+    "/images/riad/hammam.webp",
+    "/images/riad/patio-suite.webp",
+  ];
+  return gallery[variant % gallery.length];
 }

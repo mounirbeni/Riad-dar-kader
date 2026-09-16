@@ -40,7 +40,7 @@ const COLORS = {
 const T = {
   fr: {
     location: "Médina de Marrakech",
-    footer: "Mbn Demo Riad · Médina, près du Musée Mouassine, Marrakech, Maroc\nRéservation directe acceptée.",
+    footer: "MBN DEMO RIAD · Médina, près du Musée Mouassine, Marrakech, Maroc\nRéservation directe acceptée.",
     reference: "Référence",
     arrival: "Arrivée",
     departure: "Départ",
@@ -53,7 +53,7 @@ const T = {
   },
   en: {
     location: "Medina of Marrakech",
-    footer: "Mbn Demo Riad · Medina, near Mouassine Museum, Marrakech, Morocco\nDirect booking accepted.",
+    footer: "MBN DEMO RIAD · Medina, near Mouassine Museum, Marrakech, Morocco\nDirect booking accepted.",
     reference: "Reference",
     arrival: "Check-in",
     departure: "Check-out",

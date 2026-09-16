@@ -6,7 +6,6 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localePath } from "@/i18n/nav";
 import { prisma } from "@/lib/prisma";
-import { Placeholder } from "@/components/Placeholder";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { formatEUR } from "@/lib/money";
 import { guestWhatsAppLink } from "@/lib/whatsapp";
@@ -71,7 +70,7 @@ export async function generateMetadata({
       },
     },
     openGraph: {
-      title: `${room.name} · Mbn Demo Riad`,
+      title: `${room.name} · MBN DEMO RIAD`,
       description: desc.slice(0, 160),
       url: `${siteUrl()}/${fr ? "fr" : "en"}/chambres/${slug}`,
       type: "website",
@@ -285,9 +284,9 @@ export default async function RoomDetailPage({
                   href={`${localePath(locale, "rooms")}/${r.slug}`}
                   className="card group overflow-hidden"
                 >
-                  <Placeholder
+                  <PhotoSlot
                     label={r.name}
-                    variant={i + 2}
+                    code={`${r.slug}-1`}
                     rounded={false}
                     className="aspect-[4/3] w-full"
                   />

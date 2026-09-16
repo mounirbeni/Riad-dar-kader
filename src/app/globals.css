@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #f5f0e8;
-  --foreground: #1a1a1a;
+  --background: #18130f;
+  --foreground: #f6eee1;
   --font-cormorant: "Cormorant Garamond", "Playfair Display", Georgia, serif;
   --font-inter: "Inter", "Manrope", system-ui, sans-serif;
 }
@@ -47,7 +47,7 @@
     min-height: 44px;
   }
   .btn-primary {
-    @apply btn bg-terracotta text-white shadow-card hover:bg-terracotta-dark;
+    @apply btn bg-[#bd5a40] text-white shadow-card hover:bg-[#cc694d];
   }
   .btn-outline {
     @apply btn border border-terracotta/30 bg-transparent text-terracotta hover:bg-terracotta/5;
@@ -73,6 +73,87 @@
     @apply mb-1.5 block text-sm font-medium text-muted;
   }
 }
+
+/* Night Arrival design system — shared by the public journey, booking, guest area and admin. */
+.night-platform,
+.night-admin {
+  color: #f6eee1;
+  background: #18130f;
+}
+
+.night-platform .site-header {
+  border-color: rgba(232, 214, 185, 0.14);
+  background: rgba(24, 19, 15, 0.88);
+}
+.night-platform .site-header a:not(.btn-primary) {
+  color: rgba(246, 238, 225, 0.78);
+}
+.night-platform .site-header a:hover { color: #d8b56a; }
+.night-platform .site-header a.font-serif { color: #f6eee1; }
+.night-platform .site-footer {
+  border-color: rgba(232, 214, 185, 0.12);
+  background: #120d09;
+}
+
+.night-platform .bg-white,
+.night-platform .bg-sand,
+.night-platform .bg-\[\#FDFAF7\],
+.night-platform .bg-\[\#F7F4EF\],
+.night-admin .bg-white,
+.night-admin .bg-sand,
+.night-admin .bg-\[\#F7F4EF\] {
+  background-color: #211812 !important;
+}
+.night-platform .bg-sand-50,
+.night-platform .bg-sand-100,
+.night-platform .bg-sand-200,
+.night-admin .bg-sand-50,
+.night-admin .bg-sand-100,
+.night-admin .bg-sand-200 {
+  background-color: #2a1e16 !important;
+}
+.night-platform .text-ink,
+.night-admin .text-ink { color: #f6eee1 !important; }
+.night-platform [class*="text-ink/"],
+.night-admin [class*="text-ink/"] { color: rgba(246, 238, 225, 0.82) !important; }
+.night-platform .text-muted,
+.night-admin .text-muted { color: #c8b8a2 !important; }
+.night-platform .border-sand-200,
+.night-platform .border-sand-300,
+.night-admin .border-sand-200,
+.night-admin .border-sand-300 { border-color: rgba(232, 214, 185, 0.16) !important; }
+.night-platform .card,
+.night-admin .card {
+  border: 1px solid rgba(232, 214, 185, 0.14);
+  background: #211812;
+  box-shadow: 0 18px 42px -26px rgba(0, 0, 0, 0.8);
+}
+.night-platform .input,
+.night-admin .input {
+  border-color: rgba(232, 214, 185, 0.18);
+  background: #2a1e16;
+  color: #f6eee1;
+}
+.night-platform .input::placeholder,
+.night-admin .input::placeholder { color: rgba(246, 238, 225, 0.42); }
+.night-platform .btn-outline {
+  border-color: rgba(216, 181, 106, 0.55);
+  color: #e8d6b9;
+}
+.night-platform .btn-outline:hover { background: rgba(216, 181, 106, 0.1); }
+.night-platform .kicker { color: #d8b56a; }
+.night-platform .pattern-divider { opacity: 0.7; }
+.night-platform [class*="bg-white/"],
+.night-admin [class*="bg-white/"] { background-color: rgba(42, 30, 22, 0.92) !important; }
+.night-platform [class*="bg-sand/"],
+.night-admin [class*="bg-sand/"] { background-color: rgba(42, 30, 22, 0.86) !important; }
+
+.night-admin main { background: #18130f; }
+.night-admin .bg-terracotta\/10 { background-color: rgba(189, 90, 64, 0.14) !important; }
+.night-admin .text-terracotta { color: #dd795a !important; }
+.night-admin table { color: #eadfce; }
+.night-admin thead { background: #2a1e16; }
+.night-admin tr { border-color: rgba(232, 214, 185, 0.11); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(8px); }

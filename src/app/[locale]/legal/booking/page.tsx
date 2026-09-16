@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const fr = locale !== "en";
   return {
-    title: fr ? "Conditions de réservation — Mbn Demo Riad" : "Booking Terms — Mbn Demo Riad",
+    title: fr ? "Conditions de réservation — MBN DEMO RIAD" : "Booking Terms — MBN DEMO RIAD",
     robots: { index: false },
   };
 }
@@ -17,8 +17,8 @@ export default async function BookingTermsPage({ params }: { params: Promise<{ l
   const fr = locale === "fr";
 
   const intro = fr
-    ? "Ces conditions précisent le déroulement d'une réservation au Mbn Demo Riad, de la demande initiale jusqu'à votre départ. Elles complètent nos conditions générales d'utilisation et s'appliquent à toute réservation effectuée en direct via ce site."
-    : "These terms describe how a booking at Mbn Demo Riad works, from the initial request to your departure. They supplement our general Terms & Conditions and apply to any booking made directly through this site.";
+    ? "Ces conditions précisent le déroulement d'une réservation au MBN DEMO RIAD, de la demande initiale jusqu'à votre départ. Elles complètent nos conditions générales d'utilisation et s'appliquent à toute réservation effectuée en direct via ce site."
+    : "These terms describe how a booking at MBN DEMO RIAD works, from the initial request to your departure. They supplement our general Terms & Conditions and apply to any booking made directly through this site.";
 
   const sections: LegalSection[] = fr
     ? [

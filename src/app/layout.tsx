@@ -3,7 +3,7 @@ import "./globals.css";
 import { PwaRegister } from "@/components/PwaRegister";
 
 export const viewport: Viewport = {
-  themeColor: "#8B3A2A",
+  themeColor: "#18130F",
   width: "device-width",
   initialScale: 1,
   minimumScale: 1,
@@ -15,15 +15,15 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
   ),
   title: {
-    default: "Mbn Demo Riad — Riad traditionnel à Marrakech",
-    template: "%s · Mbn Demo Riad",
+    default: "MBN DEMO RIAD — Riad traditionnel à Marrakech",
+    template: "%s · MBN DEMO RIAD",
   },
   description:
     "Riad traditionnel marocain au cœur de la Médina de Marrakech, près du Musée Mouassine. Réservation directe.",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Mbn Demo Riad",
+    title: "MBN DEMO RIAD",
   },
   formatDetection: {
     telephone: false,

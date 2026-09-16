@@ -1,7 +1,7 @@
 // Riad-wide constants and configuration.
 
 export const RIAD = {
-  name: "Mbn Demo Riad",
+  name: "MBN DEMO RIAD",
   totalRooms: 7,
   city: "Marrakech",
   area: "Médina, près du Musée Mouassine",
@@ -17,7 +17,7 @@ export const whatsappNumber = () =>
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/[^0-9]/g, "") || "212600000000";
 
 export const contactEmail = () =>
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@mbndemo.com";
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@mbnriad.com";
 
 export const siteUrl = () =>
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
