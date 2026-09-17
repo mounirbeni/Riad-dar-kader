@@ -325,13 +325,20 @@ export function BookingFlow({
 
   const showSummary = nights > 0 && step >= 2;
   const progress = Math.round(((step - 1) / TOTAL_STEPS) * 100);
+  const mobileAction = step === 2
+    ? { label: t.continue, disabled: !canBook, onClick: () => goTo(3) }
+    : step === 3
+      ? { label: t.continue, disabled: false, onClick: () => goTo(4) }
+      : step === 4 && authedUser
+        ? { label: t.submit, disabled: submitting, onClick: () => (document.getElementById("booking-details-form") as HTMLFormElement | null)?.requestSubmit() }
+        : null;
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 pb-28 lg:pb-0">
       {/* Progress bar + step indicator */}
-      <div className="mb-6">
+      <div className="mb-6 rounded-2xl border border-white/15 bg-white/[0.06] p-4 shadow-[inset_0_1px_0_rgba(255,246,230,0.14)] backdrop-blur-xl">
         <div className="mb-3 flex items-center justify-between text-xs text-muted">
-          <span className="font-medium text-ink">
+          <span className="font-medium uppercase tracking-[0.16em] text-ink">
             {step <= TOTAL_STEPS
               ? `${fr ? "Étape" : "Step"} ${step} ${fr ? "sur" : "of"} ${TOTAL_STEPS}`
               : fr ? "Réservation envoyée" : "Booking sent"}
@@ -343,7 +350,7 @@ export function BookingFlow({
           )}
         </div>
         {/* Progress track */}
-        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-sand-300">
+        <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-white/10">
           <div
             className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-terracotta to-brass transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
@@ -373,7 +380,7 @@ export function BookingFlow({
                 >
                   {done ? <IconCheck size={12} /> : n}
                 </div>
-                <span className={`hidden text-[10px] sm:block transition-colors ${active ? "font-semibold text-ink" : "text-muted"}`}>
+                <span className={`max-w-[72px] truncate text-center text-[10px] transition-colors ${active ? "font-semibold text-ink" : "text-muted"}`}>
                   {label}
                 </span>
               </div>
@@ -384,7 +391,7 @@ export function BookingFlow({
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
         {/* Main card */}
-        <div className="overflow-hidden rounded-2xl border border-sand-200 bg-white shadow-card">
+        <div className="overflow-hidden rounded-[1.75rem] border border-white/20 bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,246,230,0.16),0_22px_52px_rgba(0,0,0,0.22)] backdrop-blur-xl">
           <AnimatePresence mode="wait" custom={direction} initial={false}>
           <motion.div
             key={step}
@@ -776,7 +783,7 @@ export function BookingFlow({
                   </div>
                 </div>
 
-                <form onSubmit={onSubmit} className="p-5 sm:p-7 space-y-4">
+                <form id="booking-details-form" onSubmit={onSubmit} className="p-5 sm:p-7 space-y-4">
                   {/* honeypot */}
                   <input type="text" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />
 
@@ -846,7 +853,7 @@ export function BookingFlow({
         {/* Sticky summary sidebar */}
         {showSummary && (
           <aside className="lg:sticky lg:top-20 animate-step-in">
-            <div className="rounded-2xl border border-sand-200 bg-white p-5 shadow-card">
+            <div className="rounded-[1.5rem] border border-white/20 bg-white/[0.07] p-5 shadow-[inset_0_1px_0_rgba(255,246,230,0.16),0_18px_42px_rgba(0,0,0,0.2)] backdrop-blur-xl">
               <h4 className="font-serif text-lg text-ink">{t.summary}</h4>
               <SummaryRow
                 fr={fr} dict={dict} locale={locale}
@@ -859,6 +866,27 @@ export function BookingFlow({
           </aside>
         )}
       </div>
+
+      {showSummary && mobileAction && (
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.24, ease: EASE }}
+          className="fixed inset-x-3 bottom-[calc(5.35rem+env(safe-area-inset-bottom))] z-30 overflow-hidden rounded-2xl border border-white/25 bg-[#42271d]/85 p-2 shadow-[0_16px_42px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,244,223,0.2)] backdrop-blur-[24px] saturate-150 lg:hidden"
+        >
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,233,204,0.16),transparent_48%,rgba(150,63,39,0.17))]" />
+          <div className="relative flex items-center gap-3">
+            <div className="min-w-0 flex-1 px-2">
+              <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/60">{t.summary}</p>
+              <p className="truncate font-serif text-base text-white">{selectedRoomNames || (fr ? "Choisissez une chambre" : "Choose a room")}</p>
+            </div>
+            <button type="button" disabled={mobileAction.disabled} onClick={mobileAction.onClick} className="flex min-h-[48px] shrink-0 items-center gap-2 rounded-xl border border-[#ffd0b8]/30 bg-[#c76346]/90 px-4 font-medium text-white shadow-[inset_0_1px_0_rgba(255,241,223,0.28)] disabled:opacity-45">
+              <span>{mobileAction.label}</span>
+              {step < 4 ? <IconArrowRight size={16} /> : <IconCheck size={16} />}
+            </button>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
