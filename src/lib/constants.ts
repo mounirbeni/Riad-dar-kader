@@ -20,7 +20,7 @@ export const contactEmail = () =>
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@mbnriad.com";
 
 export const siteUrl = () => {
-  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\\/+$/, "");
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "");
 
   // The legacy Vercel URL is no longer assigned to this project.
   if (!configuredUrl || configuredUrl === "https://riad-dar-kader.vercel.app") {
