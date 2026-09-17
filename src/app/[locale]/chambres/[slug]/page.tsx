@@ -60,6 +60,10 @@ export async function generateMetadata({
   const room = await getRoom(slug);
   if (!room) return { title: fr ? "Chambre" : "Room" };
   const desc = fr ? room.description : room.descriptionEn || room.description;
+  const baseUrl = siteUrl().replace(/\/+$/, "");
+  const pageUrl = `${baseUrl}/${fr ? "fr" : "en"}/chambres/${slug}`;
+  const imageUrl = `${pageUrl}/opengraph-image`;
+
   return {
     title: room.name,
     description: desc.slice(0, 160),
@@ -72,8 +76,22 @@ export async function generateMetadata({
     openGraph: {
       title: `${room.name} · MBN DEMO RIAD`,
       description: desc.slice(0, 160),
-      url: `${siteUrl()}/${fr ? "fr" : "en"}/chambres/${slug}`,
+      url: pageUrl,
       type: "website",
+      images: [
+        {
+          url: imageUrl,
+          alt: room.name,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${room.name} · MBN DEMO RIAD`,
+      description: desc.slice(0, 160),
+      images: [imageUrl],
     },
   };
 }
