@@ -40,10 +40,10 @@ export function MobileNightHero({ locale, stayHref }: Props) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.12, ease: "easeOut" }}
-        className="relative -mt-7 overflow-hidden rounded-t-[2.6rem] border-t border-white/20 bg-[#301b15]/75 px-5 pb-5 pt-5 shadow-[0_-18px_48px_rgba(0,0,0,0.46)] backdrop-blur-[28px]"
+        className="relative -mt-7 overflow-hidden rounded-t-[2.6rem] border-t border-white/20 bg-[#1b1513]/78 px-5 pb-5 pt-5 shadow-[0_-18px_48px_rgba(0,0,0,0.46)] backdrop-blur-[28px]"
       >
         <div aria-hidden className="absolute -inset-8 bg-[url('/images/riad/hero-night-arrival.webp')] bg-cover bg-center opacity-20 blur-[18px]" />
-        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,236,202,0.16),transparent_36%,rgba(112,53,34,0.32)_72%,rgba(9,7,6,0.24))]" />
+        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,242,218,0.13),transparent_40%,rgba(12,9,8,0.42))]" />
         <div className="relative z-10">
           <p className="flex items-center justify-center gap-4 text-[10px] font-medium uppercase tracking-[0.26em] text-[#efd07f] before:h-px before:w-9 before:bg-[#efd07f]/80 after:h-px after:w-9 after:bg-[#efd07f]/80">
             Marrakech
@@ -57,22 +57,22 @@ export function MobileNightHero({ locale, stayHref }: Props) {
               : "Moroccan authenticity, gentle luxury."}
           </p>
 
-          <div className="relative mt-4 overflow-hidden rounded-2xl border border-white/25 bg-[#5c3529]/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,244,222,0.18),0_14px_30px_rgba(0,0,0,0.24)] backdrop-blur-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-white/35">
+          <div className="relative mt-4 overflow-hidden rounded-2xl border border-[#f4dfbd]/35 bg-[#130e0c]/86 p-1.5 shadow-[inset_0_1px_0_rgba(255,244,222,0.22),0_14px_30px_rgba(0,0,0,0.32)] backdrop-blur-2xl before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-white/40">
             <div className="grid grid-cols-2">
               <Link href={stayHref} className="group border-r border-white/20 px-3 py-2.5 transition-colors active:bg-white/10">
-                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f0d8b7]">
                   <IconCalendar size={17} /> {fr ? "Arrivée" : "Arrival"}
                 </span>
-                <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
-                  {fr ? "12 oct. 2026" : "Oct 12, 2026"} <IconChevronDown size={15} className="text-white/75" />
+                <span className="mt-1 flex items-center justify-between font-serif text-lg text-[#fff9ef]">
+                  {fr ? "12 oct. 2026" : "Oct 12, 2026"} <IconChevronDown size={15} className="text-[#f0d8b7]" />
                 </span>
               </Link>
               <Link href={stayHref} className="group px-3 py-2.5 transition-colors active:bg-white/10">
-                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                <span className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f0d8b7]">
                   <IconCalendar size={17} /> {fr ? "Départ" : "Departure"}
                 </span>
-                <span className="mt-1 flex items-center justify-between font-serif text-lg text-white">
-                  {fr ? "15 oct. 2026" : "Oct 15, 2026"} <IconChevronDown size={15} className="text-white/75" />
+                <span className="mt-1 flex items-center justify-between font-serif text-lg text-[#fff9ef]">
+                  {fr ? "15 oct. 2026" : "Oct 15, 2026"} <IconChevronDown size={15} className="text-[#f0d8b7]" />
                 </span>
               </Link>
             </div>

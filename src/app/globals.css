@@ -138,15 +138,15 @@
 .night-admin [class*="rounded"][class*="bg-white"],
 .night-admin [class*="rounded"][class*="bg-sand"] {
   border-color: rgba(255, 237, 210, 0.22) !important;
-  background-color: rgba(74, 43, 32, 0.64) !important;
-  background-image: linear-gradient(135deg, rgba(255, 237, 210, 0.13), rgba(166, 82, 53, 0.08) 42%, rgba(22, 13, 10, 0.14)) !important;
+  background-color: rgba(29, 23, 20, 0.72) !important;
+  background-image: linear-gradient(135deg, rgba(255, 243, 222, 0.11), rgba(222, 190, 142, 0.045) 42%, rgba(10, 8, 7, 0.2)) !important;
   box-shadow: inset 0 1px 0 rgba(255, 246, 230, 0.18), inset 0 -1px 0 rgba(23, 12, 8, 0.25), 0 18px 42px -26px rgba(0, 0, 0, 0.82) !important;
   backdrop-filter: blur(22px) saturate(150%);
 }
 .night-platform .input,
 .night-admin .input {
   border-color: rgba(255, 237, 210, 0.24);
-  background: rgba(64, 35, 27, 0.64);
+  background: rgba(20, 16, 14, 0.76);
   box-shadow: inset 0 1px 0 rgba(255, 246, 230, 0.12);
   backdrop-filter: blur(16px) saturate(140%);
   color: #f6eee1;
@@ -179,9 +179,9 @@
 .night-platform .kicker { color: #d8b56a; }
 .night-platform .pattern-divider { opacity: 0.7; }
 .night-platform [class*="bg-white/"],
-.night-admin [class*="bg-white/"] { background-color: rgba(42, 30, 22, 0.92) !important; }
+.night-admin [class*="bg-white/"] { background-color: rgba(28, 22, 19, 0.78) !important; }
 .night-platform [class*="bg-sand/"],
-.night-admin [class*="bg-sand/"] { background-color: rgba(42, 30, 22, 0.86) !important; }
+.night-admin [class*="bg-sand/"] { background-color: rgba(34, 27, 23, 0.74) !important; }
 
 .night-admin main { background: #18130f; }
 .night-admin .bg-terracotta\/10 { background-color: rgba(189, 90, 64, 0.14) !important; }

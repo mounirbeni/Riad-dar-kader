@@ -115,7 +115,7 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
           onClick={() => shiftMonth(-1)}
           disabled={!canPrev}
           aria-label={locale === "fr" ? "Mois précédent" : "Previous month"}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 bg-white text-ink transition hover:border-terracotta hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[#f2d7aa]/35 bg-[#17110f]/80 text-[#fff7ea] transition hover:border-[#e6bd75]/75 hover:text-[#f0c477] disabled:cursor-not-allowed disabled:opacity-30"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
@@ -126,7 +126,7 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
           {months.map(({ y, m }, idx) => (
             <p
               key={`${y}-${m}`}
-              className={`font-serif text-base font-semibold text-ink ${idx === 1 ? "hidden sm:block" : ""}`}
+              className={`font-serif text-base font-semibold text-[#fff7ea] ${idx === 1 ? "hidden sm:block" : ""}`}
             >
               {MONTHS[locale][m]} {y}
             </p>
@@ -138,7 +138,7 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
           onClick={() => shiftMonth(1)}
           disabled={!canNext}
           aria-label={locale === "fr" ? "Mois suivant" : "Next month"}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-sand-300 bg-white text-ink transition hover:border-terracotta hover:text-terracotta disabled:cursor-not-allowed disabled:opacity-30"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[#f2d7aa]/35 bg-[#17110f]/80 text-[#fff7ea] transition hover:border-[#e6bd75]/75 hover:text-[#f0c477] disabled:cursor-not-allowed disabled:opacity-30"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 18l6-6-6-6" />
@@ -180,7 +180,7 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
                       "relative aspect-square text-sm font-medium transition-all duration-150 focus:outline-none",
                       // Range background — no border-radius on range cells so they merge
                       inRange
-                        ? "bg-terracotta/10 text-terracotta"
+                        ? "bg-terracotta/25 text-[#fff7ea]"
                         : "",
                       // Endpoint circles — rounded
                       isEndpoint
@@ -188,9 +188,9 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
                         : "",
                       // Disabled
                       disabled
-                        ? "cursor-not-allowed text-sand-300"
+                        ? "cursor-not-allowed text-white/25"
                         : !isEndpoint && !inRange
-                          ? "text-ink hover:bg-sand-200 rounded-lg"
+                          ? "rounded-lg text-[#fff7ea] hover:bg-white/10"
                           : "",
                       // Today ring
                       isToday && !isEndpoint
@@ -200,14 +200,14 @@ export function AvailabilityCalendar({ locale, checkIn, checkOut, onSelect }: Pr
                   >
                     {/* Endpoint circle */}
                     {isEndpoint && (
-                      <span className="absolute inset-1 flex items-center justify-center rounded-full bg-terracotta text-white shadow-sm shadow-terracotta/40">
+                      <span className="absolute inset-1 flex items-center justify-center rounded-full bg-[#c76346] text-white shadow-[0_8px_20px_rgba(199,99,70,0.35)] ring-2 ring-[#f0c477]/45">
                         {date.getUTCDate()}
                       </span>
                     )}
                     {/* Sold-out line */}
                     {isSold && (
                       <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-sand-300 line-through">{date.getUTCDate()}</span>
+                        <span className="text-white/25 line-through">{date.getUTCDate()}</span>
                       </span>
                     )}
                     {/* Normal date */}
