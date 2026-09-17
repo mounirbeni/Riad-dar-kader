@@ -78,7 +78,8 @@ export async function generateMetadata({
   const room = await getRoom(slug);
   if (!room) return { title: fr ? "Chambre" : "Room" };
   const desc = fr ? room.description : room.descriptionEn || room.description;
-  const pageUrl = `${siteUrl()}/${fr ? "fr" : "en"}/chambres/${slug}`;
+  const baseUrl = siteUrl().replace(/\/+$/, "");
+  const pageUrl = `${baseUrl}/${fr ? "fr" : "en"}/chambres/${slug}`;
   const imagePath = room.photos?.[0] || ROOM_OG_FALLBACKS[slug] || "/og-image.svg";
   const imageUrl = absoluteImageUrl(imagePath);
 
