@@ -30,7 +30,7 @@ export default async function LocaleLayout({
       <Footer locale={locale as Locale} dict={dict} />
       <BottomNav locale={locale as Locale} />
       <WhatsAppFloat locale={locale as Locale} />
-      <DemoBanner />
+      <DemoBanner locale={locale as Locale} />
     </div>
   );
 }
