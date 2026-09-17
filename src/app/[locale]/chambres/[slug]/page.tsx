@@ -32,24 +32,6 @@ export const dynamic = "force-dynamic";
 // Recommended real photos per room: 1 main + 3 detail shots.
 const ROOM_PHOTO_TARGET = 4;
 
-const ROOM_OG_FALLBACKS: Record<string, string> = {
-  mouassine: "/images/riad/mouassine.webp",
-  saadienne: "/images/riad/saadienne.webp",
-  bahia: "/images/riad/bahia.webp",
-  koutoubia: "/images/riad/koutoubia.webp",
-  medina: "/images/riad/medina-suite.webp",
-  patio: "/images/riad/patio-suite.webp",
-  terrasse: "/images/riad/terrasse-suite.webp",
-};
-
-function absoluteImageUrl(path: string) {
-  try {
-    return new URL(path, siteUrl()).toString();
-  } catch {
-    return path;
-  }
-}
-
 type IconCmp = ComponentType<{ size?: number; className?: string }>;
 
 // amenity key → icon
@@ -80,8 +62,7 @@ export async function generateMetadata({
   const desc = fr ? room.description : room.descriptionEn || room.description;
   const baseUrl = siteUrl().replace(/\/+$/, "");
   const pageUrl = `${baseUrl}/${fr ? "fr" : "en"}/chambres/${slug}`;
-  const imagePath = room.photos?.[0] || ROOM_OG_FALLBACKS[slug] || "/og-image.svg";
-  const imageUrl = absoluteImageUrl(imagePath);
+  const imageUrl = `${pageUrl}/opengraph-image`;
 
   return {
     title: room.name,
